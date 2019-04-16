@@ -8,3 +8,7 @@ save/
 stuff/
 tgcc_dods/
 tmp/
+
+#files from pycharm to ignore
+.idea/
+venv
