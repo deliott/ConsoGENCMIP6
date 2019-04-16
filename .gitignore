@@ -1,0 +1,10 @@
+.svn/
+init_db/
+log/
+missing_data.ods
+output/
+plot/
+save/
+stuff/
+tgcc_dods/
+tmp/
