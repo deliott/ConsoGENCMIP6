@@ -1,0 +1,51 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# this must come first
+from __future__ import print_function, unicode_literals, division
+
+# standard library imports
+import os
+import os.path
+
+# Application library imports
+from gencmip6 import *
+
+
+ROOT_DIR = os.path.join(os.environ["HOME"], "ConsoGENCMIP6")
+
+# Common paths
+# ============
+DIR = {
+  "ROOT": ROOT_DIR,
+  "DATA": os.path.join(ROOT_DIR, "output"),
+  "SAVE": os.path.join(os.environ["CCCWORKDIR"], "ConsoGENCMIP6"),
+  "PLOT": os.path.join(ROOT_DIR, "plot"),
+  "DODS": None,
+}
+DIR["SAVEDATA"] = os.path.join(DIR["SAVE"], "data")
+DIR["SAVEPLOT"] = os.path.join(DIR["SAVE"], "plot")
+
+for dirname in DIR.itervalues():
+  if dirname and not os.path.isdir(dirname):
+    try :
+      os.makedirs(dirname)
+    except Exception as rc :
+      print("Could not create {}:\n{}".format(dirname, rc))
+
+# Common files
+# ============
+OUT = {
+  "PARAM": "OUT_CONSO_PARAM",
+  "BILAN": "OUT_CONSO_BILAN",
+  "UTHEO": "OUT_CONSO_UTHEO",
+  "LOGIN": "OUT_CONSO_LOGIN",
+  "STORE": "OUT_CONSO_STORE",
+  "CCCMP": "ccc_myproject.dat",
+  "JOBS":  "OUT_JOBS_PENDING",
+}
+
+
+if __name__ == "__main__":
+  print(DIR, )
+  print(OUT, )
