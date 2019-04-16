@@ -4,7 +4,8 @@
   <content><![CDATA[
 # ${1:ConsoGENCMIP6}
 
-TODO: Write a project description
+TODO: Write a project description 
+
 These are the codes used and formerly used to check the computing ressources use in TGCC for the CMIP6 projects
 ## Installation
 
