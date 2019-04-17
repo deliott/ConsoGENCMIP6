@@ -1,0 +1,1 @@
+0   *   *  * * cd /ccc/cont003/home/gencmip6/p86ipsl/IRENE/ConsoGENCMIP6 ; ./launch_jobs.sh > log/jobs_gencmip6_py_\2019\04\17_\17\42.log 2>&1
