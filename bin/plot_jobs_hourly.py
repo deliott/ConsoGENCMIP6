@@ -179,30 +179,35 @@ def plot_data(
   line_width = 0.
   width = 1.05
 
+  # max_cores = 80000.
+
+  ax_jobsp.bar(
+    # xcoord, penp, bottom=runp, width=width,
+    # xcoord, penp, bottom=max(runp), width=width,
+    xcoord, penp, bottom=8000., width=width,
+    linewidth=line_width, align="center",
+    color="firebrick", antialiased=True,
+    label="jobs pending"
+  )
   ax_jobsp.bar(
     xcoord, runp, width=width,
     linewidth=line_width, align="center",
     color="lightgreen", ecolor="green", antialiased=True,
     label="jobs running"
   )
-  ax_jobsp.bar(
-    xcoord, penp, bottom=runp, width=width,
+
+  ax_jobsf.bar(
+    # xcoord, penf, bottom=runf, width=width,
+    xcoord, penf, bottom=MAX_CORES, width=width,
     linewidth=line_width, align="center",
     color="firebrick", antialiased=True,
-    label="jobs pending"
+    label="jobs pending\n(Ressources & Priority)"
   )
-
   ax_jobsf.bar(
     xcoord, runf, width=width,
     linewidth=line_width, align="center",
     color="lightgreen", ecolor="green", antialiased=True,
     label="jobs running"
-  )
-  ax_jobsf.bar(
-    xcoord, penf, bottom=runf, width=width,
-    linewidth=line_width, align="center",
-    color="firebrick", antialiased=True,
-    label="jobs pending\n(Ressources & Priority)"
   )
 
 
@@ -217,9 +222,23 @@ def plot_config(
 
   # ... Compute useful stuff ...
   # ----------------------------
-  conso_jobsf = 80000.
+  # conso_jobsf = 80000.
+  conso_jobsf = MAX_CORES
 
   multialloc = False
+
+  yi = conso_per_day
+  yf = conso_per_day
+  if projet.date_init in dates:
+    xi = dates.index(projet.date_init)
+  else:
+    xi = 0
+  if projet.deadline in dates:
+    xf = dates.index(projet.deadline)
+  else:
+    xf = len(dates) + 1
+  xn = xi
+
   if conso_per_day_2:
     date_inter = projet.date_init + dt.timedelta(days=projet.days//2)
     if projet.date_init in dates:
@@ -246,8 +265,6 @@ def plot_config(
         xn = xi
         yi = conso_per_day_2
         yf = conso_per_day_2
-
-  print("config")
 
   # ... Config axes ...
   # -------------------
@@ -300,9 +317,10 @@ def plot_config(
     ax.yaxis.set_minor_locator(minor_locator)
 
   yticks = list(ax_jobsp.get_yticks())
-  yticks.append(conso_per_day)
-  if multialloc:
-    yticks.append(conso_per_day_2)
+  # yticks.append(conso_per_day)
+  # if multialloc:
+  #   yticks.append(conso_per_day_2)
+  yticks.extend([yi, yf])
   ax_jobsp.set_yticks(yticks)
 
   yticks = list(ax_jobsf.get_yticks())
@@ -338,7 +356,7 @@ def plot_config(
   # ax_jobsp.legend(loc="upper right", fontsize="x-small", frameon=False)
   for ax, subtitle, loc_legend in (
     (ax_jobsp, "Projet", "upper right"),
-    (ax_jobsf, "Tout Curie", "upper right"),
+    (ax_jobsf, "Tout Irene", "upper right"),
   ):
     ax.legend(loc=loc_legend, fontsize="x-small", frameon=False)
     ax.set_title(subtitle, loc="left")
@@ -375,6 +393,7 @@ if __name__ == '__main__':
   # ... Constants ...
   # -----------------
   WEEK_NB = 3
+  MAX_CORES = 79200
 
   # ... Turn interactive mode off ...
   # ---------------------------------
@@ -467,14 +486,16 @@ if __name__ == '__main__':
   penf = np.array([item.penf for item in selected_items],
                    dtype=float)
 
-  if projet.project == "gencmip6":
-    alloc1 = (1 * projet.alloc) / 3
-    alloc2 = (2 * projet.alloc) / 3
-    conso_per_day   = 2 * alloc1 / (projet.days * 24.)
-    conso_per_day_2 = 2 * alloc2 / (projet.days * 24.)
-  else:
-    conso_per_day = projet.alloc / (projet.days * 24.)
-    conso_per_day_2 = None
+  # if projet.project == "gencmip6":
+  #   alloc1 = (1 * projet.alloc) / 3
+  #   alloc2 = (2 * projet.alloc) / 3
+  #   conso_per_day   = 2 * alloc1 / (projet.days * 24.)
+  #   conso_per_day_2 = 2 * alloc2 / (projet.days * 24.)
+  # else:
+  #   conso_per_day = projet.alloc / (projet.days * 24.)
+  #   conso_per_day_2 = None
+  conso_per_day = projet.alloc / (projet.days * 24.)
+  conso_per_day_2 = None
 
   # .. Plot stuff ..
   # ================

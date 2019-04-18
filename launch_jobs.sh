@@ -34,7 +34,7 @@ else
   echo "${script} OK"
 fi
 
-# Main script to get data for whole Curie
+# Main script to get data for whole Irene
 # =======================================
 script="run_pen_full"
 printf "${script}\n"
@@ -55,7 +55,7 @@ fi
 script="plot_jobs"
 printf "\n${script}\n"
 echo "--------------------"
-bin/${script}.py -v
+bin/${script}.py -vd
 rc=$?
 if [ ${rc} -ne 0 ] ; then
   echo "${script} terminated abnormally"
@@ -65,7 +65,7 @@ fi
 
 printf "\n${script}\n"
 echo "--------------------"
-bin/${script}.py -vm machine
+bin/${script}.py -vdm machine
 rc=$?
 if [ ${rc} -ne 0 ] ; then
   echo "${script} terminated abnormally"
@@ -89,7 +89,8 @@ fi
 # ========================
 echo "=> Copy web files to ciclad"
 echo "==========================="
-rsync -var ${ROOT_DIR}/web/* igcmg@ciclad.ipsl.jussieu.fr:dods/ConsoGENCMIP6
+rsync -var ${ROOT_DIR}/web/* igcmg@ciclad.ipsl.jussieu.fr:dods/IRENE/ConsoGENCMIP6
+scp  /ccc/cont003/home/gencmip6/oboucher/CONSO/IRENE/conso.png igcmg@ciclad.ipsl.jussieu.fr:dods/IRENE/ConsoGENCMIP6/img
 
 
 printf "\nEnd of script OK\n"

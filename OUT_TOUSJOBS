@@ -1,0 +1,8 @@
+p86caub     devcmip6   972217   1008   skylake    461688     RUN    30.0m  6.9m          -      10.2m  CM61-LR-618beta- irene[1627-1628,1630-1633,1635,1637,1639,1641-1642,1644,1929-1930,1975,1989,1992,1994,2001,2010,2014]
+wangyush    devcmip6   972404   8      skylake    261693     RUN    2.0h   32.0s         -      32.0s  bash             irene1626
+wangyush    devcmip6   972366   8      skylake    261688     RUN    2.0h   7.2m          -      7.4m   bash             irene1317
+p25camil    pmicmip6   972207   4      skylake    261688     RUN    22.2h  10.7m         -      10.8m  MONITORING       irene1296
+p25camil    pmicmip6   972162   4      skylake    261684     RUN    2.0h   14.2m         -      14.8m  ATL_PIS          irene1359
+p25camil    pmicmip6   971788   960    skylake    261682     RUN    24.0h  30.7m         -      30.9m  Eois400-spinup4  irene[2201-2218,2223,2441]
+p25camil    pmicmip6   971767   4      skylake    261682     RUN    22.2h  34.0m         -      34.0m  TS               irene1825
+p86caub     devcmip6   972392   976    skylake    461694     PEN    30.0m  ~11h12        -      2.1m   CM61-LR-618beta- QOSMaxCpuPerUserLimit
