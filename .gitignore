@@ -12,3 +12,10 @@ tmp/
 #files from pycharm to ignore
 .idea/
 venv
+
+#OUT files to ignore
+
+OUT_JOBS_PENDING
+OUT_JOBS_PEN_FULL
+OUT_TOUSJOBS
+OUT_TOUSJOBS_FULL
