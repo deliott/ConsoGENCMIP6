@@ -38,7 +38,7 @@ def dods_cp(filein, DIR):
   command = ["convert", "-density", "200", fileout, filepng]
 
   try :
-    subprocess.call(command)
+    subprocess.call(command)Missing section
   except Exception as rc :
     print("Error in convert for {}:\n{}".format(fileout, rc))
 

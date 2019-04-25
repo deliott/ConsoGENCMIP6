@@ -390,6 +390,7 @@ if __name__ == '__main__':
   # ------------------------------
   args = get_arguments()
 
+
   # ... Constants ...
   # -----------------
   WEEK_NB = 3
@@ -409,7 +410,7 @@ if __name__ == '__main__':
 
   # ... Files and directories ...
   # -----------------------------
-  project_name, DIR, OUT = parse_config("bin/config.ini")
+  project_name, DIR, OUT = parse_config("/home/edupont/Documents/mesocentre/ConsoGENCMIP6_git/ConsoGENCMIP6/bin/config_local.ini")
 
   (file_param, file_utheo) = \
       get_input_files(DIR["SAVEDATA"], [OUT["PARAM"], OUT["UTHEO"]])

@@ -1,0 +1,7 @@
+{
+  "machine": "Irene", 
+  "alloc": 16100000.0, 
+  "nodes": "Skylake", 
+  "deadline": "2019-05-01", 
+  "name": "gencmip6"
+}

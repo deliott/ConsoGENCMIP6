@@ -392,7 +392,7 @@ if __name__ == '__main__':
 
   # ... Files and directories ...
   # -----------------------------
-  project_name, DIR, OUT = parse_config("bin/config.ini")
+  project_name, DIR, OUT = parse_config("bin/config_local.ini")
 
   (file_param, file_utheo) = \
       get_input_files(DIR["SAVEDATA"], [OUT["PARAM"], OUT["UTHEO"]])
