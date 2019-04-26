@@ -18,7 +18,7 @@ Two cron are currently runing to follow the computing time ([Figure 1]) and the 
 ![Figure 1](UML/cron_consmation_description.png?raw=true)
 
 ###### 1) Runing and Pending Jobs Monitoring
-%Python scripts are executed to plot the different graphs required to manage the CPU and memory usage on the computation centers. 
+[//]: # (Python scripts are executed to plot the different graphs required to manage the CPU and memory usage on the computation centers. )
 ![Figure 2](UML/cron_job_description.png?raw=true)
 
 ## Usage
