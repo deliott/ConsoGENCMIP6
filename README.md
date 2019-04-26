@@ -10,6 +10,8 @@ These are the codes used and formerly used to check the computing ressources use
 
 Here is a brief overview of the computing chain used to get the graphs for the GENCMIP6 project : 
 
+![Figure 1](UML/cron_consmation_description.png?raw=true)
+
 ###### 1) Data acquisition
 A cron is launched by the from the igcmg account on TGCC. It executes the ccc_myproject and ccc_mpp commands. Their output is stored and sent to ciclad. 
 
