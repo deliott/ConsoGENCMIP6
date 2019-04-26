@@ -14,7 +14,7 @@ Two cron are currently runing to follow the computing time ([Figure 1]) and the 
 
 
 ###### 1) Computing Time Monitoring
-%A cron is launched by the from the igcmg account on TGCC. It executes the ccc_myproject and ccc_mpp commands. Their output is stored and sent to ciclad. 
+[//]: # (A cron is launched by the from the igcmg account on TGCC. It executes the ccc_myproject and ccc_mpp commands. Their output is stored and sent to ciclad. )
 ![Figure 1](UML/cron_consmation_description.png?raw=true)
 
 ###### 1) Runing and Pending Jobs Monitoring
@@ -29,11 +29,11 @@ TODO: Write usage instructions
 ## Contributing
 No contribution need for now. 
 
-%1. Fork it!
+[//]: # (1. Fork it!
 %2. Create your feature branch: `git checkout -b my-new-feature`
 %3. Commit your changes: `git commit -am 'Add some feature'`
 %4. Push to the branch: `git push origin my-new-feature`
-%5. Submit a pull request :D
+%5. Submit a pull request :D ) 
 
 ## History
 
