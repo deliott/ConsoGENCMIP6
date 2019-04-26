@@ -10,15 +10,16 @@ These are the codes used and formerly used to check the computing ressources use
 Here is a brief overview of the computing chain used to get the graphs for the GENCMIP6 project : 
 Two cron are currently runing to follow the computing time ([Figure 1]) and the runing and pending jobs from CMIP6 teams on IRENE ([Figure 2] ) 
 
+
+
+
+###### 1) Computing Time Monitoring
+%A cron is launched by the from the igcmg account on TGCC. It executes the ccc_myproject and ccc_mpp commands. Their output is stored and sent to ciclad. 
 ![Figure 1](UML/cron_consmation_description.png?raw=true)
 
+###### 1) Runing and Pending Jobs Monitoring
+%Python scripts are executed to plot the different graphs required to manage the CPU and memory usage on the computation centers. 
 ![Figure 2](UML/cron_job_description.png?raw=true)
-
-###### 1) Data acquisition
-A cron is launched by the from the igcmg account on TGCC. It executes the ccc_myproject and ccc_mpp commands. Their output is stored and sent to ciclad. 
-
-###### 1) Data analysis
-Python scripts are executed to plot the different graphs required to manage the CPU and memory usage on the computation centers. 
 
 ## Usage
 
