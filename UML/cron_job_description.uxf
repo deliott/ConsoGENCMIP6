@@ -24,8 +24,10 @@ output</panel_attributes><additional_attributes>140;20;10;20</additional_attribu
 output</panel_attributes><additional_attributes>130;20;10;20</additional_attributes></element><element><id>UMLClass</id><coordinates><x>880</x><y>310</y><w>200</w><h>50</h></coordinates><panel_attributes>*/OUT_JOBS_PENDING/*
 
 /OUT_TOUSJOBS/
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>850</x><y>690</y><w>200</w><h>50</h></coordinates><panel_attributes>jobs_hourly.pdf</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>120</x><y>440</y><w>60</w><h>40</h></coordinates><panel_attributes>CRON 
-p86ipsl 
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>850</x><y>690</y><w>200</w><h>50</h></coordinates><panel_attributes>jobs_hourly.pdf</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>80</x><y>430</y><w>100</w><h>60</h></coordinates><panel_attributes>CRON p86ipsl :
+
+Suivi des jobs
 bg=red
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>170</x><y>440</y><w>120</w><h>40</h></coordinates><panel_attributes>lt=-&gt;
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>170</x><y>440</y><w>120</w><h>50</h></coordinates><panel_attributes>lt=-&gt;
+runs
 </panel_attributes><additional_attributes>10;20;100;20</additional_attributes></element></diagram>
