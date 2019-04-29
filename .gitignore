@@ -24,7 +24,7 @@ OUT_CONSO_UTHEO_20181204
 
 #pyc files to ignore 
 
-bin/libconso.pyc
-bin/plot_jobs.pyc
+
+bin/*.pyc
 
 bin/__pycache__/
