@@ -38,7 +38,7 @@ class DataDict(dict):
   #---------------------------------------
   def fill_data(self, file_list):
     """
-    """
+git    """
     for filein in sorted(file_list):
       try:
         data = np.genfromtxt(
@@ -167,6 +167,8 @@ class Conso(object):
 
   #---------------------------------------
   def isfilled(self):
+    """ Test
+    """
     return self.filled
 
   #---------------------------------------
