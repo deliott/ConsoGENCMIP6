@@ -377,6 +377,8 @@ def get_arguments():
                       help="interactive mode")
   parser.add_argument("-d", "--dods", action="store_true",
                       help="copy output on dods")
+  parser.add_argument("-l", "--local", action="store_true",
+                      help=" select the config_local.ini file if code ran on local computer ")
 
   return parser.parse_args()
 
@@ -410,7 +412,13 @@ if __name__ == '__main__':
 
   # ... Files and directories ...
   # -----------------------------
-  project_name, DIR, OUT = parse_config("/home/edupont/Documents/mesocentre/ConsoGENCMIP6_git/ConsoGENCMIP6/bin/config_local.ini")
+
+  if args.local:
+    config_path = "/home/edupont/Documents/mesocentre/ConsoGENCMIP6_git/ConsoGENCMIP6/bin/config_local.ini"
+  else:
+    config_path = "bin/config.ini"
+
+  project_name, DIR, OUT = parse_config(config_path)
 
   (file_param, file_utheo) = \
       get_input_files(DIR["SAVEDATA"], [OUT["PARAM"], OUT["UTHEO"]])
