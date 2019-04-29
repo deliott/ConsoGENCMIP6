@@ -19,3 +19,12 @@ OUT_JOBS_PENDING
 OUT_JOBS_PEN_FULL
 OUT_TOUSJOBS
 OUT_TOUSJOBS_FULL
+OUT_CONSO_PARAM_20181204
+OUT_CONSO_UTHEO_20181204
+
+#pyc files to ignore 
+
+bin/libconso.pyc
+bin/plot_jobs.pyc
+
+bin/__pycache__/
