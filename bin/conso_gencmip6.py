@@ -364,8 +364,19 @@ if __name__ == '__main__':
                       help="produce all files (default)")
   parser.add_argument("-s", "--store", action="store_true",
                       help="produce all files (default)")
+  parser.add_argument("-L", "--local", action="store_true",
+                      help=" select the config_local.ini file if code ran on local computer ")
 
   args = parser.parse_args()
+
+
+  if args.local:
+    config_path = "/home/edupont/Documents/mesocentre/ConsoGENCMIP6_git/ConsoGENCMIP6/bin/config_local.ini"
+  else:
+    config_path = "bin/config.ini"
+
+
+
   if args.verbose:
     print(os.path.basename(__file__))
     print(where_we_run())
@@ -374,7 +385,7 @@ if __name__ == '__main__':
   if args.bilan or args.login or args.store:
     args.all = False
 
-  project_name, DIR, OUT = parse_config("bin/config.ini")
+  project_name, DIR, OUT = parse_config(config_path)
 
   if args.verbose:
     print(DIR["DATA"])

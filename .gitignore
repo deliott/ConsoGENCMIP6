@@ -8,4 +8,23 @@ save/
 stuff/
 tgcc_dods/
 tmp/
-.pyc
+
+#files from pycharm to ignore
+.idea/
+venv
+
+#OUT files to ignore
+
+OUT_JOBS_PENDING
+OUT_JOBS_PEN_FULL
+OUT_TOUSJOBS
+OUT_TOUSJOBS_FULL
+OUT_CONSO_PARAM_20181204
+OUT_CONSO_UTHEO_20181204
+
+#pyc files to ignore
+
+
+bin/plot_jobs.pyc
+bin/libconso.pyc
+bin/__pycache__/
