@@ -28,7 +28,8 @@ if __name__ == '__main__':
     if args.local:
         config_path = "/home/edupont/Documents/mesocentre/ConsoGENCMIP6_git/ConsoGENCMIP6/bin/config_conso_local.ini"
     else:
-        config_path = "bin/config_conso.ini"
+        config_path = "/ccc/cont003/home/gencmip6/dupontel/deploy_folder/ConsoGENCMIP6_git/ConsoGENCMIP6/bin/config_conso.ini"
+#"bin/config_conso.ini"
 
     project_name, DIR, OUT = parse_config(config_path)
 
@@ -41,8 +42,10 @@ if __name__ == '__main__':
     miplist = []
     for file in files:
         print file
-#        mip = file[6:14]
-        mip = file[83:91]
+        if args.local:
+            mip = file[83:91]
+        else:
+            mip = file[98:106]
         miplist.append(mip)
         xx[mip] = []
         yy[mip] = []
@@ -77,3 +80,4 @@ if __name__ == '__main__':
     plt.savefig(DIR["PLOT"] + "/conso.png")
     plt.savefig(DIR["SAVEPLOT"] + "/conso.png")
     plt.show()
+
