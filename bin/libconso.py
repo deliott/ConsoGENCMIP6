@@ -155,6 +155,8 @@ def where_we_run():
     res = "curie"
   elif "ipsl" in socket.getfqdn():
     res = "ipsl"
+  elif "irene" in socket.getfqdn():
+    res = "irene"
   else:
     res = "default"
 
