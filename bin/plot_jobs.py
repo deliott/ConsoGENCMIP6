@@ -208,7 +208,9 @@ def plot_data(ax, xcoord, dates, run_jobs, pen_jobs, run_std, pen_std):
 
 
 ########################################
-def plot_config(fig, ax, xcoord, dates, title):
+def plot_config(
+  fig, ax, xcoord, dates, title, conso_per_day, conso_per_day_2
+):
   """
   """
   from matplotlib.ticker import AutoMinorLocator
@@ -224,6 +226,19 @@ def plot_config(fig, ax, xcoord, dates, title):
     yi = 80000.
     yf = yi
   else:
+
+    yi = conso_per_day
+    yf = conso_per_day
+    if projet.date_init in dates:
+      xi = dates.index(projet.date_init)
+    else:
+      xi = 0
+    if projet.deadline in dates:
+      xf = dates.index(projet.deadline)
+    else:
+      xf = len(dates) + 1
+    xn = xi
+
     if conso_per_day_2:
       date_inter = projet.date_init + dt.timedelta(days=projet.days//2)
       if projet.date_init in dates:
@@ -234,7 +249,7 @@ def plot_config(fig, ax, xcoord, dates, title):
       if projet.deadline in dates:
         xf = dates.index(projet.deadline)
       else:
-        xf = len(dates)
+        xf = len(dates) + 1
 
       if date_inter in dates:
         xn = dates.index(date_inter)
@@ -255,10 +270,10 @@ def plot_config(fig, ax, xcoord, dates, title):
   # -------------------
   # 1) Range
   xmin, xmax = xcoord[0]-1, xcoord[-1]+1
-  if projet.multialloc:
-    ymax = 4. * max(projet.yi, projet.yf) / 24.
+  if multialloc:
+    ymax = 4. * max(yi, yf)
   else:
-    ymax = 4. * projet.yi / 24.
+    ymax = 4. * yi
   ax.set_xlim(xmin, xmax)
   ax.set_ylim(0, ymax)
 
@@ -266,13 +281,8 @@ def plot_config(fig, ax, xcoord, dates, title):
   line_color = "blue"
   line_alpha = 0.5
   line_label = "conso journalière idéale"
-  xlist = [projet.xi, projet.xn, projet.xn, projet.xf]
-  ylist = np.array(
-    [projet.yi, projet.yi, projet.yf, projet.yf],
-    dtype=float
-  ) / 24.
   ax.plot(
-    xlist, ylist,
+    [xi, xn, xn, xf], [yi, yi, yf, yf],
     color=line_color, alpha=line_alpha, label=line_label,
   )
 
@@ -449,8 +459,6 @@ if __name__ == '__main__':
   xcoord   = np.linspace(1, nb_items, num=nb_items)
   dates  = [item.date for item in selected_items]
 
-  projet.get_multialloc(dates)
-
   if args.full:
     run_jobs = np.array([item.run_mean for item in selected_items],
                          dtype=float)
@@ -479,6 +487,17 @@ if __name__ == '__main__':
           )
         )
 
+  # if projet.project == "gencmip6":
+  #   alloc1 = (1 * projet.alloc) / 3
+  #   alloc2 = (2 * projet.alloc) / 3
+  #   conso_per_day   = 2 * alloc1 / (projet.days * 24.)
+  #   conso_per_day_2 = 2 * alloc2 / (projet.days * 24.)
+  # else:
+  #   conso_per_day = projet.alloc / (projet.days * 24.)
+  #   conso_per_day_2 = None
+  conso_per_day = projet.alloc / (projet.days * 24.)
+  conso_per_day_2 = None
+
   # .. Plot stuff ..
   # ================
   # ... Initialize figure ...
@@ -497,7 +516,9 @@ if __name__ == '__main__':
     projet.deadline
   )
 
-  plot_config(fig, ax, xcoord, dates, title)
+  plot_config(
+    fig, ax, xcoord, dates, title, conso_per_day, conso_per_day_2
+  )
 
   # ... Save figure ...
   # -------------------
