@@ -19,7 +19,15 @@ from libconso import *
 
 ########################################
 def get_storedir(login):
+  """
+  Return and Print the CCC store directory path as a string for the user specified by input 'login'.
 
+  :param login: the login of a user on irene (no default value)
+  :type login: str
+  :return: Print the CCC store directory path for the user specified by input
+  :rtype: str
+  :raises MyError: raises an exception if the ccc_home command fails. Maybe the login doesn't exist.
+  """
   print("get_storedir")
 
   command = ["ccc_home", "-A", "-u", login]
@@ -35,7 +43,16 @@ def get_storedir(login):
 
 ########################################
 def get_dirsize(dirname):
+  """Return a string,  the total size of the directory specified by 'dirname'.
+  It will be human readable (-h), in bytes (-b) and the total size of the directory (-s)
 
+
+  :param dirname: name of a directory  (no default value)
+  :type dirname: str
+  :return: total size of the directory
+  :rtype: str
+  :raises MyError: raises an exception if the du command fails. Maybe the directory doesn't exist.
+   """
   command = ["du", "-sbh", dirname]
   try :
     res = subprocess.check_output(command)
@@ -61,7 +78,7 @@ def parse_myproject(filename, project_name):
   project["name"] = project_name
   logins  = {}
 
-  if where_we_run() == "curie":
+  if where_we_run() == "irene":
     try :
       res = subprocess.check_output("ccc_myproject")
     except Exception as rc :
@@ -544,7 +561,7 @@ if __name__ == '__main__':
   if args.verbose:
     print("=> write_store")
 
-  if where_we_run() == "curie":
+  if where_we_run() == "irene":
     write_store(os.path.join(DIR["DATA"], OUT["STORE"]), today, logins)
 
   # Save files (on WORKDIR)
