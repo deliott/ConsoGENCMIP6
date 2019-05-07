@@ -262,8 +262,8 @@ def plot_data(ax_conso, ax_theo, ax_jobs, xcoord, dates,
 
 
 ########################################
-def plot_config(fig, ax_conso, ax_theo,
-                xcoord, dates, consos, run_mean, title):
+def plot_config(fig, ax_conso, ax_theo, xcoord, dates, title,
+                conso_per_day, conso_per_day_2):
   """
   """
   from matplotlib.ticker import AutoMinorLocator
@@ -277,12 +277,8 @@ def plot_config(fig, ax_conso, ax_theo,
     ymax = conso_max  # * 1.1
     ymax_jobs = jobs_max  # * 1.1
   else:
-    if projet.multialloc:
-      ymax = 3. * max(projet.yi, projet.yf)
-      ymax_jobs = 4. * max(projet.yi, projet.yf) / 24.
-    else:
-      ymax = 3. * projet.yi
-      ymax_jobs = 4. * projet.yi / 24.
+    ymax = 3. * max(conso_per_day, conso_per_day_2)
+    ymax_jobs = 2* (max(conso_per_day, conso_per_day_2)/24.)
 
   if conso_max > ymax:
     ax_conso.annotate(
@@ -291,6 +287,7 @@ def plot_config(fig, ax_conso, ax_theo,
       va="top",
       fontsize="xx-small",
       bbox=dict(boxstyle="round", fc="w", ec="0.5", color="gray",),
+      # xy=(np.nanargmax(consos)+1.2, ymax),
       xy=(np.nanargmax(consos)+1.2, ymax*0.9),
       textcoords="axes fraction",
       xytext=(0.01, 0.8),
@@ -312,19 +309,25 @@ def plot_config(fig, ax_conso, ax_theo,
   line_color = "blue"
   line_alpha = 0.5
   line_label = "conso journalière\nidéale ({})"
-  xlist = [projet.xi, projet.xn, projet.xn, projet.xf]
-  ylist = np.array(
-    [projet.yi, projet.yi, projet.yf, projet.yf],
-    dtype=float
-  )
-  for ax, ydiv, label in (
+  for ax, y_div, label in (
     (ax_conso, 1., line_label.format("heures")),
     (ax_jobs, 24., line_label.format("cœurs")),
   ):
-    ax.plot(
-      xlist, ylist / ydiv,
-      color=line_color, alpha=line_alpha, label=line_label,
-    )
+    if conso_per_day_2:
+      list_x = [0, xmax/2, xmax/2, xmax]
+      list_y = np.array(
+        [conso_per_day, conso_per_day, conso_per_day_2, conso_per_day_2],
+        dtype=float
+      )
+      ax.plot(
+        list_x, list_y/y_div,
+        color=line_color, alpha=line_alpha, label=label,
+      )
+    else:
+      ax.axhline(
+        y=conso_per_day/y_div,
+        color=line_color, alpha=line_alpha, label=label,
+      )
 
   # 3) Ticks labels
   (date_beg, date_end) = (dates[0], dates[-1])
@@ -347,18 +350,19 @@ def plot_config(fig, ax_conso, ax_theo,
     maj_xlabs, rotation="vertical", size="x-small"
   )
 
-  for ax, ydiv, label in (
-    (ax_conso, 1., "heures"),
-    (ax_jobs, 24., "cœurs"),
+  for ax, y, label in (
+    (ax_conso, conso_per_day, "heures"),
+    (ax_jobs, conso_per_day / 24., "cœurs"),
   ):
     minor_locator = AutoMinorLocator()
     ax.yaxis.set_minor_locator(minor_locator)
 
     yticks = list(ax.get_yticks())
-    yticks.append(projet.conso_per_day / ydiv)
-    if projet.multialloc:
-      yticks.append(projet.conso_per_day_2 / ydiv)
+    yticks.append(y)
     ax.set_yticks(yticks)
+
+  if conso_per_day_2:
+    yticks.append(conso_per_day_2)
 
   ax_theo.spines["right"].set_color("firebrick")
   ax_theo.tick_params(colors="firebrick")
@@ -370,7 +374,7 @@ def plot_config(fig, ax_conso, ax_theo,
         ax.axvline(x=x, color="black", alpha=0.5,
                    linewidth=0.5, linestyle=":")
 
-  # 5) Define axes title
+  # 4) Define axes title
   for ax, label in (
     (ax_conso, "heures"),
     (ax_theo, "%"),
@@ -504,14 +508,23 @@ if __name__ == '__main__':
   xcoord = np.linspace(1, nb_items, num=nb_items)
   dates = [item.date for item in selected_items]
 
-  projet.get_multialloc(dates)
-
   cumul = np.array([item.conso for item in selected_items],
                         dtype=float)
   consos = []
   consos.append(cumul[0])
   consos[1:nb_items] = cumul[1:nb_items] - cumul[0:nb_items-1]
   consos = np.array(consos, dtype=float)
+
+  # if projet.project == "gencmip6":
+  #   alloc1 = (1 * projet.alloc) / 3
+  #   alloc2 = (2 * projet.alloc) / 3
+  #   conso_per_day   = 2 * alloc1 / projet.days
+  #   conso_per_day_2 = 2 * alloc2 / projet.days
+  # else:
+  #   conso_per_day = projet.alloc / projet.days
+  #   conso_per_day_2 = None
+  conso_per_day = projet.alloc / projet.days
+  conso_per_day_2 = None
 
   theo_uses = np.array(
     [100.*item.theo_use for item in selected_items],
@@ -549,12 +562,9 @@ if __name__ == '__main__':
 
   # ... Plot data ...
   # -----------------
-  plot_data(
-    ax_conso, ax_theo, ax_jobs,
-    xcoord, dates, consos,
-    theo_uses, real_uses, theo_equs, theo_delay,
-    run_mean, pen_mean, run_std, pen_std
-  )
+  plot_data(ax_conso, ax_theo, ax_jobs, xcoord, dates,
+            consos, theo_uses, real_uses, theo_equs, theo_delay,
+            run_mean, pen_mean, run_std, pen_std)
 
   # ... Tweak figure ...
   # --------------------
@@ -566,9 +576,8 @@ if __name__ == '__main__':
           )
 
   plot_config(
-    fig, ax_conso, ax_theo,
-    xcoord, dates, consos, run_mean,
-    title
+    fig, ax_conso, ax_theo, xcoord, dates, title,
+    conso_per_day, conso_per_day_2
   )
 
   # ... Save figure ...
