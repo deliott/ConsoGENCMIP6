@@ -462,6 +462,53 @@ if __name__ == '__main__':
   if args.verbose:
     print(run_mean, pen_mean, run_std, pen_std)
 
+  # ============================================
+
+  file_jobs = get_last_file(
+      DIR["SAVEDATA"],
+      "{}_{:%Y%m%d}".format(OUT["JOBSF"], today)
+  )
+  if args.verbose:
+    print(file_jobs)
+
+  runf_mean = np.nan
+  penf_mean = np.nan
+  runf_std  = np.nan
+  penf_std  = np.nan
+
+  if file_jobs:
+    try:
+      data = np.genfromtxt(
+        file_jobs,
+        skip_header=1,
+        converters={
+          0: string_to_datetime,
+          1: float,
+          2: float,
+        },
+        missing_values="nan",
+      )
+    except Exception as rc:
+      print("Problem with file {} :\n{}".format(file_jobs, rc))
+      exit(1)
+
+    runf_mean = np.nanmean(
+        np.array([run for _, run, _ in data])
+    )
+    penf_mean = np.nanmean(
+        np.array([pen for _, _, pen in data])
+    )
+
+    runf_std = np.nanstd(
+        np.array([run for _, run, _ in data])
+    )
+    penf_std = np.nanstd(
+        np.array([pen for _, _, pen in data])
+    )
+
+  if args.verbose:
+    print(runf_mean, penf_mean, runf_std, penf_std)
+
   write_bilan(
     os.path.join(DIR["DATA"], OUT["BILAN"]),
     today,
