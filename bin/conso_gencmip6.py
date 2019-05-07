@@ -73,11 +73,32 @@ def get_dirsize(dirname):
 
 ########################################
 def parse_myproject(filename, project_name):
+  """
+  Description of the function
+  If on irene(/curie) the CCCMP file is created from ccc_myproject command
+  Parse the file given by filename to get the relevant data
 
+  :param filename: name of the file containing the ccc_myproject data
+  :type filename: str
+  :param project_name: name of the project (ex gen0212 or dcpcmip6)
+  :type project_name : str
+  :return project: dict with info on the project, name , mahine, nb of nodes, time allocated and deadline
+  :rtype project: dict
+  :return logins: ditionary with the consomation associated to the login
+  :rtype logins: dict
+  :return today: date of the given ccc_myproject file
+  :rtype today: datetime
+  :return total: Total hours count for the project
+  :rtype total: float
+  :return utheo: percentage of the theorical use of cpu time at this date
+  :return ureal: percentage of the real use of cpu time at this date
+  :raises MyError: Description of my error
+  """
   project = {}
   project["name"] = project_name
-  logins  = {}
+  logins= {}
 
+  #If on irene(/curie) the CCCMP file is created from ccc_myproject command
   if where_we_run() == "irene":
     try :
       res = subprocess.check_output("ccc_myproject")
