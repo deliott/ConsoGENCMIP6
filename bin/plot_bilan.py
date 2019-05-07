@@ -53,10 +53,10 @@ class DataDict(dict):
           5:  string_to_float,
           6:  string_to_float,
           7:  string_to_float,
-          # 8:  string_to_float,
-          # 9:  string_to_float,
-          # 10: string_to_float,
-          # 11: string_to_float,
+          8:  string_to_float,
+          9:  string_to_float,
+          10: string_to_float,
+          11: string_to_float,
         },
         missing_values="nan",
       )
@@ -64,11 +64,9 @@ class DataDict(dict):
       print("Empty file {}:\n{}".format(filein, rc))
       exit(1)
 
-    # for date, conso, real_use, theo_use, \
-    #     run_mean, pen_mean, run_std, pen_std, \
-    #     _, _, _, _ in data:
     for date, conso, real_use, theo_use, \
-        run_mean, pen_mean, run_std, pen_std in data:
+        run_mean, pen_mean, run_std, pen_std, \
+        _, _, _, _ in data:
       if date in self:
         self.add_item(
           date,
@@ -240,27 +238,55 @@ def plot_data(ax_conso, ax_theo, xcoord, dates,
     label="retard de\ndeux mois (%)"
   )
 
-  if projet.poly1:
-    theo_equs_m = []
-    for i, date in enumerate(dates):
-      if date < projet.date_inter:
-        theo_equs_m.append(100 * projet.poly1(dates.index(date)))
-      else:
-        theo_equs_m.append(100 * projet.poly2(dates.index(date)))
-    theo_equs_m = np.array(theo_equs_m, dtype=float)
-
-    ax_theo.plot(
-      xcoord, theo_equs_m, "-",
-      color="orange", linewidth=2,
-      solid_capstyle="round", solid_joinstyle="round"
-    )
-
 
 ########################################
-def plot_config(fig, ax_conso, ax_theo, xcoord, dates, title):
+def plot_config(fig, ax_conso, ax_theo, xcoord, dates, title,
+                conso_per_day, conso_per_day_2):
   """
   """
   from matplotlib.ticker import AutoMinorLocator
+
+  # ... Compute useful stuff ...
+  # ----------------------------
+  multialloc = False
+  yi = conso_per_day
+  yf = conso_per_day
+  if projet.date_init in dates:
+    xi = dates.index(projet.date_init)
+  else:
+    xi = 0
+  if projet.deadline in dates:
+    xf = dates.index(projet.deadline)
+  else:
+    xf = len(dates) + 1
+  xn = xi
+
+  if conso_per_day_2:
+    date_inter = projet.date_init + dt.timedelta(days=projet.days//2)
+    # if projet.date_init in dates:
+    #   xi = dates.index(projet.date_init)
+    # else:
+    #   xi = 0
+
+    # if projet.deadline in dates:
+    #   xf = dates.index(projet.deadline)
+    # else:
+    #   xf = len(dates) + 1
+
+    if date_inter in dates:
+      xn = dates.index(date_inter)
+      yi = conso_per_day
+      yf = conso_per_day_2
+      multialloc = True
+    else:
+      if dates[-1] < date_inter:
+        xn = xf
+        yi = conso_per_day
+        yf = conso_per_day
+      elif dates[0] > date_inter:
+        xn = xi
+        yi = conso_per_day_2
+        yf = conso_per_day_2
 
   # ... Config axes ...
   # -------------------
@@ -269,10 +295,10 @@ def plot_config(fig, ax_conso, ax_theo, xcoord, dates, title):
   if args.max:
     ymax = conso_max  # + conso_max*.1
   else:
-    if projet.multialloc:
-      ymax = 3. * max(projet.yi, projet.yf)
+    if multialloc:
+      ymax = 3. * max(yi, yf)
     else:
-      ymax = 3. * projet.yi
+      ymax = 3. * yi
 
   if conso_max > ymax:
     ax_conso.annotate(
@@ -302,8 +328,7 @@ def plot_config(fig, ax_conso, ax_theo, xcoord, dates, title):
   line_alpha = 0.5
   line_label = "conso journalière\nidéale (heures)"
   ax_conso.plot(
-    [projet.xi, projet.xn, projet.xn, projet.xf],
-    [projet.yi, projet.yi, projet.yf, projet.yf],
+    [xi, xn, xn, xf], [yi, yi, yf, yf],
     color=line_color, alpha=line_alpha, label=line_label,
   )
 
@@ -332,9 +357,9 @@ def plot_config(fig, ax_conso, ax_theo, xcoord, dates, title):
   ax_conso.yaxis.set_minor_locator(minor_locator)
 
   yticks = list(ax_conso.get_yticks())
-  yticks.append(projet.conso_per_day)
-  if projet.multialloc:
-    yticks.append(projet.conso_per_day_2)
+  yticks.append(conso_per_day)
+  if multialloc:
+    yticks.append(conso_per_day_2)
   ax_conso.set_yticks(yticks)
 
   ax_theo.spines["right"].set_color("firebrick")
@@ -481,14 +506,23 @@ if __name__ == '__main__':
   xcoord = np.linspace(1, nb_items, num=nb_items)
   dates = [item.date for item in selected_items]
 
-  projet.get_multialloc(dates)
-
   cumul = np.array([item.conso for item in selected_items],
                         dtype=float)
   consos = []
   consos.append(cumul[0])
   consos[1:nb_items] = cumul[1:nb_items] - cumul[0:nb_items-1]
   consos = np.array(consos, dtype=float)
+
+  # if projet.project == "gencmip6":
+  #   alloc1 = (1 * projet.alloc) / 3
+  #   alloc2 = (2 * projet.alloc) / 3
+  #   conso_per_day   = 2 * alloc1 / projet.days
+  #   conso_per_day_2 = 2 * alloc2 / projet.days
+  # else:
+  #   conso_per_day = projet.alloc / projet.days
+  #   conso_per_day_2 = None
+  conso_per_day = projet.alloc / projet.days
+  conso_per_day_2 = None
 
   theo_uses = np.array(
     [100.*item.theo_use for item in selected_items],
@@ -538,7 +572,10 @@ if __name__ == '__main__':
     projet.deadline
   )
 
-  plot_config(fig, ax_conso, ax_theo, xcoord, dates, title)
+  plot_config(
+    fig, ax_conso, ax_theo, xcoord, dates, title,
+    conso_per_day, conso_per_day_2
+  )
 
   # ... Save figure ...
   # -------------------
@@ -568,3 +605,4 @@ if __name__ == '__main__':
     plt.show()
 
   exit(0)
+
