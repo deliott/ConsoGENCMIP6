@@ -149,7 +149,7 @@ def string_to_datetime(string, fmt="%Y-%m-%d-%H:%M"):
 
 #######################################################################
 def where_we_run():
-
+  """return the name of the computer on which the program is ran"""
   res = ""
   if "curie" in socket.getfqdn():
     res = "curie"
