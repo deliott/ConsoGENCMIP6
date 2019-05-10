@@ -176,7 +176,17 @@ def where_we_run():
 
 #######################################################################
 def get_last_file(dir_data, pattern):
-  """used by gencmip6.py to get OUT_JOBS_PENDING
+  """
+  Gets the name of the last file (according to suffix date/lexcographical order)
+  corresponding to input pattern int the dir_data directory.
+  Used by gencmip6.py to get OUT_JOBS_PENDINGxxx  OUT_JOBS_PEN_FULLxxx
+
+  :param dir_data: path to directory on where to look for the last file
+  :type dir_data : str
+  :param pattern: pattern the file has to follow. ex: "{}_{:%Y%m%d}".format(OUT["JOBS"], today)
+  :type pattern : str
+  :return res: path to last file corresponding to teh pattern
+  :rtype res: str
   """
   current_dir = os.getcwd()
   os.chdir(dir_data)
