@@ -398,7 +398,6 @@ def write_login(filename, today, logins):
 ########################################
 def write_store(filename, today, logins):
   """
-
   Write used/created store directory path and size per day and login, formated into a file with specified path.
   Output is a test file, DIR["DATA"]/OUT_CONSO_STORE.
   If agrs.dryrun, only a print is started instead of file creation.
@@ -474,7 +473,16 @@ def write_store(filename, today, logins):
 
 ########################################
 def save_files(file_list, today):
+  """
+  Save data into the list of files and with date as a suffix.
+  Two files are created per name in filelist, one in DIR["DATA"] and one in DIR["SAVEDATA"]
+  If agrs.dryrun, only a print is started instead of file creation.
 
+  :param filelist: list of the name of the file in which data will be saved
+  :type filelist: list
+  :param today: date of the given ccc_myproject file
+  :type today: datetime
+  """
   if not args.dryrun:
     suffix = "{:%Y%m%d}".format(today)
     for filename in file_list:
