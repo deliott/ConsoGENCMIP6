@@ -51,7 +51,18 @@ def dods_cp(filein, DIR):
 
 #######################################################################
 def parse_config(filename):
+  """
+  Extract relevant data from the config*.ini files.
 
+  :param filename: path to the relevant config*.ini according to where and what the program will run
+  :type filename: str
+  :return project_name: name of the project worked on. ex: gencmip6
+  :rtype project_name: str
+  :return DIR: dictionary with the paths of the [directories] section of the config file
+  :rtype DIR: dict
+  :return OUT: dictionary with the paths of the [files] section of the config file
+  :rtype OUT: dict
+  """
   DIR = {}
   OUT = {}
 
@@ -59,6 +70,7 @@ def parse_config(filename):
   config.optionxform = str
   config.read(filename)
 
+  #checks all the looked for sections are in the config file
   for section in ("projet", "directories", "files"):
     if not config.has_section(section):
       print(
@@ -135,8 +147,7 @@ def string_to_date(ssaammjj, fmt="%Y-%m-%d"):
 
 #######################################################################
 def string_to_datetime(string, fmt="%Y-%m-%d-%H:%M"):
-  """
-  """
+  """Convert a string in the proper format into a datetime  """
   return dt.datetime.strptime(string, fmt)
 
 
@@ -165,7 +176,7 @@ def where_we_run():
 
 #######################################################################
 def get_last_file(dir_data, pattern):
-  """
+  """used by gencmip6.py to get OUT_JOBS_PENDING
   """
   current_dir = os.getcwd()
   os.chdir(dir_data)
