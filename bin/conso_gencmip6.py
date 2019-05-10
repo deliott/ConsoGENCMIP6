@@ -24,7 +24,7 @@ def get_storedir(login):
 
   :param login: the login of a user on irene (no default value)
   :type login: str
-  :return: Print the CCC store directory path for the user specified by input
+  :return: path to the CCC store directory for the user specified by input
   :rtype: str
   :raises MyError: raises an exception if the ccc_home command fails. Maybe the login doesn't exist.
   """
@@ -90,7 +90,9 @@ def parse_myproject(filename, project_name):
   :return total: Total consumed timed in hours for the project
   :rtype total: float
   :return utheo: percentage of the theorical use of cpu time at this date
+  :rtype utheo: float
   :return ureal: percentage of the real use of cpu time at this date
+  :rtype ureal: float
   :raises MyError: Description of my error
   """
   project = {}
@@ -212,9 +214,9 @@ def write_bilan(
   :param total: 4th output of the parse_my_project function, total consumed timed in hours for the project
   :type total: float
   :param ureal: 6th output of the parse_my_project function, percentage of the real use of cpu time at this date
-  :type ureal:
+  :type ureal: float
   :param utheo: 5th output of the parse_my_project function, percentage of the theorical use of cpu time at this date
-  :type utheo:
+  :type utheo: float
   :param runp_mean:
   :type runp_mean: numpy array
   :param penp_mean:
@@ -231,8 +233,15 @@ def write_bilan(
   :type runf_std: numpy array
   :param penf_std:
   :type penf_std: numpy array
-
   :raises MyError: Description of my error
+
+  date       conso(hours) real_use(%) theo_use(%) runningP(core) pendingP(core) run_stdP(core) pen_stdP(core)\
+   runningF(core) pendingF(core) run_stdF(core) pen_stdF(core)
+  2018-09-10  31745970.70       83.98       79.57       29401.50        3131.92       10830.33        4225.70\
+         69991.58        9363.71       12910.58        8422.97
+  2018-09-10  31745970.70       83.98       79.57       29401.50        3131.92       10830.33        4225.70\
+         69991.58        9363.71       12910.58        8422.97
+
 
   """
   # Using formatters to give 10, 12, 11 or 14 spaces to each set of values
@@ -294,10 +303,30 @@ def write_bilan(
 ########################################
 def write_utheo(filename, today, utheo):
   """
-  Conso théorique par jour
-  ------------------------
-  OUT_CONSO_THEO
+  Writes theoretical daily consumption (conso théorique par jour) formated data into a file with specified path.
+  Output is a test file, DIR["DATA"]/OUT_CONSO_THEO.
+  If agrs.dryrun, only a print is started instead of file creation.
+
+  :param filename: name of the file containing the ccc_myproject data
+  :type filename: str
+  :param today: date of the given ccc_myproject file
+  :type today: datetime
+  :param utheo: percentage of the theorical use of cpu time at this date
+  :type utheo: float
+  :raises MyError: Description of my error
+
+  :Example:
+
+  date       theo_use(%)
+  2015-01-12         nan
+  2015-01-13         nan
+  2015-01-14         nan
+  2015-01-15         nan
+  2015-01-16        8.89
+  2015-01-17        9.44
+
   """
+
 
   title_str  = "{:10s} {:11s}\n".format(
                  "date",
@@ -322,10 +351,24 @@ def write_utheo(filename, today, utheo):
 ########################################
 def write_login(filename, today, logins):
   """
-  Conso par login (HOME)
-  ----------------------
-  on garde la trace de chaque login, date en tete, en remplacant
-  le fichier a chaque fois : OUT_CONSO_LOGIN
+  Writes theoretical daily consumption (conso théorique par jour) formated data into a file with specified path.
+  Output is a test file, DIR["DATA"]/OUT_CONSO_LOGIN.
+  If agrs.dryrun, only a print is started instead of file creation.
+  Overwrites the file at each run ?
+
+  :param filename: name of the file containing the ccc_myproject data
+  :type filename: str
+  :param today: date of the given ccc_myproject file
+  :type today: datetime
+  :param logins: 2nd output of parse_my_mproject function. dict with consumption time associated to each login
+  :type logins: dict
+  :raises MyError: Description of my error
+
+  :Example:
+
+  date       login      conso(hours)
+  2018-09-10 p24balk         6819.85
+  2018-09-10 p24cozic           0.00
   """
 
   title_str  = "{:10s} {:10s} {:12s}\n".format(
@@ -355,12 +398,29 @@ def write_login(filename, today, logins):
 ########################################
 def write_store(filename, today, logins):
   """
-  volume cree sur STORE
-  ---------------------
-  par login qui a consomme, en remplacant le fichier a chaque fois :
-  OUT_CONSO_STORE
+
+  Write used/created store directory path and size per day and login, formated into a file with specified path.
+  Output is a test file, DIR["DATA"]/OUT_CONSO_STORE.
+  If agrs.dryrun, only a print is started instead of file creation.
+  Overwrites the file at each run ?
+
+  :param filename: name of the file containing the ccc_myproject data
+  :type filename: str
+  :param today: date of the given ccc_myproject file
+  :type today: datetime
+  :param logins: 2nd output of parse_my_mproject function. dict with consumption time associated to each login
+  :type logins: dict
+  :raises OSError: Error if failure to list the directories of igcmg_out
+
+  :Example:
+
+  date       login      dirsize dirname
+  2018-09-01 p24balk        97T /ccc/store/cont003/drf/p24balk/IGCM_OUT/LMDZORINCA
+  2018-09-01 p24balk       4.0K /ccc/store/cont003/drf/p24balk/IGCM_OUT/RESTART
+  2018-09-01 p24balk       101T /ccc/store/cont003/drf/p24balk/IGCM_OUT/IPSLCM6
   """
 
+  #  D.iteritems() -> an iterator over the (key, value) items of D
   items = (login for login, conso in logins.iteritems()
                   if conso > 0.)
 
@@ -384,6 +444,7 @@ def write_store(filename, today, logins):
       if not storedir:
         print("storedir not found for {}".format(storedir))
         break
+      #checks if the IGCMG_OUT path exist for the login. If it does, writes it in the output file
       igcm_out = os.path.join(storedir, "IGCM_OUT")
 
       if not os.path.isdir(igcm_out):
