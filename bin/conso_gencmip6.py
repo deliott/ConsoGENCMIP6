@@ -74,7 +74,6 @@ def get_dirsize(dirname):
 ########################################
 def parse_myproject(filename, project_name):
   """
-  Description of the function
   If on irene(/curie) the CCCMP file is created from ccc_myproject command
   Parse the file given by filename to get the relevant data
 
@@ -82,13 +81,13 @@ def parse_myproject(filename, project_name):
   :type filename: str
   :param project_name: name of the project (ex gen0212 or dcpcmip6)
   :type project_name : str
-  :return project: dict with info on the project, name , mahine, nb of nodes, time allocated and deadline
+  :return project: dict with info on the project, name , machine, nb of nodes, time allocated and deadline
   :rtype project: dict
-  :return logins: ditionary with the consomation associated to the login
+  :return logins: ditionary with the consumption associated to the login
   :rtype logins: dict
   :return today: date of the given ccc_myproject file
   :rtype today: datetime
-  :return total: Total hours count for the project
+  :return total: Total consumed timed in hours for the project
   :rtype total: float
   :return utheo: percentage of the theorical use of cpu time at this date
   :return ureal: percentage of the real use of cpu time at this date
@@ -175,6 +174,18 @@ def parse_myproject(filename, project_name):
 
 ########################################
 def write_param(filename, project):
+  """
+  Write param data into a file with specified path
+  Output is a jsonfile, DIR["DATA"]/OUT_CONSO_PARAM
+  If agrs.dryrun, only a print is started instead of file creation
+
+  :param filename: name/path of the file where to write the data
+  :type filename: str
+  :param project: 1st output of the parse_my_project function, with info on the project, name, \
+  machine, nb of nodes, time allocated and deadline
+  :type project: dict
+  :raises MyError: Description of my error
+  """
 
   if args.dryrun:
     print(json.dumps(project, indent=2))
@@ -190,12 +201,41 @@ def write_bilan(
   runf_mean, penf_mean, runf_std, penf_std
 ):
   """
-  Conso totale par jour
-  ---------------------
-  on garde le total, date en tete en accumulant dans le fichier :
-  OUT_CONSO_BILAN
-  """
+  Writes bilan formated data into a file with specified path
+  Output is a test file, DIR["DATA"]/OUT_CONSO_BILAN
+  If agrs.dryrun, only a print is started instead of file creation
 
+  :param filename: name/path of the file where to write the data
+  :type filename: str
+  :param today: 3rd output of the parse_my_project function,date of the given ccc_myproject file
+  :type today: datetime
+  :param total: 4th output of the parse_my_project function, total consumed timed in hours for the project
+  :type total: float
+  :param ureal: 6th output of the parse_my_project function, percentage of the real use of cpu time at this date
+  :type ureal:
+  :param utheo: 5th output of the parse_my_project function, percentage of the theorical use of cpu time at this date
+  :type utheo:
+  :param runp_mean:
+  :type runp_mean: numpy array
+  :param penp_mean:
+  :type penp_mean: numpy array
+  :param runp_std:
+  :type runp_std: numpy array
+  :param penp_std:
+  :type penp_std: numpy array
+  :param runf_mean:
+  :type runf_mean: numpy array
+  :param penf_mean:
+  :type penf_mean: numpy array
+  :param runf_std:
+  :type runf_std: numpy array
+  :param penf_std:
+  :type penf_std: numpy array
+
+  :raises MyError: Description of my error
+
+  """
+  # Using formatters to give 10, 12, 11 or 14 spaces to each set of values
   fmt_str = (
     "{:10s} {:12s} {:11s} {:11s} "
     "{:14s} {:14s} {:14s} {:14s} "
