@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # this must come first
-
+#TODO: Repair code since switched from python2 to python3 when used with plot_jobs*
 
 # standard library imports
 import socket
