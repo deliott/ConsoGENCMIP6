@@ -1,39 +1,29 @@
 import glob
 import matplotlib as mpl
 
-mpl.use('Agg')
+#mpl.use('Agg')
 import matplotlib.pyplot as plt
-from argparse import ArgumentParser
 from libconso_py37 import *
-
-def get_arguments():
-    parser = ArgumentParser()
-    parser.add_argument("-l", "--local", action="store_true",
-                        help=" select the config_local.ini file if code ran on local computer ")
-
-    return parser.parse_args()
+import bin.settings as settings
+import bin.set_config_path as set_config_path
 
 
 ########################################
 if __name__ == '__main__':
     # .. Initialization ..
     # ====================
+    # ... Config Path ...
+    # -------------------
+    settings.init()
+    set_config_path.set_config_path()
+
     # ... Command line arguments ...
     # ------------------------------
-    args = get_arguments()
+    # Supressed C.L.A.
 
-    # ... Files and directories ...
-    # -----------------------------
 
-    if args.local:
-        config_path = "/home/edupont/Documents/mesocentre/ConsoGENCMIP6_git/ConsoGENCMIP6/bin/config_conso_local.ini"
-    else:
-        config_path = "/ccc/cont003/home/gencmip6/dupontel/deploy_folder/ConsoGENCMIP6_git/ConsoGENCMIP6/bin/config_conso.ini"
-#"bin/config_conso.ini"
+    project_name, DIR, OUT = parse_config(settings.config_path)
 
-    project_name, DIR, OUT = parse_config(config_path)
-
-    #files = glob.glob("conso_*.dat")
     files = glob.glob(DIR["SAVEDATA"] + "/conso_*.dat")
 
     color = ['black', 'red', 'blue', 'green', 'orange', 'cyan', 'grey', 'brown', 'salmon', 'violet', 'yellow']
@@ -42,7 +32,7 @@ if __name__ == '__main__':
     miplist = []
     for file in files:
         print(file)
-        if args.local:
+        if set_config_path.where_we_run() == "ipsl":
             mip = file[83:91]
         else:
             mip = file[98:106]
