@@ -28,3 +28,6 @@ OUT_CONSO_UTHEO_*
 bin/*.pyc
 
 bin/__pycache__/
+
+#tests that are not operational yet.
+tests/test_where_we_run.py
