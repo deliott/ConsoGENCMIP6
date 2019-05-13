@@ -10,8 +10,10 @@ def where_we_run():
     if "irene" in socket.getfqdn():
         res = "irene"
 
-    elif "ipsl" in socket.getfqdn():
-        res = "ipsl"
+    elif "jussieu" in socket.getfqdn():
+        res = "jussieu"
+    elif "ciclad" in socket.getfqdn():
+        res = "ciclad"
     else:
         res = "default"
 
@@ -23,7 +25,7 @@ def set_config_path():
     res = ""
     if where_we_run() == "irene":
         settings.config_path = "/ccc/cont003/home/gencmip6/dupontel/deploy_folder/ConsoGENCMIP6_git/ConsoGENCMIP6/bin/config_conso.ini"
-    elif where_we_run() == "ipsl":
+    elif where_we_run() == "jussieu":
         settings.config_path = "/home/edupont/Documents/mesocentre/ConsoGENCMIP6_git/ConsoGENCMIP6/bin/config_conso_local.ini"
     else:
         settings.config_path = "\default"

@@ -32,9 +32,9 @@ if __name__ == '__main__':
     miplist = []
     for file in files:
         print(file)
-        if set_config_path.where_we_run() == "ipsl":
+        if set_config_path.where_we_run() == "jussieu":
             mip = file[83:91]
-        else:
+        elif set_config_path.where_we_run() == "irene":
             mip = file[98:106]
         miplist.append(mip)
         xx[mip] = []
