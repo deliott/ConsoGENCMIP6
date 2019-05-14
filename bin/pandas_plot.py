@@ -21,7 +21,10 @@ def get_project_name(chemin):
     >>> get_project_name("/home/edupont/data_conso/conso_anacmip6.dat")
     'anacmip6'
     """
-    return chemin[-12:-4]
+    if len(chemin) < 12:
+        raise IndexError('Path is too small to contain project_name.dat')
+    else :
+        return chemin[-12:-4]
 
 ########################################
 
@@ -43,7 +46,7 @@ if __name__ == '__main__':
     df = pd.read_table(files[0], header=None, delim_whitespace=True)
     name = get_project_name(files[0])
     df.columns = ['Date', name]
-    output_file("test.html")
+    output_file(DIR["SAVEPLOT"] + "test.html")
 
     colormap = Set3[12]
     p = figure(title="Consommation de l'allocation CMIP6", x_axis_label="Année 2018 - 2019 - 2020", y_axis_label="Irene skylake (millions d'heures)")
