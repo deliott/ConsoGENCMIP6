@@ -6,7 +6,6 @@ class TestGet_project_name(TestCase):
     def test_get_project_name(self):
         self.assertEqual(get_project_name("/home/edupont/data_conso/conso_anacmip6.dat"), 'anacmip6')
 
-
     def test_path_too_small(self):
         self.assertRaises(IndexError, get_project_name, "0")
         self.assertRaises(IndexError, get_project_name, "01")
