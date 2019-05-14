@@ -24,6 +24,9 @@ class TestGet_project_name(TestCase):
     def test_portabilite(self):
         self.assertEqual(get_project_name("/home/edupont/data_conso/conso_anacmip6.dat"), 'anacmip6')
         self.assertEqual(get_project_name("/home/eldupont/data_conso/conso_geocmip6.dat"), 'geocmip6')
-        self.assertEqual(get_project_name("/ccc/cont003/home/gencmip6/oboucher/CONSO/IRENE/conso_volcmip6.dat"), 'volcmip6')
+        self.assertEqual(get_project_name("/ccc/cont003/home/gencmip6/oboucher/CONSO/IRENE/conso_volcmip6.dat"),\
+                         'volcmip6')
+
+
 if __name__ == '__main__':
     unittest.main()
