@@ -3,7 +3,7 @@ import matplotlib as mpl
 
 #mpl.use('Agg')
 import matplotlib.pyplot as plt
-from libconso_py37 import *
+from bin.libconso_py37 import *
 import bin.settings as settings
 import bin.set_config_path as set_config_path
 
