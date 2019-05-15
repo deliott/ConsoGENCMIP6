@@ -7,6 +7,40 @@ logs are stored on /home/edupont/ccc_myproject_data
 and ccc_myproject_20190514.log is one we can work on
 """
 
+import bin.settings as settings
+import bin.set_config_path as set_config_path
+import os
+import datetime
+
+# @TODO : Thisis not a parser but somethin to get the files_to_parse's directory and list.
+class Parser:
+
+    def __init__(self):
+        settings.init()
+        # settings.path_to_ccc_myproject_raw_data
+        self.path_to_raw_data = "/default/path/"
+        # self.working_date = datetime.datetime.now().strftime('%Y%m%d')
+        self.list_of_possible_files_to_parse = []
+
+
+
+    def set_path_to_raw_data(self):
+        set_config_path.set_path_to_raw_data_for_parser()
+        self.path_to_raw_data = settings.path_to_ccc_myproject_raw_data
+
+    def get_list_of_possible_files_to_parse(self):
+        for _file in os.listdir(self.path_to_raw_data):
+            if _file.endswith('.log') and _file.startswith('ccc_myproject_20'):
+                self.list_of_possible_files_to_parse.append(_file)
+        return
+
+
+    # def open_raw_data_file(self):
+    #     open(self.path_to_raw_data, "r")
+
+# for line in my_text:
+#     outputfile.writelines(data_parser(line, reps))
+
 # def parse_myproject(filename, project_name):
 #   """
 #   If on irene(/curie) the CCCMP file is created from ccc_myproject command
