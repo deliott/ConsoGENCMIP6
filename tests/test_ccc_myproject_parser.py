@@ -50,13 +50,5 @@ class Test_CCC_MYPROJECT_Parser(TestCase):
         self.assertEqual(1, len(files))
 
 
-class Test_CCC_MYPROJECT_FileParser(TestCase):
-
-    def test_parser_init_(self):
-        file_parser = FileParser()
-        # self.assertEqual(parser.path_to_raw_data, "/default/path/")
-        # self.assertEqual(parser.list_of_possible_files_to_parse, [])
-
-
 if __name__ == '__main__':
     unittest.main()
