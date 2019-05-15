@@ -12,7 +12,7 @@ import bin.set_config_path as set_config_path
 import os
 import datetime
 
-# @TODO : Thisis not a parser but somethin to get the files_to_parse's directory and list.
+# @TODO : This is not a parser but somethin to get the files_to_parse's directory and list.
 class Parser:
 
     def __init__(self):
@@ -22,6 +22,9 @@ class Parser:
         # self.working_date = datetime.datetime.now().strftime('%Y%m%d')
         self.list_of_possible_files_to_parse = []
 
+        #init uses the defined methods in the class. Is this conventional ? 
+        self.set_path_to_raw_data()
+        self.get_list_of_possible_files_to_parse()
 
 
     def set_path_to_raw_data(self):
