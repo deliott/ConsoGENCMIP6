@@ -23,7 +23,7 @@ class TestFileParser(TestCase):
     #     self.assertEqual('/home/edupont/ccc_myproject_data/ccc_myproject_20190515.log', file)
 
 
-# @TODO : Problem with the mock to solve.
+# @TODO : Problem with the mock to solve. -- https://www.youtube.com/watch?v=ww1UsGZV8fQ
     def test_parser_init_with_mock(self):
         with mock.patch('bin.ccc_myproject_fileparser.Parser', autospec=True) as mock_Parser:
         # with mock.patch('bin.ccc_myproject_fileparser.ccc_myproject_parser.Parser') as mock_Parser:
