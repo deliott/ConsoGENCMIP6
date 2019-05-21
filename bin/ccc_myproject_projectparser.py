@@ -22,6 +22,11 @@ class ProjectParser(FileParser):
         # self.file_date = ''
         self.file_date = date(1945, 5, 8)
         self.project_deadline = date(1969, 7, 21)
+        self.has_subproject = False
+        self.subproject = dict()
+
+
+
 
     def get_project_name(self):
         """Get the name of the project from the split log of ccc_myproject.
@@ -29,7 +34,7 @@ class ProjectParser(FileParser):
         with open(self.path_to_project_file, "r") as filein:
             for ligne in filein:
                 if "Accounting" in ligne:
-                    self.project_name = ligne.split(' ')[3]
+                    self.project_name = ligne.split()[3]
                     break
 
     def get_project_machine(self):
@@ -71,10 +76,56 @@ class ProjectParser(FileParser):
                     self.project_deadline = date(int(date_deadline[0]), int(date_deadline[1]), int(date_deadline[2]))
                     break
 
+    def check_has_subproject(self):
+        """Check if the project has subprojects (ex : gencmip6 has mips).
+        Update the self.has_subproject attribute to True if there are any.
+        """
+        with open(self.path_to_project_file, "r") as filein:
+            for ligne in filein:
+                if "Login" in ligne:
+                    liste_mots = ligne.split()
+                    if liste_mots[1] == 'Account':
+                        self.has_subproject = True
+                    break
+
+    def get_subproject_namelist(self):
+        """Get the names of the project from the split log of ccc_myproject.
+        Warning : if project has no subproject, name has to be set (get_project_name() method)
+                  before running this function.
+        :returns name_list: List of the names of the subprojects.
+        """
+        name_list = []
+        if not self.has_subproject:
+            name_list.append(self.project_name)
+        else:
+            with open(self.path_to_project_file, "r") as filein:
+                store_subproject_name_at_next_line = False
+                for ligne in filein:
+                    if store_subproject_name_at_next_line:
+                        #
+                        subproject_name = ligne.split()[1]
+                        # print(subproject_name)
+                        name_list.append(subproject_name)
+                        store_subproject_name_at_next_line = False
+                        # self.subproject[subproject_name] = {} # Add new entry
+                    elif "Login" in ligne:
+                        store_subproject_name_at_next_line = True
+
+        return name_list
+
+    def set_subproject(self):
+        """Sets the subprojects name in the  subproject dictionary datastructure of the class"""
+        liste = self.get_subproject_namelist()
+        for subproject_name in liste:
+            self.subproject[subproject_name] = {} # Add new entry
+
 
 if __name__ == "__main__":
 
     print("\nBeginning of execution\n")
+    # file_to_parse = FileParser('/home/edupont/ccc_myproject_data/mock_ccc_myproject.log')
+    # project_to_parse1 = ProjectParser(self.file_to_parse.set_path_to_individual_projects_directory() +
+    #                                            "/project_1.log")
 
     # # # file_to_parse = FileParser('/home/edupont/ccc_myproject_data/mock_ccc_myproject.log')
     # file_to_parse = FileParser('/home/edupont/ccc_myproject_data/ccc_myproject_20190514.log')
