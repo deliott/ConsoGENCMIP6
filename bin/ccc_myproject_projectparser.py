@@ -6,6 +6,42 @@ from bin.ccc_myproject_fileparser import FileParser
 from datetime import date
 
 
+"""
+The objective of this parser is to create a json file with the data extracted from the project log files.
+
+output should look like this : 
+{
+  "date": "2019-05-13",
+  "projet": "gencmip6",
+  "processor_type": {
+    "Skylake": {
+      "total": 984797.89,
+      "alllocated": 27070000,
+      "sous_projets": {
+        "dcpcmip6": {
+          "logins_conso": {
+            "pierre": 752.5,
+            "paul": 125.4,
+            "jacques": 0
+          },
+          "subtotal": 877.9
+        },
+        "geocmip6": {
+          "logins_conso": {
+            "pierre": 552.4,
+            "andre": 125.4,
+            "jacques": 0
+          },
+          "subtotal": 677.8
+        }
+      }
+    }    
+  },
+  "machine": "Irene",
+  "project_deadline": "2020-05-02"
+}
+"""
+
 class ProjectParser(FileParser):
 
     def __init__(self,path_to_one_file_to_parse):
@@ -24,6 +60,7 @@ class ProjectParser(FileParser):
         self.project_deadline = date(1969, 7, 21)
         self.has_subproject = False
         self.subproject = dict()
+        self.processor_type_dict = dict()
 
 
 
@@ -114,10 +151,60 @@ class ProjectParser(FileParser):
         return name_list
 
     def set_subproject(self):
-        """Sets the subprojects name in the  subproject dictionary datastructure of the class"""
+        """Sets the subprojects name in the subproject dictionary datastructure of the class"""
+        processor_list = self.project_processor_list
         liste = self.get_subproject_namelist()
-        for subproject_name in liste:
-            self.subproject[subproject_name] = {} # Add new entry
+        for processor_name in processor_list:
+            for subproject_name in liste:
+                # self.subproject[subproject_name] = {} # Add new entry
+                self.processor_type_dict[processor_name][subproject_name] = {} # Add new entry
+
+    def set_processor_type(self):
+        self.get_processor_type_list()
+        liste = self.project_processor_list
+        for processor_type in liste:
+            self.processor_type_dict[processor_type] = {} # Add new entry
+
+
+
+
+    def set_subtotals(self):
+        """Sets the subprojects subtotal in the subproject dictionary datastructure of the class"""
+        with open(self.path_to_project_file, "r") as filein:
+            key_detected = False
+
+            for processor in self.processor_type_dict.keys():
+                if self.has_subproject:  # cas avec sous projets
+                    for key in self.processor_type_dict[processor].keys():
+                        for ligne in filein:
+                            if not key_detected:
+                                if key in ligne:
+                                    key_detected = True
+                            if not key in ligne and 'Subtotal' in ligne:
+                                sous_total = ligne.split()[1]
+                                self.subproject[key] = {'subtotal': float(sous_total)}
+                                self.processor_type_dict[processor][key] = {'subtotal': float(sous_total)}
+                                key_detected = False
+                                break
+
+                else: # cas sans sous projets
+                    for key in self.processor_type_dict[processor].keys():
+                        for ligne in filein:
+                            if not key_detected:
+                                if key in ligne:
+                                    key_detected = True
+                            if not key in ligne and 'Total' in ligne:
+                                sous_total = ligne.split()[1]
+                                self.subproject[key] = {'subtotal': float(sous_total)}
+                                self.processor_type_dict[processor][key] = {'subtotal': float(sous_total)}
+                                key_detected = False
+                                break
+
+
+
+
+
+
 
 
 if __name__ == "__main__":

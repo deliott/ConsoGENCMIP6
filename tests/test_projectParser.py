@@ -97,17 +97,80 @@ class TestProjectParser(TestCase):
         liste3_mock.sort()
         self.assertListEqual(liste3, liste3_mock)
 
+    # def test_set_subproject(self):
+    #     self.project_to_parse1.check_has_subproject()
+    #     self.project_to_parse1.set_subproject()
+    #     dict1_mock = {'dcpcmip6': {}, 'rcecmip6': {}, 'scecmip6': {}, 'pmicmip6': {}, 'devcmip6': {}}
+    #     self.assertDictEqual(self.project_to_parse1.subproject, dict1_mock)
+    #
+    #     self.project_to_parse2.check_has_subproject()
+    #     self.project_to_parse2.get_project_name()
+    #     self.project_to_parse2.set_subproject()
+    #     dict2_mock = {'gen0826': {}}
+    #     self.assertDictEqual(self.project_to_parse2.subproject, dict2_mock)
+
     def test_set_subproject(self):
         self.project_to_parse1.check_has_subproject()
+        self.project_to_parse1.set_processor_type()
         self.project_to_parse1.set_subproject()
         dict1_mock = {'dcpcmip6': {}, 'rcecmip6': {}, 'scecmip6': {}, 'pmicmip6': {}, 'devcmip6': {}}
-        self.assertDictEqual(self.project_to_parse1.subproject, dict1_mock)
+
+        print(self.project_to_parse1.processor_type_dict)
+        self.assertDictEqual(self.project_to_parse1.processor_type_dict['Skylake'], dict1_mock)
 
         self.project_to_parse2.check_has_subproject()
         self.project_to_parse2.get_project_name()
+        self.project_to_parse2.set_processor_type()
         self.project_to_parse2.set_subproject()
-        dict2_mock = {'gen0826': {}}
-        self.assertDictEqual(self.project_to_parse2.subproject, dict2_mock)
+        #
+        dict2_mock = {'Skylake': {'gen0826': {}}, 'KNL': {'gen0826': {}}}
+        self.assertDictEqual(self.project_to_parse2.processor_type_dict, dict2_mock)
+
+    def test_set_subtotals(self):
+        self.project_to_parse1.check_has_subproject()
+        self.project_to_parse1.set_processor_type()
+        self.project_to_parse1.set_subproject()
+        self.project_to_parse1.set_subtotals()
+        dict1_mock = {'dcpcmip6': {'subtotal': 665437.81},
+                      'rcecmip6': {'subtotal': 0.0},
+                      'scecmip6': {'subtotal': 61794.4},
+                      'pmicmip6': {'subtotal': 125172.41},
+                      'devcmip6': {'subtotal': 6026.07}}
+        self.assertDictEqual(self.project_to_parse1.processor_type_dict['Skylake'], dict1_mock)
+
+        self.project_to_parse2.check_has_subproject()
+        self.project_to_parse2.get_project_name()
+        self.project_to_parse2.set_processor_type()
+        self.project_to_parse2.set_subproject()
+        self.project_to_parse2.set_subtotals()
+        dict2_mock = {'KNL': {'gen0826': {'subtotal': 59460.32}}, 'Skylake': {'gen0826': {'subtotal': 6935.07}}}
+        self.assertDictEqual(self.project_to_parse2.processor_type_dict, dict2_mock)
+
+
+    # def test_get_total(self):
+    #         self.project_to_parse1.check_has_subproject()
+    #         self.project_to_parse1.set_subproject()
+    #         total = self.project_to_parse1.get_total()
+    #
+    #         self.assertEqual(total, 984797.89)
+    #
+    #         self.project_to_parse1.check_has_subproject()
+    #         self.project_to_parse1.set_subproject()
+    #         total = self.project_to_parse1.get_total()
+    #
+    #         self.assertEqual(total, 984797.89)
+
+    def test_set_processor_type(self):
+        self.project_to_parse1.check_has_subproject()
+        self.project_to_parse1.set_processor_type()
+        dict1_mock = {'Skylake': {}}
+        self.assertDictEqual(self.project_to_parse1.processor_type_dict, dict1_mock)
+
+        self.project_to_parse2.check_has_subproject()
+        # self.project_to_parse2.get_project_name()
+        self.project_to_parse2.set_processor_type()
+        dict2_mock = {'Skylake': {}, 'KNL': {}}
+        self.assertDictEqual(self.project_to_parse2.processor_type_dict, dict2_mock)
 
 
 if __name__ == '__main__':
