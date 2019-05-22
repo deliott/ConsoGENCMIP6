@@ -173,7 +173,7 @@ class ProjectParser(FileParser):
         return name_list
 
     def set_subproject(self):
-        """Sets the subprojects name in the subproject dictionary datastructure of the class"""
+        """Set the subprojects name in the subproject dictionary datastructure of the class"""
         processor_list = self.project_processor_list
         liste = self.get_subproject_namelist()
         for processor_name in processor_list:
@@ -182,13 +182,15 @@ class ProjectParser(FileParser):
                 self.processor_type_dict[processor_name][subproject_name] = {}  # Add new entry
 
     def set_processor_type(self):
+        """Add a new empty dictionary in the processor_type_dict attribute.
+         Do it for each processor type in the list project_processor_list attribute."""
         self.get_processor_type_list()
         liste = self.project_processor_list
         for processor_type in liste:
             self.processor_type_dict[processor_type] = {}  # Add new entry
 
     def set_subtotals(self):
-        """Sets the subprojects subtotal in the subproject dictionary datastructure of the class"""
+        """Set the subprojects subtotal in the subproject dictionary datastructure of the class"""
         with open(self.path_to_project_file, "r") as filein:
             key_detected = False
 
@@ -218,6 +220,32 @@ class ProjectParser(FileParser):
                                 self.processor_type_dict[processor][key] = {'subtotal': float(sous_total)}
                                 key_detected = False
                                 break
+
+    def set_total(self):
+        """Set the total consumption to each processor on a project in the processor_type_dict
+
+        has to be run after set_subtotals"""
+        with open(self.path_to_project_file, "r") as filein:
+            local_processor = ''
+            for ligne in filein:
+                if 'Accounting' in ligne:
+                    local_processor = ligne.split()[6]
+                if "Total" in ligne:
+                    total_value = float(ligne.split()[1])
+                    self.processor_type_dict[local_processor]['total'] = total_value
+
+    def set_allocated(self):
+        """Set the allocated time value to each processor on a project in the processor_type_dict
+
+        has to be run after set_subtotals"""
+        with open(self.path_to_project_file, "r") as filein:
+            local_processor = ''
+            for ligne in filein:
+                if 'Accounting' in ligne:
+                    local_processor = ligne.split()[6]
+                if "Allocated" in ligne:
+                    allocated_value = float(ligne.split()[1])
+                    self.processor_type_dict[local_processor]['allocated'] = allocated_value
 
     def set_login_for_a_subproject(self, subproject_name):
         """Set the login_conso dictionary inside the data structure for the given subproject.
@@ -269,6 +297,9 @@ class ProjectParser(FileParser):
         self.set_subproject()
 
         self.set_subtotals()
+        self.set_total()
+        self.set_allocated()
+
         self.set_login_for_all_subprojects()
 
         self.set_file_date()
@@ -320,30 +351,6 @@ if __name__ == "__main__":
     complete_project_to_parse1.set_output_name()
     string2 = json.dumps(complete_project_to_parse1.complete_dictionary,indent = 2)
     print(string2)
-    # project_to_parse2.check_has_subproject()
-    # project_to_parse2.get_project_name()
-    # project_to_parse2.set_processor_type()
-    # project_to_parse2.set_subproject()
-    # project_to_parse2.set_subtotals()
-    # print(project_to_parse2.has_subproject)
-    # project_to_parse2.set_login_for_a_subproject('gen0826')
 
-    # file_to_parse = FileParser('/home/edupont/ccc_myproject_data/mock_ccc_myproject.log')
-    # project_to_parse1 = ProjectParser(self.file_to_parse.set_path_to_individual_projects_directory() +
-    #                                            "/project_1.log")
-
-    # # # file_to_parse = FileParser('/home/edupont/ccc_myproject_data/mock_ccc_myproject.log')
-    # file_to_parse = FileParser('/home/edupont/ccc_myproject_data/ccc_myproject_20190514.log')
-    # print(file_to_parse.path_to_project_file)
-    # # print(file_to_parse.get_project_last_line())
-    # project_to_parse = ProjectParser(file_to_parse.set_path_to_individual_projects_directory() + "/project_2.log")
-    # print(project_to_parse.path_to_project_file)
-    # project_to_parse.get_project_name()
-    # print(project_to_parse.project_name)
-    # # liste = file_to_parse.path_to_file.split('/')[:-1]
-    # # print(file_to_parse.set_path_to_individual_projects_directory())
-    # #
-    # # file_to_parse.create_individual_projects_directory()
-    # # file_to_parse.copy_project_from_raw_input()
 
     print("\nEnd of execution\n")

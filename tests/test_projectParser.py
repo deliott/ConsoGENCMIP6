@@ -45,7 +45,7 @@ class TestProjectParser(TestCase):
         self.project_to_parse2.set_project_machine()
         self.assertEqual(self.project_to_parse2.project_machine, 'Irene')
 
-    def test_get_processor_type_list(self):
+    def test_set_processor_type_list(self):
         self.project_to_parse1.get_processor_type_list()
         self.assertEqual(self.project_to_parse1.project_processor_list, ['Skylake'])
 
@@ -175,6 +175,32 @@ class TestProjectParser(TestCase):
         # self.project_to_parse2.get_project_name()
         self.project_to_parse2.set_processor_type()
         dict2_mock = {'Skylake': {}, 'KNL': {}}
+        self.assertDictEqual(self.project_to_parse2.processor_type_dict, dict2_mock)
+
+    def test_set_total(self):
+        self.project_to_parse1.check_has_subproject()
+        self.project_to_parse1.set_processor_type()
+        self.project_to_parse1.set_total()
+        dict1_mock = {'Skylake': {'total': 984797.89}}
+        self.assertDictEqual(self.project_to_parse1.processor_type_dict, dict1_mock)
+
+        self.project_to_parse2.check_has_subproject()
+        self.project_to_parse2.set_processor_type()
+        self.project_to_parse2.set_total()
+        dict2_mock = {'Skylake': {'total': 6935.07}, 'KNL': {'total': 59460.32}}
+        self.assertDictEqual(self.project_to_parse2.processor_type_dict, dict2_mock)
+
+    def test_set_allocated(self):
+        self.project_to_parse1.check_has_subproject()
+        self.project_to_parse1.set_processor_type()
+        self.project_to_parse1.set_allocated()
+        dict1_mock = {'Skylake': {'allocated': 27070000.00}}
+        self.assertDictEqual(self.project_to_parse1.processor_type_dict, dict1_mock)
+
+        self.project_to_parse2.check_has_subproject()
+        self.project_to_parse2.set_processor_type()
+        self.project_to_parse2.set_allocated()
+        dict2_mock = {'Skylake': {'allocated': 40000.00}, 'KNL': {'allocated': 200000.00}}
         self.assertDictEqual(self.project_to_parse2.processor_type_dict, dict2_mock)
 
     def test_set_login_for_a_subproject(self):
@@ -334,6 +360,8 @@ class TestProjectParser(TestCase):
             'machine': 'Irene',
             'project_deadline': '2020-05-02',
             'processor_type': {'Skylake': {
+                      'total': 984797.89,
+                    'allocated': 27070000.00,
                       'dcpcmip6': {'subtotal': 665437.81,
                                    'login_conso': {
                                        'andrezwt': 0.00,
@@ -400,6 +428,8 @@ class TestProjectParser(TestCase):
             'project_deadline': '2019-11-04',
             'processor_type': {
                 'KNL': {
+                    'total': 59460.32,
+                    'allocated': 200000.00,
                     'gen0826': {
                         'login_conso': {
                             'desroche': 59460.32,
@@ -415,6 +445,8 @@ class TestProjectParser(TestCase):
                         'subtotal': 59460.32}
                 },
                 'Skylake': {
+                    'total': 6935.07,
+                    'allocated': 40000.00,
                     'gen0826': {
                         'login_conso': {
                             'desroche': 6295.58,
