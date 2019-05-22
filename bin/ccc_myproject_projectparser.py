@@ -187,20 +187,53 @@ class ProjectParser(FileParser):
                                 key_detected = False
                                 break
 
-                else: # cas sans sous projets
+                else:  # cas sans sous projets
                     for key in self.processor_type_dict[processor].keys():
                         for ligne in filein:
                             if not key_detected:
                                 if key in ligne:
                                     key_detected = True
-                            if not key in ligne and 'Total' in ligne:
+                            if key not in ligne and 'Total' in ligne:
                                 sous_total = ligne.split()[1]
                                 self.subproject[key] = {'subtotal': float(sous_total)}
                                 self.processor_type_dict[processor][key] = {'subtotal': float(sous_total)}
                                 key_detected = False
                                 break
 
+    def set_login_for_a_subproject(self, subproject_name):
+        """Set the login_conso dictionary inside the data structure for the given subproject.
+        Has to be called after self.set_subtotals()
+        Works if there are subprojects (gencmip6) else see next function"""
+        with open(self.path_to_project_file, "r") as filein:
+            # for each processor in the dictionary
 
+            for key in self.processor_type_dict.keys():
+                # create an empty dictionary to store the login conso data
+                self.processor_type_dict[key][subproject_name]['login_conso'] ={}
+                current_file_processor = ''
+
+            if self.has_subproject:
+                for ligne in filein:
+                    # first set the processor the read lines are about
+                    if "Accounting" in ligne:
+                        current_file_processor = ligne.split(' ')[6]
+                    if len(ligne.split()) > 1 and ligne.split()[1] == subproject_name :
+                        # set a new login entry in the dict and associates its consumption data
+                        self.processor_type_dict[current_file_processor][subproject_name]['login_conso'][ligne.split()[0]]\
+                            = float(ligne.split()[2])
+            else:
+                for ligne in filein:
+                    # first set the processor the read lines are about
+                    if "Accounting" in ligne:
+                        current_file_processor = ligne.split(' ')[6]
+                    # test to detect the logins lines in the project log file.
+                    #   check if lines has at least two words
+                    #  and
+                    #   check if first word is only lower case (and therefore is a login) (test is a bit weak)
+                    if len(ligne.split()) > 1 and ligne.split()[0].islower():
+                        # set a new login entry in the dict and associates its consumption data
+                        self.processor_type_dict[current_file_processor][subproject_name]['login_conso'][ligne.split()[0]] \
+                            = float(ligne.split()[1])
 
 
 
@@ -210,6 +243,17 @@ class ProjectParser(FileParser):
 if __name__ == "__main__":
 
     print("\nBeginning of execution\n")
+    # file_to_parse = FileParser('/home/edupont/ccc_myproject_data/mock_ccc_myproject.log')
+    # project_to_parse2 = ProjectParser(file_to_parse.set_path_to_individual_projects_directory() + "/project_1.log")
+    # project_to_parse2.check_has_subproject()
+    # project_to_parse2.get_project_name()
+    # project_to_parse2.set_processor_type()
+    # project_to_parse2.set_subproject()
+    # project_to_parse2.set_subtotals()
+    # print(project_to_parse2.has_subproject)
+    # project_to_parse2.set_login_for_a_subproject('gen0826')
+
+
     # file_to_parse = FileParser('/home/edupont/ccc_myproject_data/mock_ccc_myproject.log')
     # project_to_parse1 = ProjectParser(self.file_to_parse.set_path_to_individual_projects_directory() +
     #                                            "/project_1.log")

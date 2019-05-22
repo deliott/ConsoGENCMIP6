@@ -172,6 +172,63 @@ class TestProjectParser(TestCase):
         dict2_mock = {'Skylake': {}, 'KNL': {}}
         self.assertDictEqual(self.project_to_parse2.processor_type_dict, dict2_mock)
 
+    def test_set_login_for_a_subproject(self):
+        self.project_to_parse1.check_has_subproject()
+        self.project_to_parse1.set_processor_type()
+        self.project_to_parse1.set_subproject()
+        self.project_to_parse1.set_subtotals()
+        self.project_to_parse1.set_login_for_a_subproject('dcpcmip6')
+        dict1_mock = {'dcpcmip6': {'subtotal': 665437.81,
+                                   'login_conso': {
+                                       'andrezwt': 0.00,
+                                       'bobby': 0.00,
+                                       'corrine': 0.00,
+                                       'damiens': 0.00,
+                                       'p86ffas': 3444.85,
+                                       'p86ticl': 135472.06,
+                                       'quoranti': 526520.90,
+                                   }
+
+                                   },
+                      'rcecmip6': {'subtotal': 0.0},
+                      'scecmip6': {'subtotal': 61794.4},
+                      'pmicmip6': {'subtotal': 125172.41},
+                      'devcmip6': {'subtotal': 6026.07}}
+        print(self.project_to_parse1.processor_type_dict['Skylake'])
+        self.assertDictEqual(self.project_to_parse1.processor_type_dict['Skylake'], dict1_mock)
+
+        self.project_to_parse2.check_has_subproject()
+        self.project_to_parse2.get_project_name()
+        self.project_to_parse2.set_processor_type()
+        self.project_to_parse2.set_subproject()
+        self.project_to_parse2.set_subtotals()
+        self.project_to_parse2.set_login_for_a_subproject('gen0826')
+        dict2_mock = {'KNL': {'gen0826': {'login_conso': {'desroche': 59460.32,
+                                                          'derickin': 0.00,
+                                                          'pierre': 0.00,
+                                                          'p24demus': 0.00,
+                                                          'p86fisa': 0.00,
+                                                          'p86mno': 0.00,
+                                                          'p86mnop': 0.00,
+                                                          'p86fann': 0.00,
+                                                          'francesc': 0.00,
+                                                          },
+                                          'subtotal': 59460.32}},
+                      'Skylake': {'gen0826': {'login_conso': {'desroche': 6295.58,
+                                                              'derickin': 3.13,
+                                                              'pierre': 0.00,
+                                                              'p24demus': 4.00,
+                                                              'p86fisa': 4.12,
+                                                              'p86mno': 622.33,
+                                                              'p86mnop': 1.04,
+                                                              'p86fann': 4.85,
+                                                              'francesc': 0.02,
+                                                              },
+                                              'subtotal': 6935.07}}}
+
+        print(self.project_to_parse2.processor_type_dict)
+
+        self.assertDictEqual(self.project_to_parse2.processor_type_dict, dict2_mock)
 
 if __name__ == '__main__':
     unittest.main()
