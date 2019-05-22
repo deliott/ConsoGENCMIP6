@@ -24,7 +24,7 @@ class TestFileParser(TestCase):
     def test_get_project_last_line(self):
         fileparser1 = FileParser('/home/edupont/ccc_myproject_data/mock_ccc_myproject.log')
         liste1 = fileparser1.get_project_last_line()
-        self.assertEqual(liste1 ,[57, 123] )
+        self.assertEqual(liste1 ,[57, 93] )
 
         fileparser2 = FileParser('/home/edupont/ccc_myproject_data/ccc_myproject_20190514.log')
         liste2 = fileparser2.get_project_last_line()

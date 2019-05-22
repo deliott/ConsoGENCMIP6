@@ -113,8 +113,8 @@ if __name__ == "__main__":
 
     print("\nBeginning of execution\n")
 
-    # file_to_parse = FileParser('/home/edupont/ccc_myproject_data/mock_ccc_myproject.log')
-    file_to_parse = FileParser('/home/edupont/ccc_myproject_data/ccc_myproject_20190514.log')
+    file_to_parse = FileParser('/home/edupont/ccc_myproject_data/mock_ccc_myproject.log')
+    # file_to_parse = FileParser('/home/edupont/ccc_myproject_data/ccc_myproject_20190514.log')
     print(file_to_parse.path_to_file)
     print(file_to_parse.get_project_last_line())
 
