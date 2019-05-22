@@ -80,32 +80,31 @@ class FileParser:
         Not tested.
         :return: None
         """
-        beginning_of_project_line = 0
         project_number = 0
         end_of_projects_line_list = self.get_projects_last_line_list()
-        length_of_project_to_parse_list = [end_of_projects_line_list[0]] + [y - x for x, y in zip(end_of_projects_line_list, end_of_projects_line_list[1:])]
-        # length_of_project_to_parse = [y - x for x, y in zip(end_of_projects_line_list, end_of_projects_line_list[1:])]
-        print(length_of_project_to_parse_list)
+        length_of_project_to_parse_list = [end_of_projects_line_list[0]] + [x - y for x, y in
+                                                                            zip(end_of_projects_line_list[1:],
+                                                                                end_of_projects_line_list)]
+        # print(length_of_project_to_parse_list)
         try:
             raw_ccc_myproject_file = open(self.path_to_file, "r")
         except IOError:
             print("Failed to open " + self.path_to_file + " file in copy_project_from_raw_input. ")
         while len(length_of_project_to_parse_list) > 0:
             project_number = project_number + 1
-
-            print(length_of_project_to_parse_list)
-            #update of the extremities of the file
-            length_of_project_to_parse = length_of_project_to_parse_list.pop(0)
-
-
             path_to_new_file = self.set_path_to_individual_projects_directory() + '/project_' + \
                                str(project_number) + '.log'
+
+            # Update of the extremities of the file
+            length_of_project_to_parse = length_of_project_to_parse_list.pop(0)
+            # print(length_of_project_to_parse_list)
+
             try:
                 project_specific_file = open(path_to_new_file, "wt")
             except IOError:
                 print("Failed to open " + path_to_new_file + " file in copy_project_from_raw_input. ")
 
-            for ligne in range(beginning_of_project_line, length_of_project_to_parse):
+            for ligne in range(length_of_project_to_parse):
                 line_to_copy = raw_ccc_myproject_file.readline()
                 project_specific_file.write(str(line_to_copy))
             project_specific_file.close()
