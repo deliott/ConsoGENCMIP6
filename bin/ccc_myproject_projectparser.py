@@ -235,9 +235,12 @@ class ProjectParser(FileParser):
                         self.processor_type_dict[current_file_processor][subproject_name]['login_conso'][ligne.split()[0]] \
                             = float(ligne.split()[1])
 
-
-
-
+    def set_login_for_all_subprojects(self):
+        """Set the login_conso dictionary inside the data structure
+        Call of _login_for_a_subproject on all the subprojects."""
+        project_list = self.get_subproject_namelist()
+        for project in project_list:
+            self.set_login_for_a_subproject(project)
 
 
 if __name__ == "__main__":
