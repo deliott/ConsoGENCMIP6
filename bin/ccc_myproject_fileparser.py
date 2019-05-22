@@ -95,7 +95,7 @@ class FileParser:
             path_to_new_file = self.set_path_to_individual_projects_directory() + '/project_' + \
                                str(project_number) + '.log'
 
-            # Update of the extremities of the file
+            # Update of the length of the file
             length_of_project_to_parse = length_of_project_to_parse_list.pop(0)
             # print(length_of_project_to_parse_list)
 
