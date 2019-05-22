@@ -202,8 +202,8 @@ class ProjectParser(FileParser):
 
     def set_login_for_a_subproject(self, subproject_name):
         """Set the login_conso dictionary inside the data structure for the given subproject.
-        Has to be called after self.set_subtotals()
-        Works if there are subprojects (gencmip6) else see next function"""
+        Has to be called after self.set_subtotals().
+        """
         with open(self.path_to_project_file, "r") as filein:
             # for each processor in the dictionary
 
