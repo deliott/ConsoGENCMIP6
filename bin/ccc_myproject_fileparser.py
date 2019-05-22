@@ -25,7 +25,7 @@ class FileParser:
         """
         self.path_to_file = path_to_one_file_to_parse
 
-    def get_project_last_line(self):
+    def get_projects_last_line_list(self):
         """Get a list of indexes of the lines after the deadlines of a project are told"""
         end_of_project_line_list = []
 
@@ -82,25 +82,30 @@ class FileParser:
         """
         beginning_of_project_line = 0
         project_number = 0
-        end_of_project_line = self.get_project_last_line()
-
-        try :
+        end_of_projects_line_list = self.get_projects_last_line_list()
+        length_of_project_to_parse_list = [end_of_projects_line_list[0]] + [y - x for x, y in zip(end_of_projects_line_list, end_of_projects_line_list[1:])]
+        # length_of_project_to_parse = [y - x for x, y in zip(end_of_projects_line_list, end_of_projects_line_list[1:])]
+        print(length_of_project_to_parse_list)
+        try:
             raw_ccc_myproject_file = open(self.path_to_file, "r")
         except IOError:
             print("Failed to open " + self.path_to_file + " file in copy_project_from_raw_input. ")
-        while len(end_of_project_line) > 0:
+        while len(length_of_project_to_parse_list) > 0:
             project_number = project_number + 1
-            # print(end_of_project_line)
-            end_line = end_of_project_line.pop(0)
+
+            print(length_of_project_to_parse_list)
+            #update of the extremities of the file
+            length_of_project_to_parse = length_of_project_to_parse_list.pop(0)
+
 
             path_to_new_file = self.set_path_to_individual_projects_directory() + '/project_' + \
                                str(project_number) + '.log'
-            try :
+            try:
                 project_specific_file = open(path_to_new_file, "wt")
-            except  IOError:
-                print("Failed to open " + path_to_new_file +  " file in copy_project_from_raw_input. " )
+            except IOError:
+                print("Failed to open " + path_to_new_file + " file in copy_project_from_raw_input. ")
 
-            for ligne in range(beginning_of_project_line, end_line):
+            for ligne in range(beginning_of_project_line, length_of_project_to_parse):
                 line_to_copy = raw_ccc_myproject_file.readline()
                 project_specific_file.write(str(line_to_copy))
             project_specific_file.close()
@@ -113,12 +118,15 @@ if __name__ == "__main__":
 
     print("\nBeginning of execution\n")
 
-    file_to_parse = FileParser('/home/edupont/ccc_myproject_data/mock_ccc_myproject.log')
+    # file_to_parse = FileParser('/home/edupont/ccc_myproject_data/mock_ccc_myproject.log')
+    # file_to_parse = FileParser('/home/edupont/ccc_myproject_data/test_data/oboucher_ccc_myproject.txt')
+    file_to_parse = FileParser('/home/edupont/ccc_myproject_data/test_data/p86caub_ccc_myproject.txt')
     # file_to_parse = FileParser('/home/edupont/ccc_myproject_data/ccc_myproject_20190514.log')
     print(file_to_parse.path_to_file)
-    print(file_to_parse.get_project_last_line())
+    print(file_to_parse.get_projects_last_line_list())
 
     liste = file_to_parse.path_to_file.split('/')[:-1]
+    print(liste)
     print(file_to_parse.set_path_to_individual_projects_directory())
 
     file_to_parse.create_individual_projects_directory()
