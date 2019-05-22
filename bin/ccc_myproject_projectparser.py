@@ -5,6 +5,7 @@ import shutil
 from bin.ccc_myproject_fileparser import FileParser
 from datetime import date
 
+import json
 
 """
 The objective of this parser is to create a json file with the data extracted from the project log files.
@@ -42,9 +43,10 @@ output should look like this :
 }
 """
 
+
 class ProjectParser(FileParser):
 
-    def __init__(self,path_to_one_file_to_parse):
+    def __init__(self, path_to_one_file_to_parse):
         """
         :param path_to_one_file_to_parse: absolute path of the file that will be parsed, here it is the last one.
         """
@@ -56,16 +58,17 @@ class ProjectParser(FileParser):
         self.project_machine = ""
         self.project_processor_list = []
         # self.file_date = ''
-        self.file_date = date(1945, 5, 8)
-        self.project_deadline = date(1969, 7, 21)
+        self.file_date = '1945-05-08'
+        self.project_deadline = '1969-07-21'
         self.has_subproject = False
         self.subproject = dict()
         self.processor_type_dict = dict()
 
+        self.complete_dictionary = dict()
 
+        self.output_name = 'default_output_name'
 
-
-    def get_project_name(self):
+    def set_project_name(self):
         """Get the name of the project from the split log of ccc_myproject.
         """
         with open(self.path_to_project_file, "r") as filein:
@@ -74,7 +77,7 @@ class ProjectParser(FileParser):
                     self.project_name = ligne.split()[3]
                     break
 
-    def get_project_machine(self):
+    def set_project_machine(self):
         """Get the name of the machine on which the project is ran from the splitted log of ccc_myproject.
         """
         with open(self.path_to_project_file, "r") as filein:
@@ -91,26 +94,48 @@ class ProjectParser(FileParser):
                 if "Accounting" in ligne:
                     self.project_processor_list.append(ligne.split(' ')[6])
 
-    def get_file_date(self):
+    # def set_file_date(self):
+    #     """Get the date of the given project log.
+    #     """
+    #     with open(self.path_to_project_file, "r") as filein:
+    #         for ligne in filein:
+    #             if "Accounting" in ligne:
+    #                 # Convert yyyy-mm-dd format into datetime
+    #                 date_projet = ligne.split(' ')[8].split('-')
+    #                 self.file_date = date(int(date_projet[0]), int(date_projet[1]), int(date_projet[2]))
+    #                 break
+
+    def set_file_date(self):
         """Get the date of the given project log.
         """
         with open(self.path_to_project_file, "r") as filein:
             for ligne in filein:
                 if "Accounting" in ligne:
                     # Convert yyyy-mm-dd format into datetime
-                    date_projet = ligne.split(' ')[8].split('-')
-                    self.file_date = date(int(date_projet[0]), int(date_projet[1]), int(date_projet[2]))
+                    date_projet = ligne.split(' ')[8]
+                    self.file_date = date_projet.strip()
                     break
 
-    def get_project_deadline(self):
+    # def set_project_deadline(self):
+    #     """Get the deadline of the given project.
+    #     """
+    #     with open(self.path_to_project_file, "r") as filein:
+    #         for ligne in reversed(list(filein)):
+    #             if "deadline" in ligne:
+    #                 # Convert yyyy-mm-dd format into datetime
+    #                 date_deadline = ligne.split(' ')[2].split('-')
+    #                 self.project_deadline = date(int(date_deadline[0]), int(date_deadline[1]), int(date_deadline[2]))
+    #                 break
+
+    def set_project_deadline(self):
         """Get the deadline of the given project.
         """
         with open(self.path_to_project_file, "r") as filein:
             for ligne in reversed(list(filein)):
                 if "deadline" in ligne:
                     # Convert yyyy-mm-dd format into datetime
-                    date_deadline = ligne.split(' ')[2].split('-')
-                    self.project_deadline = date(int(date_deadline[0]), int(date_deadline[1]), int(date_deadline[2]))
+                    date_deadline = ligne.split(' ')[2]
+                    self.project_deadline = date_deadline.strip()
                     break
 
     def check_has_subproject(self):
@@ -139,12 +164,9 @@ class ProjectParser(FileParser):
                 store_subproject_name_at_next_line = False
                 for ligne in filein:
                     if store_subproject_name_at_next_line:
-                        #
                         subproject_name = ligne.split()[1]
-                        # print(subproject_name)
                         name_list.append(subproject_name)
                         store_subproject_name_at_next_line = False
-                        # self.subproject[subproject_name] = {} # Add new entry
                     elif "Login" in ligne:
                         store_subproject_name_at_next_line = True
 
@@ -157,16 +179,13 @@ class ProjectParser(FileParser):
         for processor_name in processor_list:
             for subproject_name in liste:
                 # self.subproject[subproject_name] = {} # Add new entry
-                self.processor_type_dict[processor_name][subproject_name] = {} # Add new entry
+                self.processor_type_dict[processor_name][subproject_name] = {}  # Add new entry
 
     def set_processor_type(self):
         self.get_processor_type_list()
         liste = self.project_processor_list
         for processor_type in liste:
-            self.processor_type_dict[processor_type] = {} # Add new entry
-
-
-
+            self.processor_type_dict[processor_type] = {}  # Add new entry
 
     def set_subtotals(self):
         """Sets the subprojects subtotal in the subproject dictionary datastructure of the class"""
@@ -180,7 +199,7 @@ class ProjectParser(FileParser):
                             if not key_detected:
                                 if key in ligne:
                                     key_detected = True
-                            if not key in ligne and 'Subtotal' in ligne:
+                            if key not in ligne and 'Subtotal' in ligne:
                                 sous_total = ligne.split()[1]
                                 self.subproject[key] = {'subtotal': float(sous_total)}
                                 self.processor_type_dict[processor][key] = {'subtotal': float(sous_total)}
@@ -209,7 +228,7 @@ class ProjectParser(FileParser):
 
             for key in self.processor_type_dict.keys():
                 # create an empty dictionary to store the login conso data
-                self.processor_type_dict[key][subproject_name]['login_conso'] ={}
+                self.processor_type_dict[key][subproject_name]['login_conso'] = {}
                 current_file_processor = ''
 
             if self.has_subproject:
@@ -217,10 +236,10 @@ class ProjectParser(FileParser):
                     # first set the processor the read lines are about
                     if "Accounting" in ligne:
                         current_file_processor = ligne.split(' ')[6]
-                    if len(ligne.split()) > 1 and ligne.split()[1] == subproject_name :
+                    if len(ligne.split()) > 1 and ligne.split()[1] == subproject_name:
                         # set a new login entry in the dict and associates its consumption data
-                        self.processor_type_dict[current_file_processor][subproject_name]['login_conso'][ligne.split()[0]]\
-                            = float(ligne.split()[2])
+                        self.processor_type_dict[current_file_processor]\
+                            [subproject_name]['login_conso'][ligne.split()[0]] = float(ligne.split()[2])
             else:
                 for ligne in filein:
                     # first set the processor the read lines are about
@@ -232,8 +251,8 @@ class ProjectParser(FileParser):
                     #   check if first word is only lower case (and therefore is a login) (test is a bit weak)
                     if len(ligne.split()) > 1 and ligne.split()[0].islower():
                         # set a new login entry in the dict and associates its consumption data
-                        self.processor_type_dict[current_file_processor][subproject_name]['login_conso'][ligne.split()[0]] \
-                            = float(ligne.split()[1])
+                        self.processor_type_dict[current_file_processor]\
+                            [subproject_name]['login_conso'][ligne.split()[0]] = float(ligne.split()[1])
 
     def set_login_for_all_subprojects(self):
         """Set the login_conso dictionary inside the data structure
@@ -242,12 +261,65 @@ class ProjectParser(FileParser):
         for project in project_list:
             self.set_login_for_a_subproject(project)
 
+    def build_complete_dictionary(self):
+
+        self.check_has_subproject()
+        self.set_project_name()
+        self.set_processor_type()
+        self.set_subproject()
+
+        self.set_subtotals()
+        self.set_login_for_all_subprojects()
+
+        self.set_file_date()
+        self.set_project_deadline()
+        self.set_project_machine()
+
+        self.complete_dictionary['date'] = self.file_date
+        self.complete_dictionary['project'] = self.project_name
+        self.complete_dictionary['project_deadline'] = self.project_deadline
+        self.complete_dictionary['machine'] = self.project_machine
+        self.complete_dictionary['processor_type'] = self.processor_type_dict
+
+    def set_output_name(self):
+        """Set the output name attribute before dumping the data structure to a .json file"""
+        self.output_name = self.project_machine + '_' + self.project_name + '_' \
+                           + ''.join(self.file_date.split('-')) + '.json'
+
+    def get_output_path(self):
+
+        outfile = '/'.join(self.path_to_project_file.split('/')[:-1]) + '/' + self.output_name
+        return outfile
+
+    def dump_dict_to_json(self):
+        """dumps the complete dictionary to a json file.
+        requires the name to be set before."""
+        path = self.get_output_path()
+        with open(path, 'w') as outfile:
+            json.dump(self.complete_dictionary, outfile)
 
 if __name__ == "__main__":
 
     print("\nBeginning of execution\n")
-    # file_to_parse = FileParser('/home/edupont/ccc_myproject_data/mock_ccc_myproject.log')
-    # project_to_parse2 = ProjectParser(file_to_parse.set_path_to_individual_projects_directory() + "/project_1.log")
+    file_to_parse = FileParser('/home/edupont/ccc_myproject_data/mock_ccc_myproject.log')
+    project_to_parse2 = ProjectParser(file_to_parse.set_path_to_individual_projects_directory() + "/project_1.log")
+
+
+    project_to_parse2.build_complete_dictionary()
+
+    project_to_parse2.set_output_name()
+
+    string = json.dumps(project_to_parse2.complete_dictionary,indent = 2)
+    # print(string)
+
+    # project_to_parse2.dump_dict_to_json()
+
+    complete_file_to_parse = FileParser('/home/edupont/ccc_myproject_data/ccc_myproject_20190515.log')
+    complete_project_to_parse1 = ProjectParser(complete_file_to_parse.set_path_to_individual_projects_directory() + "/project_1.log")
+    complete_project_to_parse1.build_complete_dictionary()
+    complete_project_to_parse1.set_output_name()
+    string2 = json.dumps(complete_project_to_parse1.complete_dictionary,indent = 2)
+    print(string2)
     # project_to_parse2.check_has_subproject()
     # project_to_parse2.get_project_name()
     # project_to_parse2.set_processor_type()
@@ -255,7 +327,6 @@ if __name__ == "__main__":
     # project_to_parse2.set_subtotals()
     # print(project_to_parse2.has_subproject)
     # project_to_parse2.set_login_for_a_subproject('gen0826')
-
 
     # file_to_parse = FileParser('/home/edupont/ccc_myproject_data/mock_ccc_myproject.log')
     # project_to_parse1 = ProjectParser(self.file_to_parse.set_path_to_individual_projects_directory() +
