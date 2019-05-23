@@ -106,22 +106,23 @@ class TimeSeriesConcatenator():
             # print('la série temporelle : ', self.time_series_dict)
 
 
-# @TODO complete this fonction and adapt the data structure
     def suppress_zeroes_from_timeseries(self):
-        for dates in self.time_series_dict.keys():
-            print('\n' + dates)
-            for processor_type in self.time_series_dict[dates]['processor_type'].keys():
-                print(processor_type)
-                test = list(self.time_series_dict[dates]['processor_type'][processor_type].keys())
-                test.remove('total')
-                test.remove('allocated')
-                subproject = test.pop()
 
-                login_list = self.time_series_dict[dates]['processor_type'][processor_type][subproject]['login_conso'].keys()
-                for login in login_list:
-                    if self.time_series_dict[dates]['processor_type'][processor_type][subproject]['login_conso'][login] == 0.0 :
-                        print('    ', login)
-                        del self.time_series_dict[dates]['processor_type'][processor_type][subproject]['login_conso'][login]
+        temp_dict = self.time_series_dict.copy()
+
+        for dates in self.time_series_dict.keys():
+            # print('\n' + dates)
+            for processor_type in self.time_series_dict[dates]['processor_type'].keys():
+                # print(processor_type)
+                sub_project_keylist = self.time_series_dict[dates]['processor_type'][processor_type]['sous_projet'].keys()
+                for sub_project_name in sub_project_keylist:
+
+                    # print(list(self.time_series_dict[dates]['processor_type'][processor_type]['sous_projet'][sub_project_name]['login_conso'].items()))
+                    for login in list(self.time_series_dict[dates]['processor_type'][processor_type]['sous_projet'][sub_project_name]['login_conso'].keys()):
+                        value = self.time_series_dict[dates]['processor_type'][processor_type]['sous_projet'][sub_project_name]['login_conso'][login]
+                        if value == 0.0:
+                            # print('         deleted login : ', login)
+                            del temp_dict[dates]['processor_type'][processor_type]['sous_projet'][sub_project_name]['login_conso'][login]
 
     def get_timeseries_name(self):
         """
@@ -171,6 +172,7 @@ if __name__ == "__main__":
     print("\nBeginning of execution\n")
     mock_concat = TimeSeriesConcatenator('/home/edupont/ccc_myproject_data/mocks/mock_time_series')
     mock_concat.create_timeseries()
+    mock_concat.suppress_zeroes_from_timeseries()
     mock_concat.dump_dict_to_json()
 
     gencmip6_concat = TimeSeriesConcatenator('/home/edupont/ccc_myproject_data/time_series_gencmip6')

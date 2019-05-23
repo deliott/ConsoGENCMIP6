@@ -236,17 +236,17 @@ class TestTimeSeriesConcatenator(TestCase):
         }
         self.assertDictEqual(self.mock_concat.time_series_dict, mock_timeseries_20190513_20190514_20190515)
 
-    # def test_suppress_zeroes_from_timeseries(self):
-    #     self.mock_concat.create_timeseries()
-    #     self.mock_concat.suppress_zeroes_from_timeseries()
-    #
-    #     path_to_mock_timeseries_without_zeroes = "/home/edupont/ccc_myproject_data/mocks/mock_time_series/timeseries_gen0826_Irene_from_20190513_to_20190515_clean.json"
-    #     with open(path_to_mock_timeseries_without_zeroes) as file_object:
-    #         # store file data in object
-    #         mock_clean_timeseries = json.load(file_object)
-    #
-    #
-    #     self.assertDictEqual(mock_clean_timeseries, self.mock_concat.time_series_dict)
+    def test_suppress_zeroes_from_timeseries(self):
+        self.mock_concat.create_timeseries()
+        self.mock_concat.suppress_zeroes_from_timeseries()
+
+        path_to_mock_timeseries_without_zeroes = "/home/edupont/ccc_myproject_data/mocks/mock_time_series/timeseries_gen0826_Irene_from_20190513_to_20190515_without_zeroes.json"
+        with open(path_to_mock_timeseries_without_zeroes) as file_object:
+            # store file data in object
+            mock_clean_timeseries = json.load(file_object)
+
+
+        self.assertDictEqual(mock_clean_timeseries, self.mock_concat.time_series_dict)
 
 
 
