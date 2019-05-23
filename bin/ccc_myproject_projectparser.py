@@ -94,17 +94,6 @@ class ProjectParser(FileParser):
                 if "Accounting" in ligne:
                     self.project_processor_list.append(ligne.split(' ')[6])
 
-    # def set_file_date(self):
-    #     """Get the date of the given project log.
-    #     """
-    #     with open(self.path_to_project_file, "r") as filein:
-    #         for ligne in filein:
-    #             if "Accounting" in ligne:
-    #                 # Convert yyyy-mm-dd format into datetime
-    #                 date_projet = ligne.split(' ')[8].split('-')
-    #                 self.file_date = date(int(date_projet[0]), int(date_projet[1]), int(date_projet[2]))
-    #                 break
-
     def set_file_date(self):
         """Get the date of the given project log.
         """
@@ -115,17 +104,6 @@ class ProjectParser(FileParser):
                     date_projet = ligne.split(' ')[8]
                     self.file_date = date_projet.strip()
                     break
-
-    # def set_project_deadline(self):
-    #     """Get the deadline of the given project.
-    #     """
-    #     with open(self.path_to_project_file, "r") as filein:
-    #         for ligne in reversed(list(filein)):
-    #             if "deadline" in ligne:
-    #                 # Convert yyyy-mm-dd format into datetime
-    #                 date_deadline = ligne.split(' ')[2].split('-')
-    #                 self.project_deadline = date(int(date_deadline[0]), int(date_deadline[1]), int(date_deadline[2]))
-    #                 break
 
     def set_project_deadline(self):
         """Get the deadline of the given project.
@@ -250,6 +228,7 @@ class ProjectParser(FileParser):
     def set_login_for_a_subproject(self, subproject_name):
         """Set the login_conso dictionary inside the data structure for the given subproject.
         Has to be called after self.set_subtotals().
+        Modify the processor_type_dict attribute
         """
         with open(self.path_to_project_file, "r") as filein:
             # for each processor in the dictionary
@@ -332,25 +311,36 @@ class ProjectParser(FileParser):
 if __name__ == "__main__":
 
     print("\nBeginning of execution\n")
-    file_to_parse = FileParser('/home/edupont/ccc_myproject_data/mock_ccc_myproject.log')
+    # file_to_parse = FileParser('/home/edupont/ccc_myproject_data/mocks/mock_ccc_myproject.log')
+    # file_to_parse = FileParser('/home/edupont/ccc_myproject_data/mocks/mock_ccc_myproject_20190514.log')
+    file_to_parse = FileParser('/home/edupont/ccc_myproject_data/ccc_myproject_20190516.log')
     project_to_parse2 = ProjectParser(file_to_parse.set_path_to_individual_projects_directory() + "/project_1.log")
-
-
     project_to_parse2.build_complete_dictionary()
 
     project_to_parse2.set_output_name()
 
-    string = json.dumps(project_to_parse2.complete_dictionary,indent = 2)
+    # string = json.dumps(project_to_parse2.complete_dictionary, indent=2)
     # print(string)
+    project_to_parse2.dump_dict_to_json()
 
-    # project_to_parse2.dump_dict_to_json()
+    # complete_file_to_parse = FileParser('/home/edupont/ccc_myproject_data/ccc_myproject_20190515.log')
 
-    complete_file_to_parse = FileParser('/home/edupont/ccc_myproject_data/ccc_myproject_20190515.log')
-    complete_project_to_parse1 = ProjectParser(complete_file_to_parse.set_path_to_individual_projects_directory() + "/project_1.log")
+    complete_file_to_parse = FileParser('/home/edupont/ccc_myproject_data/test_data/p86caub_ccc_myproject.txt')
+    complete_project_to_parse1 = ProjectParser(complete_file_to_parse.set_path_to_individual_projects_directory() + "/project_2.log")
     complete_project_to_parse1.build_complete_dictionary()
     complete_project_to_parse1.set_output_name()
-    string2 = json.dumps(complete_project_to_parse1.complete_dictionary,indent = 2)
-    print(string2)
+    # string2 = json.dumps(complete_project_to_parse1.complete_dictionary, indent=2)
+    # print(string2)
+    complete_project_to_parse1.dump_dict_to_json()
+
+    # for i in range(1,8):
+    #     complete_file_to_parse = FileParser('/home/edupont/ccc_myproject_data/test_data/p86caub_ccc_myproject.txt')
+    #     complete_project_to_parse1 = ProjectParser(complete_file_to_parse.set_path_to_individual_projects_directory() + "/project_" + str(i) + ".log")
+    #     complete_project_to_parse1.build_complete_dictionary()
+    #     complete_project_to_parse1.set_output_name()
+    #     # string2 = json.dumps(complete_project_to_parse1.complete_dictionary, indent=2)
+    #     # print(string2)
+    #     complete_project_to_parse1.dump_dict_to_json()
 
 
     print("\nEnd of execution\n")
