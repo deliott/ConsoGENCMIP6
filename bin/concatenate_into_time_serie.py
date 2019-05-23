@@ -105,13 +105,23 @@ class TimeSeriesConcatenator():
             self.add_dailydict_to_timeseries()
             # print('la série temporelle : ', self.time_series_dict)
 
+
+# @TODO complete this fonction and adapt the data structure
     def suppress_zeroes_from_timeseries(self):
         for dates in self.time_series_dict.keys():
-            print('\n', dates)
+            print('\n' + dates)
             for processor_type in self.time_series_dict[dates]['processor_type'].keys():
                 print(processor_type)
-                for subproject in self.time_series_dict[dates]['processor_type'][processor_type].keys():
-                    print(subproject, '\nxxxXXXxxx')
+                test = list(self.time_series_dict[dates]['processor_type'][processor_type].keys())
+                test.remove('total')
+                test.remove('allocated')
+                subproject = test.pop()
+
+                login_list = self.time_series_dict[dates]['processor_type'][processor_type][subproject]['login_conso'].keys()
+                for login in login_list:
+                    if self.time_series_dict[dates]['processor_type'][processor_type][subproject]['login_conso'][login] == 0.0 :
+                        print('    ', login)
+                        del self.time_series_dict[dates]['processor_type'][processor_type][subproject]['login_conso'][login]
 
     def get_timeseries_name(self):
         """
