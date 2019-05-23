@@ -155,9 +155,10 @@ class ProjectParser(FileParser):
         processor_list = self.project_processor_list
         liste = self.get_subproject_namelist()
         for processor_name in processor_list:
+            self.processor_type_dict[processor_name]['sous_projet'] = {}
             for subproject_name in liste:
                 # self.subproject[subproject_name] = {} # Add new entry
-                self.processor_type_dict[processor_name][subproject_name] = {}  # Add new entry
+                self.processor_type_dict[processor_name]['sous_projet'][subproject_name] = {}  # Add new entry
 
     def set_processor_type(self):
         """Add a new empty dictionary in the processor_type_dict attribute.
@@ -172,9 +173,9 @@ class ProjectParser(FileParser):
         with open(self.path_to_project_file, "r") as filein:
             key_detected = False
 
-            for processor in self.processor_type_dict.keys():
+            for processor_name in self.processor_type_dict.keys():
                 if self.has_subproject:  # cas avec sous projets
-                    for key in self.processor_type_dict[processor].keys():
+                    for key in self.processor_type_dict[processor_name]['sous_projet'].keys():
                         for ligne in filein:
                             if not key_detected:
                                 if key in ligne:
@@ -182,12 +183,12 @@ class ProjectParser(FileParser):
                             if key not in ligne and 'Subtotal' in ligne:
                                 sous_total = ligne.split()[1]
                                 self.subproject[key] = {'subtotal': float(sous_total)}
-                                self.processor_type_dict[processor][key] = {'subtotal': float(sous_total)}
+                                self.processor_type_dict[processor_name]['sous_projet'][key] = {'subtotal': float(sous_total)}
                                 key_detected = False
                                 break
 
                 else:  # cas sans sous projets
-                    for key in self.processor_type_dict[processor].keys():
+                    for key in self.processor_type_dict[processor_name]['sous_projet'].keys():
                         for ligne in filein:
                             if not key_detected:
                                 if key in ligne:
@@ -195,7 +196,7 @@ class ProjectParser(FileParser):
                             if key not in ligne and 'Total' in ligne:
                                 sous_total = ligne.split()[1]
                                 self.subproject[key] = {'subtotal': float(sous_total)}
-                                self.processor_type_dict[processor][key] = {'subtotal': float(sous_total)}
+                                self.processor_type_dict[processor_name]['sous_projet'][key] = {'subtotal': float(sous_total)}
                                 key_detected = False
                                 break
 
@@ -233,9 +234,9 @@ class ProjectParser(FileParser):
         with open(self.path_to_project_file, "r") as filein:
             # for each processor in the dictionary
 
-            for key in self.processor_type_dict.keys():
+            for processor_name in self.processor_type_dict.keys():
                 # create an empty dictionary to store the login conso data
-                self.processor_type_dict[key][subproject_name]['login_conso'] = {}
+                self.processor_type_dict[processor_name]['sous_projet'][subproject_name]['login_conso'] = {}
                 current_file_processor = ''
 
             if self.has_subproject:
@@ -245,7 +246,7 @@ class ProjectParser(FileParser):
                         current_file_processor = ligne.split(' ')[6]
                     if len(ligne.split()) > 1 and ligne.split()[1] == subproject_name:
                         # set a new login entry in the dict and associates its consumption data
-                        self.processor_type_dict[current_file_processor]\
+                        self.processor_type_dict[current_file_processor]['sous_projet']\
                             [subproject_name]['login_conso'][ligne.split()[0]] = float(ligne.split()[2])
             else:
                 for ligne in filein:
@@ -258,7 +259,7 @@ class ProjectParser(FileParser):
                     #   check if first word is only lower case (and therefore is a login) (test is a bit weak)
                     if len(ligne.split()) > 1 and ligne.split()[0].islower():
                         # set a new login entry in the dict and associates its consumption data
-                        self.processor_type_dict[current_file_processor]\
+                        self.processor_type_dict[current_file_processor]['sous_projet']\
                             [subproject_name]['login_conso'][ligne.split()[0]] = float(ligne.split()[1])
 
     def set_login_for_all_subprojects(self):
@@ -312,9 +313,9 @@ if __name__ == "__main__":
 
     print("\nBeginning of execution\n")
     # file_to_parse = FileParser('/home/edupont/ccc_myproject_data/mocks/mock_ccc_myproject.log')
-    # file_to_parse = FileParser('/home/edupont/ccc_myproject_data/mocks/mock_ccc_myproject_20190514.log')
-    file_to_parse = FileParser('/home/edupont/ccc_myproject_data/ccc_myproject_20190516.log')
-    project_to_parse2 = ProjectParser(file_to_parse.set_path_to_individual_projects_directory() + "/project_1.log")
+    file_to_parse = FileParser('/home/edupont/ccc_myproject_data/mocks/mock_ccc_myproject_20190514.log')
+    # file_to_parse = FileParser('/home/edupont/ccc_myproject_data/ccc_myproject_20190516.log')
+    project_to_parse2 = ProjectParser(file_to_parse.set_path_to_individual_projects_directory() + "/project_2.log")
     project_to_parse2.build_complete_dictionary()
 
     project_to_parse2.set_output_name()
