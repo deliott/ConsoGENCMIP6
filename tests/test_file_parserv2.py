@@ -22,7 +22,7 @@ class TestFileParser(TestCase):
         self.assertEqual('path', file)
 
     def test_get_projects_last_line_list(self):
-        fileparser1 = FileParser('/home/edupont/ccc_myproject_data/mock_ccc_myproject.log')
+        fileparser1 = FileParser('/home/edupont/ccc_myproject_data/mocks/mock_ccc_myproject.log')
         liste1 = fileparser1.get_projects_last_line_list()
         self.assertEqual(liste1 ,[57, 93, 121] )
 
@@ -35,9 +35,9 @@ class TestFileParser(TestCase):
         # self.assertEqual(liste2, [])
 
     def test_set_path_to_individual_projects_directory(self):
-        fileparser1 = FileParser('/home/edupont/ccc_myproject_data/mock_ccc_myproject.log')
+        fileparser1 = FileParser('/home/edupont/ccc_myproject_data/mocks/mock_ccc_myproject.log')
         self.assertEqual(fileparser1.set_path_to_individual_projects_directory(),\
-                         '/home/edupont/ccc_myproject_data/mock_ccc_myproject')
+                         '/home/edupont/ccc_myproject_data/mocks/mock_ccc_myproject')
 
         fileparser2 = FileParser('/home/eldupont/ccc_myproject_data/ccc_myproject_20190514.log')
         self.assertEqual(fileparser2.set_path_to_individual_projects_directory(), \

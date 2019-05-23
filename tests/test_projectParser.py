@@ -10,12 +10,12 @@ class TestProjectParser(TestCase):
 
     def setUp(self) -> None:
 
-        self.empty_file_to_parse = FileParser('/home/edupont/ccc_myproject_data/mock_ccc_myproject.log')
+        self.empty_file_to_parse = FileParser('/home/edupont/ccc_myproject_data/mocks/mock_ccc_myproject.log')
         self.empty_project_to_parse = ProjectParser(self.empty_file_to_parse.set_path_to_individual_projects_directory() +
                                                "/project_1.log")
 
         # @TODO : check if we need to import Parent and Child classes or if just Child is enough.
-        self.file_to_parse = FileParser('/home/edupont/ccc_myproject_data/mock_ccc_myproject.log')
+        self.file_to_parse = FileParser('/home/edupont/ccc_myproject_data/mocks/mock_ccc_myproject.log')
         self.project_to_parse1 = ProjectParser(self.file_to_parse.set_path_to_individual_projects_directory() +
                                                "/project_1.log")
         self.project_to_parse2 = ProjectParser(self.file_to_parse.set_path_to_individual_projects_directory() +
@@ -493,7 +493,7 @@ class TestProjectParser(TestCase):
         self.project_to_parse1.set_project_machine()
         self.project_to_parse1.set_output_name()
         path1 = self.project_to_parse1.get_output_path()
-        self.assertEqual(path1, '/home/edupont/ccc_myproject_data/mock_ccc_myproject/Irene_gencmip6_20190513.json')
+        self.assertEqual(path1, '/home/edupont/ccc_myproject_data/mocks/mock_ccc_myproject/Irene_gencmip6_20190513.json')
 
         self.complete_project_to_parse.set_file_date()
         self.complete_project_to_parse.set_project_name()
@@ -505,11 +505,11 @@ class TestProjectParser(TestCase):
 
         pathe = self.empty_project_to_parse.get_output_path()
 
-        self.assertEqual(pathe, '/home/edupont/ccc_myproject_data/mock_ccc_myproject/default_output_name')
+        self.assertEqual(pathe, '/home/edupont/ccc_myproject_data/mocks/mock_ccc_myproject/default_output_name')
 
         self.empty_project_to_parse.set_output_name()
         pathe = self.empty_project_to_parse.get_output_path()
-        self.assertEqual(pathe, '/home/edupont/ccc_myproject_data/mock_ccc_myproject/__19450508.json')
+        self.assertEqual(pathe, '/home/edupont/ccc_myproject_data/mocks/mock_ccc_myproject/__19450508.json')
 
     def test_dump_dict_to_json(self):
         pass
