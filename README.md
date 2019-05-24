@@ -17,6 +17,11 @@ Two cron are currently runing to follow the computing time ([Figure 1]) and the 
 [//]: # (A cron is launched by the from the igcmg account on TGCC. It executes the ccc_myproject and ccc_mpp commands. Their output is stored and sent to ciclad. )
 ![Figure 1](UML/cron_consmation_description.png?raw=true)
 
+Computing Time Monitoring is being revised from scratch to ensure better maintainability. 
+First, ccc_myproject logs are being stored. Then a file parsers splits the logs between the differents projects. The projects log files are the parsed and the output is stored in structured files. 
+
+These structured files will be used for data analysis an vizualization.
+
 ###### 2) Runing and Pending Jobs Monitoring
 [//]: # (Python scripts are executed to plot the different graphs required to manage the CPU and memory usage on the computation centers. )
 ![Figure 2](UML/cron_job_description.png?raw=true)
