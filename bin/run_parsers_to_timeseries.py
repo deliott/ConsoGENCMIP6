@@ -31,7 +31,7 @@ def get_list_of_projects(path):
 
     liste = os.listdir(path)
     liste_of_files = []
-    for name in liste :
+    for name in liste:
         if name.endswith('.log'):
             liste_of_files.append(name)
     return liste_of_files
