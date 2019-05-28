@@ -309,39 +309,30 @@ class ProjectParser(FileParser):
         with open(path, 'w') as outfile:
             json.dump(self.complete_dictionary, outfile)
 
-if __name__ == "__main__":
-
-    print("\nBeginning of execution\n")
-    # file_to_parse = FileParser('/home/edupont/ccc_myproject_data/mocks/mock_ccc_myproject.log')
-    file_to_parse = FileParser('/home/edupont/ccc_myproject_data/mocks/mock_ccc_myproject_20190514.log')
-    # file_to_parse = FileParser('/home/edupont/ccc_myproject_data/ccc_myproject_20190516.log')
-    project_to_parse2 = ProjectParser(file_to_parse.set_path_to_individual_projects_directory() + "/project_2.log")
-    project_to_parse2.build_complete_dictionary()
-
-    project_to_parse2.set_output_name()
-
-    # string = json.dumps(project_to_parse2.complete_dictionary, indent=2)
-    # print(string)
-    project_to_parse2.dump_dict_to_json()
-
-    # complete_file_to_parse = FileParser('/home/edupont/ccc_myproject_data/ccc_myproject_20190515.log')
-
-    complete_file_to_parse = FileParser('/home/edupont/ccc_myproject_data/test_data/p86caub_ccc_myproject.txt')
-    complete_project_to_parse1 = ProjectParser(complete_file_to_parse.set_path_to_individual_projects_directory() + "/project_2.log")
-    complete_project_to_parse1.build_complete_dictionary()
-    complete_project_to_parse1.set_output_name()
-    # string2 = json.dumps(complete_project_to_parse1.complete_dictionary, indent=2)
-    # print(string2)
-    complete_project_to_parse1.dump_dict_to_json()
-
-    # for i in range(1,8):
-    #     complete_file_to_parse = FileParser('/home/edupont/ccc_myproject_data/test_data/p86caub_ccc_myproject.txt')
-    #     complete_project_to_parse1 = ProjectParser(complete_file_to_parse.set_path_to_individual_projects_directory() + "/project_" + str(i) + ".log")
-    #     complete_project_to_parse1.build_complete_dictionary()
-    #     complete_project_to_parse1.set_output_name()
-    #     # string2 = json.dumps(complete_project_to_parse1.complete_dictionary, indent=2)
-    #     # print(string2)
-    #     complete_project_to_parse1.dump_dict_to_json()
-
-
-    print("\nEnd of execution\n")
+# if __name__ == "__main__":
+#
+#     print("\nBeginning of execution\n")
+#     # file_to_parse = FileParser('/home/edupont/ccc_myproject_data/mocks/mock_ccc_myproject.log')
+#     file_to_parse = FileParser('/home/edupont/ccc_myproject_data/mocks/mock_ccc_myproject_20190514.log')
+#     # file_to_parse = FileParser('/home/edupont/ccc_myproject_data/ccc_myproject_20190516.log')
+#     project_to_parse2 = ProjectParser(file_to_parse.set_path_to_individual_projects_directory() + "/project_2.log")
+#     project_to_parse2.build_complete_dictionary()
+#
+#     project_to_parse2.set_output_name()
+#
+#     # string = json.dumps(project_to_parse2.complete_dictionary, indent=2)
+#     # print(string)
+#     project_to_parse2.dump_dict_to_json()
+#
+#     # complete_file_to_parse = FileParser('/home/edupont/ccc_myproject_data/ccc_myproject_20190515.log')
+#
+#     complete_file_to_parse = FileParser('/home/edupont/ccc_myproject_data/test_data/p86caub_ccc_myproject.txt')
+#     complete_project_to_parse1 = ProjectParser(complete_file_to_parse.set_path_to_individual_projects_directory() + "/project_2.log")
+#     complete_project_to_parse1.build_complete_dictionary()
+#     complete_project_to_parse1.set_output_name()
+#
+#     complete_project_to_parse1.dump_dict_to_json()
+#
+#
+#
+#     print("\nEnd of execution\n")

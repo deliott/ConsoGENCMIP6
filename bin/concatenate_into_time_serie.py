@@ -8,7 +8,7 @@ from bin.ccc_myproject_fileparser import FileParser
 import json
 
 """
-The objective of module is to concatenate the daily json files of a project 
+The purpose of this module is to concatenate the daily json files of a project 
 into a bigger json file representing the timeserie.
 """
 
@@ -178,48 +178,6 @@ if __name__ == "__main__":
     gencmip6_concat = TimeSeriesConcatenator('/home/edupont/ccc_myproject_data/time_series_gencmip6')
     gencmip6_concat.create_timeseries()
     gencmip6_concat.dump_dict_to_json()
-    # file_to_parse = FileParser('/home/edupont/ccc_myproject_data/mock_ccc_myproject.log')
-    # project_to_parse2 = ProjectParser(file_to_parse.set_path_to_individual_projects_directory() + "/project_1.log")
-    # project_to_parse2.build_complete_dictionary()
-    #
-    # project_to_parse2.set_output_name()
-    #
-    # # string = json.dumps(project_to_parse2.complete_dictionary, indent=2)
-    # # print(string)
-    # # project_to_parse2.dump_dict_to_json()
-
-    # time_series = TimeSeriesConcatenator('/home/edupont/ccc_myproject_data/time_series')
-    #
-    # print(os.listdir(time_series.path_to_project_daily_json_files_directory))
-    #
-    # time_series.create_timeseries()
-    # time_series.dump_dict_to_json()
-
-# #     # time_seriesb = TimeSeriesConcatenator('/home/edupont/ccc_myproject_data/time_seriesb')
-# #     # time_seriesb.load_daily_data('/Irene_gen0826_20190513.json')
-# #     # time_seriesb.set_daily_time()
-# #     # print(os.listdir(time_seriesb.path_to_project_daily_json_files_directory))
-# #     #
-# #     # time_seriesb.create_timeseries()
-# #     #
-# #     # # time_seriesb.set_daily_time()
-# #     # time_seriesb.dump_dict_to_json()
-# #
-    # complete_project_to_parse1 = ProjectParser(complete_file_to_parse.set_path_to_individual_projects_directory() + "/project_1.log")
-    # complete_project_to_parse1.build_complete_dictionary()
-    # complete_project_to_parse1.set_output_name()
-    # # string2 = json.dumps(complete_project_to_parse1.complete_dictionary, indent=2)
-    # # print(string2)
-    # complete_project_to_parse1.dump_dict_to_json()
 
     print("\nEnd of execution\n")
-    # print("\nEnd of execution\n")
-    # import pandas as pd
-    # with open('/home/edupont/ccc_myproject_data/time_seriesb/time_series.json') as file_object:
-    #     # store file data in object
-    #     # data = json.load(file_object)
-    #     df = pd.read_json(file_object)
-    #     # string = json.dumps(data, indent= 2)
-    #     print(df.head(5))
-    #
-    # print("\nEnd of execution\n")
+
