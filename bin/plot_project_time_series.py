@@ -16,7 +16,8 @@ from bokeh.models import NumeralTickFormatter
 
 
 # Get path to data
-path_to_timeseries = '/home/edupont/ccc_myproject_data/timeseries/gencmip6/'
+path_to_timeseries = '/home/edupont/ccc_myproject_data/timeseries/' + 'gencmip6/'
+
 
 file_list = os.listdir(path_to_timeseries)
 timeseries_file_name = ''
