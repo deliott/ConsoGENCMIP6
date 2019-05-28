@@ -1,7 +1,7 @@
 import bin.settings as settings
-import bin.set_config_path as set_config_path
+import bin.set_paths as set_paths
 
 class Project:
 
-    def __init__(self,name):
+    def __init__(self, name):
         self.name = name
