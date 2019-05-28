@@ -7,6 +7,13 @@ from bin.ccc_myproject_projectparser import ProjectParser
 from bin.concatenate_into_time_serie import TimeSeriesConcatenator
 
 
+import bin.settings as settings
+import bin.set_paths as set_paths
+
+# Initialise Global Variables
+settings.init()
+set_paths.set_path_to_timeseries()
+
 
 def get_list_of_ccc_raw_logs(path):
     """
@@ -45,7 +52,19 @@ if __name__ == "__main__":
           "password, \n    On local machine run dataCCCMYPROJECTS_update \nThis will update our "
           "ccc_myproject log repository.\n")
     print("So far this script seems to work with data from ccc_myproject run on shared account.")
-    raw_data_path = '/home/edupont/ccc_myproject_data/'
+
+
+
+    # Initialise Global Variables
+    print('\nInitialisation of Global Variables (paths)\n')
+
+    settings.init()
+    set_paths.set_path_to_raw_data_for_parser()
+    print('Initialisation réussite\n')
+
+    # raw_data_path = '/home/edupont/ccc_myproject_data/'
+    raw_data_path = settings.path_to_ccc_myproject_raw_data
+
     file_liste = get_list_of_ccc_raw_logs(raw_data_path)
 
     projects_name_list = []

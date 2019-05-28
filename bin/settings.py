@@ -7,3 +7,4 @@ def init():
     path_to_ccc_myproject_raw_data = "\default\config\path"
     global path_to_timeseries
     path_to_timeseries = "\default\\timeseries\path"
+

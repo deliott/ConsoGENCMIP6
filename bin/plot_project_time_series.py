@@ -14,9 +14,16 @@ from math import pi
 from bokeh.models import NumeralTickFormatter
 # output_notebook()
 
+import bin.settings as settings
+import bin.set_paths as set_paths
+
+# Initialise Global Variables
+settings.init()
+set_paths.set_path_to_timeseries()
+
 
 # Get path to data
-path_to_timeseries = '/home/edupont/ccc_myproject_data/timeseries/' + 'gencmip6/'
+path_to_timeseries = settings.path_to_timeseries + 'gencmip6/'
 
 
 file_list = os.listdir(path_to_timeseries)

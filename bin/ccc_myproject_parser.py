@@ -8,7 +8,7 @@ and ccc_myproject_20190514.log is one we can work on
 """
 
 import bin.settings as settings
-import bin.set_config_path as set_config_path
+import bin.set_paths as set_paths
 import os
 import datetime
 
@@ -29,7 +29,7 @@ class Parser:
 
 
     def set_path_to_raw_data(self):
-        set_config_path.set_path_to_raw_data_for_parser()
+        set_paths.set_path_to_raw_data_for_parser()
         self.path_to_raw_data = settings.path_to_ccc_myproject_raw_data
 
     def get_list_of_possible_files_to_parse(self):
