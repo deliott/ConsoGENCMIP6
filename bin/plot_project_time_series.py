@@ -1,7 +1,7 @@
 import pandas as pd
 import json
 import os
-
+import datetime
 
 
 from bokeh.models import ColumnDataSource
@@ -79,11 +79,11 @@ df.insert(loc=1, value=dfTot, column='Total')
 allocated = jl['2019-05-13']['processor_type']['Skylake']["allocated"]
 deadline = jl['2019-05-13']['project_deadline']
 start_date = '2019-05-01'
-last_date = '2019-05-31'
+last_date = max(dates) + datetime.timedelta(days=int(3))
 
-date_list = pd.date_range(start = pd.to_datetime(start_date),
-              end = pd.to_datetime(last_date),
-              freq='D')
+date_list = pd.date_range(start=pd.to_datetime(start_date),
+                          end=pd.to_datetime(last_date),
+                          freq='D')
 
 delta = pd.to_datetime(deadline) - pd.to_datetime(start_date)
 
@@ -101,10 +101,12 @@ dfOpti = {'Date': date_list, 'Conso_Optimale': liste_consomation_optimale}
 # Configuration du Plot :
 
 source = ColumnDataSource(df)
-p = figure(plot_width=1800, plot_height=800,
-
+p = figure(title="Consommation de l'allocation CMIP6 - Vue par MIPs",
+           x_axis_label="Date",
+           y_axis_label="Irene skylake (heures)",
            x_axis_type="datetime",
-           x_axis_label="Date")
+           plot_width=1800, plot_height=800,
+           )
 
 
 
@@ -117,7 +119,7 @@ palette = Set3[nb_sousprojets]
 
 for header in list(df.columns):
     print(header)
-    if not header == 'Date' :
+    if not header == 'Date':
         # Conditions pour afficher le sous projet :
             # sa dernière valeure n'est pas nulle
             # On pourrait rajouter d'autres conditions, telles que :
@@ -166,19 +168,6 @@ p.yaxis.formatter = NumeralTickFormatter(format="0,")
 
 print(p)
 show(p)
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
