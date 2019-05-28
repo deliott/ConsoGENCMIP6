@@ -3,7 +3,7 @@ import glob
 import matplotlib.pyplot as plt
 from bin.libconso_py37 import *
 import bin.settings as settings
-import bin.set_config_path as set_config_path
+import bin.set_paths as set_paths
 import pandas as pd
 from bokeh.plotting import figure, output_file, show
 from bokeh.palettes import Set3
@@ -37,7 +37,7 @@ if __name__ == '__main__':
     # ... Config Path ...
     # -------------------
     settings.init()
-    set_config_path.set_config_path()
+    set_paths.set_config_path()
 
     project_name, DIR, OUT = parse_config(settings.config_path)
 

@@ -5,7 +5,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 from bin.libconso_py37 import *
 import bin.settings as settings
-import bin.set_config_path as set_config_path
+import bin.set_paths as set_paths
 
 
 ########################################
@@ -15,7 +15,7 @@ if __name__ == '__main__':
     # ... Config Path ...
     # -------------------
     settings.init()
-    set_config_path.set_config_path()
+    set_paths.set_config_path()
 
     # ... Command line arguments ...
     # ------------------------------
@@ -32,9 +32,9 @@ if __name__ == '__main__':
     miplist = []
     for file in files:
         print(file)
-        if set_config_path.where_we_run() == "jussieu":
+        if set_paths.where_we_run() == "jussieu":
             mip = file[83:91]
-        elif set_config_path.where_we_run() == "irene":
+        elif set_paths.where_we_run() == "irene":
             mip = file[98:106]
         miplist.append(mip)
         xx[mip] = []
