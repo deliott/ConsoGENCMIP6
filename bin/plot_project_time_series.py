@@ -108,7 +108,7 @@ p = figure(title="Consommation de l'allocation CMIP6 - Vue par MIPs",
            plot_width=1800, plot_height=800,
            )
 
-
+line_list = []
 
 # Ajout des lignes des sous projets au plot :
 #Nb de sous projets à ploter :
@@ -127,35 +127,54 @@ for header in list(df.columns):
         if not df[header].iloc[-1] == 0:
             if nb_plot < nb_sousprojets:
                 if header == 'Total':
-                    p.line('Date', header, source=source,
+                    line_list.append(p.line('Date', header, source=source,
                            legend=header + ' ', # small hack to be able to display the name. Otherwise, without the ' ' there is a bug
                            line_width=3,
                            color="black",
                            muted_color="black", muted_alpha=0.2
                            )
+                                     )
                 else:
-                    p.line('Date', header, source=source,
+                    line_list.append(p.line('Date', header, source=source,
                            legend=header + ' ',
                            # small hack to be able to display the name. Otherwise, without the ' ' there is a bug
                            line_width=3,
                            color=palette[nb_plot],
                            muted_color=palette[nb_plot], muted_alpha=0.2
                            )
+                                     )
                     nb_plot = nb_plot + 1
+
 
 
 
 
 # Ajout de la courbe de consomation théorique :
 source_opt = ColumnDataSource(dfOpti)
-p.line('Date', 'Conso_Optimale', source=source_opt,
+line_list.append(
+    p.line('Date', 'Conso_Optimale', source=source_opt,
                            legend='Conso_Optimale ',
                            # small hack to be able to display the name. Otherwise, without the ' ' there is a bug
                            line_width=1,
                            color='black',
                            muted_color='black', muted_alpha=0.2
                            )
+)
 
+p.add_tools(HoverTool(
+            renderers=line_list,
+            tooltips=[
+                ('Date', '$x{%F}'),
+                ('Hours', '$y{0.2f}'),  # use @{ } for field names with spaces
+                #         ( 'volume', '@volume{0.00 a}'      ),
+            ],
+
+            formatters={
+                '$x': 'datetime',  # use 'datetime' formatter for 'date' field
+            },
+
+            mode='mouse'
+        ))
 
 # Ajout de quelsues paramètres pour le graph
 
