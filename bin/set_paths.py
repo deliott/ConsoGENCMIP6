@@ -59,3 +59,18 @@ def set_path_to_timeseries():
         settings.path_to_timeseries = "\wrong\computer"
 
     return
+
+def set_path_to_plots():
+    """changes glob variable path_to_timeseries according to where the code is ran"""
+    res = ""
+    if where_we_run() == "irene":
+        settings.path_to_plots = "/ccc/cont003/home/gencmip6/dupontel/deploy_folder/ConsoGENCMIP6_git/ConsoGENCMIP6/plot/"
+
+    elif where_we_run() == "jussieu":
+        settings.path_to_plots = "/home/edupont/Documents/mesocentre/ConsoGENCMIP6_git/ConsoGENCMIP6/plot"
+    elif where_we_run() == "ciclad":
+        settings.path_to_plots = "/home/eldupont/ConsoGENCMIP6/plot/"
+    else:
+        settings.path_to_plots = "\wrong\computer"
+
+    return

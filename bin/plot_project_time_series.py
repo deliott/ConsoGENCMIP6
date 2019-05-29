@@ -20,6 +20,7 @@ import bin.set_paths as set_paths
 # Initialise Global Variables
 settings.init()
 set_paths.set_path_to_timeseries()
+set_paths.set_path_to_plots()
 
 
 # Get path to data
@@ -193,6 +194,9 @@ p.xaxis[0].formatter.days = '%a - %d/%m/%Y'
 p.xaxis.major_label_orientation = pi / 3
 p.yaxis.formatter = NumeralTickFormatter(format="0,")
 
-print(p)
+
+
+output_file(settings.path_to_plots + "gencmip6_mips_timeseries.html", title="gencmip6 mips timeseries")
+
 show(p)
 
