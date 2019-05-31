@@ -7,7 +7,7 @@ import datetime
 from bokeh.models import ColumnDataSource
 
 
-from bokeh.plotting import figure, output_file, show
+from bokeh.plotting import figure, output_file, show, save
 from bokeh.palettes import Spectral
 from bokeh.models import HoverTool
 from math import pi
@@ -115,6 +115,7 @@ p = figure(title="Consommation de l'allocation CMIP6 - Vue par MIPs",
            y_axis_label="Irene skylake (heures)",
            x_axis_type="datetime",
            plot_width=1800, plot_height=800,
+           sizing_mode='scale_width'
            )
 
 line_list = []
@@ -196,7 +197,7 @@ p.yaxis.formatter = NumeralTickFormatter(format="0,")
 
 
 
-output_file(settings.path_to_plots + "gencmip6_mips_timeseries.html", title="gencmip6 mips timeseries")
+output_file(settings.path_to_plots + "/gencmip6_mips_timeseries.html", title="gencmip6 mips timeseries")
 
-show(p)
+save(p)
 
