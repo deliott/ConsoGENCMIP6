@@ -8,7 +8,7 @@ from bokeh.models import ColumnDataSource
 
 
 from bokeh.plotting import figure, output_file, show
-from bokeh.palettes import Set3
+from bokeh.palettes import Spectral
 from bokeh.models import HoverTool
 from math import pi
 from bokeh.models import NumeralTickFormatter
@@ -124,7 +124,7 @@ line_list = []
 nb_sousprojets = 10
 nb_plot = 1
 
-palette = Set3[nb_sousprojets]
+palette = list(reversed(Spectral[nb_sousprojets]))
 
 for header in list(df.columns):
     print(header)
@@ -174,7 +174,7 @@ p.add_tools(HoverTool(
             renderers=line_list,
             tooltips=[
                 ('Date', '$x{%F}'),
-                ('Hours', '$y{0.2f}'),  # use @{ } for field names with spaces
+                ('Hours', '$y{0,2f}'),  # use @{ } for field names with spaces
                 #         ( 'volume', '@volume{0.00 a}'      ),
             ],
 
