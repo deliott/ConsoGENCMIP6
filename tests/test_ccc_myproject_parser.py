@@ -40,45 +40,46 @@ class Test_CCC_MYPROJECT_Parser(TestCase):
         # self.assertEqual(parser.path_to_raw_data[-1], "/")
         pass
 
-    @mock.patch('os.listdir')
-    def test_get_list_of_possible_files_to_parse(self, mock_listdir):
+#    @mock.patch('os.listdir')
+#     def test_get_list_of_possible_files_to_parse(self, mock_listdir):
+#
+#         # test if the end of the name properly taken into account
+#         mock_listdir.return_value = ['ccc_myproject_20190515.log', 'ccc_myproject_20190514',
+#                                      'ccc_myproject_20190515.dat', 'c.json', 'd.txt']
+#         parser = Parser()
+#         #parser.get_list_of_possible_files_to_parse()
+#         files = parser.list_of_possible_files_to_parse
+#         self.assertEqual(1, len(files))
+#
+#         # test if the begining of the name properly taken into account
+#         mock_listdir.return_value = ['ccc_myproject.log', 'ccc_myproject_20190515.log', 'b.json']
+#         parser = Parser()
+#         #parser.get_list_of_possible_files_to_parse()
+#         files = parser.list_of_possible_files_to_parse
+#         self.assertEqual(1, len(files))
+#
+#
+#
+#
+# @TODO Issue with this test. Try to repair the import in the patch.
 
-        # test if the end of the name properly taken into account
-        mock_listdir.return_value = ['ccc_myproject_20190515.log', 'ccc_myproject_20190514',
-                                     'ccc_myproject_20190515.dat', 'c.json', 'd.txt']
-        parser = Parser()
-        #parser.get_list_of_possible_files_to_parse()
-        files = parser.list_of_possible_files_to_parse
-        self.assertEqual(1, len(files))
-
-        # test if the begining of the name properly taken into account
-        mock_listdir.return_value = ['ccc_myproject.log', 'ccc_myproject_20190515.log', 'b.json']
-        parser = Parser()
-        #parser.get_list_of_possible_files_to_parse()
-        files = parser.list_of_possible_files_to_parse
-        self.assertEqual(1, len(files))
-
-
-
-
-# @TODO  Issue with this test. Try to repair the import in the patch.
-    # def test_get_list_of_possible_files_to_parse(self):
-    #     # with mock.patch('bin.ccc_myproject_parser.Parser.os.listdir') as mock_listdir:
-    #     with mock.patch('bin.ccc_myproject_parser.Parser.os.listdir') as mock_listdir:
-    #         # test if the end of the name properly taken into account
-    #             mock_listdir.return_value = ['ccc_myproject_20190515.log', 'ccc_myproject_20190514',
-    #                                          'ccc_myproject_20190515.dat', 'c.json', 'd.txt']
-    #             parser = Parser()
-    #             # parser.get_list_of_possible_files_to_parse()
-    #             files = parser.list_of_possible_files_to_parse
-    #             self.assertEqual(1, len(files))
-    #
-    #             # test if the begining of the name properly taken into account
-    #             mock_listdir.return_value = ['ccc_myproject.log', 'ccc_myproject_20190515.log', 'b.json']
-    #             parser = Parser()
-    #             # parser.get_list_of_possible_files_to_parse()
-    #             files = parser.list_of_possible_files_to_parse
-    #             self.assertEqual(1, len(files))
+#     def test_get_list_of_possible_files_to_parse(self):
+#         # with mock.patch('bin.ccc_myproject_parser.Parser.os.listdir') as mock_listdir:
+#         with mock.patch('bin.ccc_myproject_parser.Parser.os.listdir') as mock_listdir:
+#             # test if the end of the name properly taken into account
+#                 mock_listdir.return_value = ['ccc_myproject_20190515.log', 'ccc_myproject_20190514',
+#                                              'ccc_myproject_20190515.dat', 'c.json', 'd.txt']
+#                 parser = Parser()
+#                 # parser.get_list_of_possible_files_to_parse()
+#                 files = parser.list_of_possible_files_to_parse
+#                 self.assertEqual(1, len(files))
+#
+#                 # test if the begining of the name properly taken into account
+#                 mock_listdir.return_value = ['ccc_myproject.log', 'ccc_myproject_20190515.log', 'b.json']
+#                 parser = Parser()
+#                 # parser.get_list_of_possible_files_to_parse()
+#                 files = parser.list_of_possible_files_to_parse
+#                 self.assertEqual(1, len(files))
 
 
 
