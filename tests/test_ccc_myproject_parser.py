@@ -57,7 +57,7 @@ class Test_CCC_MYPROJECT_Parser(TestCase):
         files = parser.list_of_possible_files_to_parse
         self.assertEqual(1, len(files))
 
-    def test_getget_list_of_possible_files_to_parse(self):
+    def test_get_list_of_possible_files_to_parse(self):
         with mock.patch('bin.ccc_myproject_parser.Parser.os.listdir') as mock_listdir:
             # test if the end of the name properly taken into account
                 mock_listdir.return_value = ['ccc_myproject_20190515.log', 'ccc_myproject_20190514',
