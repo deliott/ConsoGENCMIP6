@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 
 # this must come first
-from __future__ import print_function, unicode_literals, division
+#TODO: Repair code since switched from python2 to python3
+
 
 # standard library imports
 from argparse import ArgumentParser
@@ -13,7 +14,7 @@ import numpy as np
 import pprint
 
 # Application library imports
-from libconso import *
+from bin.libconso_py37 import *
 
 pp = pprint.PrettyPrinter(indent=2)
 
@@ -33,7 +34,7 @@ class DataDict(dict):
     (deb, fin) = (0, int(delta.total_seconds() / 3600))
 
     dates = (date_beg + dt.timedelta(hours=i)
-             for i in xrange(deb, fin, inc))
+             for i in range(deb, fin, inc))
 
     for date in dates:
       self.add_item(date)
@@ -110,7 +111,7 @@ class DataDict(dict):
   def get_items_in_range(self, date_beg, date_end, inc=1):
     """
     """
-    items = (item for item in self.itervalues()
+    items = (item for item in self.values()
                    if item.date >= date_beg and
                       item.date <= date_end)
     items = sorted(items, key=lambda item: item.date)
@@ -121,7 +122,7 @@ class DataDict(dict):
   def get_items(self, inc=1):
     """
     """
-    items = (item for item in self.itervalues()
+    items = (item for item in self.values()
                    if item.isfilled())
     items = sorted(items, key=lambda item: item.date)
 

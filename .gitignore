@@ -12,3 +12,22 @@ tmp/
 #files from pycharm to ignore
 .idea/
 venv
+
+#OUT files to ignore
+
+OUT_JOBS_PENDING
+OUT_JOBS_PEN_FULL
+OUT_TOUSJOBS
+OUT_TOUSJOBS_FULL
+OUT_CONSO_PARAM_*
+OUT_CONSO_UTHEO_*
+
+#pyc files to ignore 
+
+
+bin/*.pyc
+
+bin/__pycache__/
+
+#tests that are not operational yet.
+tests/test_where_we_run.py

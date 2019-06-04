@@ -44,7 +44,7 @@ fi
 script="plot_bilan"
 printf "\n${script}\n"
 echo "--------------------"
-bin/${script}.py -fv
+bin/${script}.py -fdv
 rc=$?
 if [ ${rc} -ne 0 ] ; then
   echo "${script} terminated abnormally"
@@ -55,7 +55,7 @@ fi
 script="plot_bilan_jobs"
 printf "\n${script}\n"
 echo "--------------------"
-bin/${script}.py -fv
+bin/${script}.py -fdv
 rc=$?
 if [ ${rc} -ne 0 ] ; then
   echo "${script} terminated abnormally"
@@ -66,7 +66,7 @@ fi
 script="plot_jobs_daily"
 printf "\n${script}\n"
 echo "--------------------"
-bin/${script}.py -fv
+bin/${script}.py -fdv
 rc=$?
 if [ ${rc} -ne 0 ] ; then
   echo "${script} terminated abnormally"
@@ -77,7 +77,7 @@ fi
 script="plot_login"
 printf "\n${script}\n"
 echo "--------------------"
-bin/${script}.py -v
+bin/${script}.py -dv
 rc=$?
 if [ ${rc} -ne 0 ] ; then
   echo "${script} terminated abnormally"
@@ -104,7 +104,7 @@ for dir in ${dirlist} ; do
   grep -h "$dir\$" ${filelist} | head -1 >> ${OUTDIR}/${fileout}
 done
 
-bin/${script}.py -fv
+bin/${script}.py -fdv
 rc=$?
 if [ ${rc} -ne 0 ] ; then
   echo "${script} terminated abnormally"
@@ -117,8 +117,40 @@ fi
 # ========================
 echo "=> Copy web files to ciclad"
 echo "==========================="
+echo "rsync -var ${ROOT_DIR}/web/* igcmg@ciclad.ipsl.jussieu.fr:dods/ConsoGENCMIP6"
 rsync -var ${ROOT_DIR}/web/* igcmg@ciclad.ipsl.jussieu.fr:dods/ConsoGENCMIP6
 
+# # Copy cpt file to slipsl
+# # =======================
+# echo "=> Copy cpt file to slipsl"
+# echo "=========================="
+# 
+# local_dir="output"
+# # remote_dir="/data/slipsl/ConsoGENCI"
+# remote_dir="/home_local/slipsl/ConsoGENCI/data/tgcc/tmp"
+# remote_login="slipsl"
+# # remote_host="ciclad.ipsl.jussieu.fr"
+# remote_host="pc-236"
+# bounce_login=${remote_login}
+# # bounce_host="calcul2.ipsl.jussieu.fr"
+# bounce_host="ciclad.ipsl.jussieu.fr"
+# 
+# local_fileout="ccc_myproject.dat"
+# date_amj=$( head -n 2 ${local_dir}/${local_fileout} | tail -n 1 | gawk '{ print $NF }' | gawk -F "-" '{ print $1$2$3 }' )
+# remote_fileout="cpt_tgcc_gencmip6_${date_amj}_2359.dat"
+# 
+# ssh_options="-T -ax -o ClearAllForwardings=yes -c blowfish"
+# 
+# 
+# # scp ${filein} igcmg@ciclad.ipsl.jussieu.fr:/data/igcmg/ConsoGENCI/data/tmp/tgcc/${fileout}
+# 
+# set -vx
+# 
+# rsync -va -e "ssh ${ssh_options} ${bounce_login}@${bounce_host} ssh ${ssh_options}" \
+#              ${local_dir}/${local_fileout} \
+#              ${remote_login}@${remote_host}:${remote_dir}/${remote_fileout}
 
 printf "\nEnd of script OK\n"
+
+exit
 

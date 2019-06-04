@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # this must come first
-from __future__ import print_function, unicode_literals, division
+#TODO: Repair code since switched from python2 to python3 when used with plot_jobs*
 
 # standard library imports
 import socket
@@ -13,7 +13,7 @@ import shutil
 import subprocess
 import datetime as dt
 import numpy as np
-import ConfigParser as cp
+import configparser as cp
 
 # Application library imports
 
@@ -47,7 +47,18 @@ def dods_cp(filein, DIR):
 
 ########################################
 def parse_config(filename):
+  """
+  Extract relevant data from the config*.ini files.
 
+  :param filename: path to the relevant config*.ini according to where and what the program will run
+  :type filename: str
+  :return project_name: name of the project worked on. ex: gencmip6
+  :rtype project_name: str
+  :return DIR: dictionary with the paths of the [directories] section of the config file
+  :rtype DIR: dict
+  :return OUT: dictionary with the paths of the [files] section of the config file
+  :rtype OUT: dict
+  """
   DIR = {}
   OUT = {}
 
@@ -102,7 +113,7 @@ def string_to_size_unit(x):
   if x == "None":
     x = "0o"
 
-  if unicode(x).isdecimal():
+  if str(x).isdecimal():
     x = x + "o"
 
   (size, unit) = (float(x[:-1]), x[-1])
@@ -126,8 +137,7 @@ def string_to_date(ssaammjj, fmt="%Y-%m-%d"):
 
 ########################################
 def string_to_datetime(string, fmt="%Y-%m-%d-%H:%M"):
-  """
-  """
+  """Convert a string in the proper format into a datetime  """
   return dt.datetime.strptime(string, fmt)
 
 
@@ -140,7 +150,7 @@ def string_to_datetime(string, fmt="%Y-%m-%d-%H:%M"):
 
 ########################################
 def where_we_run():
-
+  """return the name of the computer on which the program is ran"""
   res = ""
   if "curie" in socket.getfqdn():
     res = "curie"
@@ -155,6 +165,16 @@ def where_we_run():
 ########################################
 def get_last_file(dir_data, pattern):
   """
+  Extract relevant data from the config*.ini files.
+
+  :param filename: path to the relevant config*.ini according to where and what the program will run
+  :type filename: str
+  :return project_name: name of the project worked on. ex: gencmip6
+  :rtype project_name: str
+  :return DIR: dictionary with the paths of the [directories] section of the config file
+  :rtype DIR: dict
+  :return OUT: dictionary with the paths of the [files] section of the config file
+  :rtype OUT: dict
   """
   current_dir = os.getcwd()
   os.chdir(dir_data)
@@ -249,7 +269,7 @@ class Project(object):
       },
       missing_values="nan",
     )
-    dates, utheos = zip(*data)
+    dates, utheos = list(zip(*data))
 
     x2 = len(utheos) - 1
     x1 = x2
@@ -302,7 +322,7 @@ class SizeUnit(object):
       idx_deb = prefixes.index(self.unit)
       idx_fin = prefixes.index(unit_out)
       size_out = self.size
-      for i in xrange(abs(idx_fin-idx_deb)):
+      for i in range(abs(idx_fin-idx_deb)):
         if idx_fin > idx_deb:
           size_out = size_out / 1024
         else:

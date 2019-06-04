@@ -8,11 +8,18 @@
 # Functions
 # =========
 function get_run {
-  ccc_mpp -n | grep cmip6 | grep -i skylake | grep ' RUN '
+  ccc_mpp -rn | grep -i skylake
 }
 
 function get_pen {
-  ccc_mpp -n | grep cmip6 | grep -i skylake | grep ' PEN '
+  # ccc_mpp -pn | awk '{ print $4, $NF }' | \
+  ccc_mpp -pn | grep -i skylake | \
+          grep -v JobHeldAdmin | \
+          grep -v Dependency | \
+          grep -v BeginTime | \
+          grep -v RESV | \
+          grep -v AssocGrpJobsLimit | \
+          grep -v AssociationResourceLimit
 }
 
 
@@ -60,17 +67,17 @@ shift $(($OPTIND-1))
 
 # Files and directories
 # =====================
-##LOCAL_DIR="${HOME}/IRENE/ConsoGENCMIP6/output"
+## LOCAL_DIR="${HOME}/IRENE/ConsoGENCMIP6/output"
 LOCAL_DIR="/ccc/cont003/home/gencmip6/p86ipsl/IRENE/ConsoGENCMIP6/output"
-##SAVE_DIR="${CCCWORKDIR}/IRENE/ConsoGENCMIP6/data"
+## SAVE_DIR="${CCCWORKDIR}/IRENE/ConsoGENCMIP6/data"
 SAVE_DIR="/ccc/work/cont003/gencmip6/p86ipsl/IRENE/ConsoGENCMIP6/data"
 
 if ( ${fg_dry} ) ; then
   OUT_PENDING="/dev/stdout"
   OUT_TOUSJOBS="/dev/stdout"
 else
-  OUT_PENDING="OUT_JOBS_PENDING"
-  OUT_TOUSJOBS="OUT_TOUSJOBS"
+  OUT_PENDING="OUT_JOBS_PEN_FULL"
+  OUT_TOUSJOBS="OUT_TOUSJOBS_FULL"
 fi
 
 Today=$( date +"%F" )
@@ -82,33 +89,24 @@ Now=$( date +"%F-%R" )
 
 cd ${LOCAL_DIR}
 
-# 1- Nombre de procs running et pending
-# -------------------------------------
-if ( ${fg_all} ) ; then
-  get_run | \
-      gawk -v Now="$Now" ' {NPROC+=$4} END {printf "%16s %-6d ", Now, NPROC }' \
-      > ${OUT_PENDING}
-  get_pen | \
-      gawk               ' {NPROC+=$4} END {printf     " %-6d ",      NPROC }' \
-      >> ${OUT_PENDING}
-  printf "\n" >> ${OUT_PENDING}
-
-  # For debug only !
-  get_run | \
-      gawk -v Now="$Now" ' {NPROC+=$4} END {printf "%16s %-6d ", Now, NPROC }' \
-      > /dev/stdout
-  get_pen | \
-      gawk               ' {NPROC+=$4} END {printf     " %-6d ",      NPROC }' \
-      >> /dev/stdout
-  printf "\n" >> /dev/stdout
-fi
-
-# 2- tous les jobs running et pending
+# 1- tous les jobs running et pending
 # -----------------------------------
 
 if ( ${fg_all} ) ; then
   get_run > ${OUT_TOUSJOBS}
   get_pen >> ${OUT_TOUSJOBS}
+fi
+
+# 2- Nombre de procs running et pending
+# -------------------------------------
+if ( ${fg_all} ) ; then
+  get_run | \
+      gawk -v Now="$Now" ' {NPROC+=$4} END {printf "%16s  %-6d ", Now, NPROC }' \
+      > ${OUT_PENDING}
+  get_pen | \
+      gawk               ' {NPROC+=$4} END {printf      " %-6d ",      NPROC }' \
+      >> ${OUT_PENDING}
+  printf "\n" >> ${OUT_PENDING}
 fi
 
 # Save files (WORK)

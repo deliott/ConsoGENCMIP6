@@ -1,0 +1,26 @@
+<diagram program="umletino" version="14.3.0"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>710</x><y>454</y><w>120</w><h>40</h></coordinates><panel_attributes>conso.py
+bg=yellow</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>370</x><y>304</y><w>100</w><h>30</h></coordinates><panel_attributes>conso.sh
+bg=orange</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>980</x><y>294</y><w>140</w><h>40</h></coordinates><panel_attributes>lt=&lt;.
+output</panel_attributes><additional_attributes>120;20;10;20</additional_attributes></element><element><id>UMLUseCase</id><coordinates><x>790</x><y>310</y><w>20</w><h>20</h></coordinates><panel_attributes></panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>770</x><y>320</y><w>390</w><h>160</h></coordinates><panel_attributes>lt=.&gt;
+input</panel_attributes><additional_attributes>370;10;370;100;10;100;10;135</additional_attributes></element><element><id>Relation</id><coordinates><x>820</x><y>454</y><w>210</w><h>40</h></coordinates><panel_attributes>lt=&lt;.
+output</panel_attributes><additional_attributes>190;20;10;20</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1010</x><y>450</y><w>200</w><h>50</h></coordinates><panel_attributes>*/conso.png/*
+(plot du suivi de consomation)
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>110</x><y>370</y><w>160</w><h>50</h></coordinates><panel_attributes>CRON Olivier :
+Suivi de Consomation 
+bg=red
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>260</x><y>310</y><w>130</w><h>100</h></coordinates><panel_attributes>lt=-&gt;
+runs
+</panel_attributes><additional_attributes>10;80;110;10</additional_attributes></element><element><id>UMLUseCase</id><coordinates><x>530</x><y>300</y><w>120</w><h>40</h></coordinates><panel_attributes>ccc_myproject
+bg=pink</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>460</x><y>300</y><w>90</w><h>40</h></coordinates><panel_attributes>lt=.
+</panel_attributes><additional_attributes>10;20;70;20</additional_attributes></element><element><id>Relation</id><coordinates><x>640</x><y>300</y><w>170</w><h>50</h></coordinates><panel_attributes>lt=.
+parsing 
+according to </panel_attributes><additional_attributes>10;20;150;20</additional_attributes></element><element><id>Relation</id><coordinates><x>800</x><y>280</y><w>100</w><h>60</h></coordinates><panel_attributes>lt=.&gt;
+total</panel_attributes><additional_attributes>10;40;80;10</additional_attributes></element><element><id>Relation</id><coordinates><x>800</x><y>310</y><w>100</w><h>50</h></coordinates><panel_attributes>lt=.&gt;
+MIPs</panel_attributes><additional_attributes>10;10;80;30</additional_attributes></element><element><id>UMLUseCase</id><coordinates><x>870</x><y>250</y><w>120</w><h>120</h></coordinates><panel_attributes>write results 
+in
+bg=pink</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1100</x><y>290</y><w>80</w><h>40</h></coordinates><panel_attributes>*/ *.dat /*</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>370</x><y>464</y><w>100</w><h>30</h></coordinates><panel_attributes>conso2.sh
+bg=orange</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>260</x><y>380</y><w>130</w><h>120</h></coordinates><panel_attributes>lt=-&gt;
+runs
+</panel_attributes><additional_attributes>10;10;110;100</additional_attributes></element><element><id>Relation</id><coordinates><x>460</x><y>460</y><w>270</w><h>50</h></coordinates><panel_attributes>lt=-&gt;
+runs
+</panel_attributes><additional_attributes>10;20;250;20</additional_attributes></element></diagram>
