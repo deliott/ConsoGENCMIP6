@@ -7,10 +7,10 @@ logs are stored on /home/edupont/ccc_myproject_data
 and ccc_myproject_20190514.log is one we can work on
 """
 
-import bin.settings as settings
-import bin.set_paths as set_paths
+import bin.consomation.settings as settings
+import bin.consomation.set_paths as set_paths
 import os
-import datetime
+
 
 # @TODO : This is not a parser but somethin to get the files_to_parse's directory and list.
 class Parser:

@@ -1,6 +1,6 @@
 # set_config_path.py
 
-import bin.settings as settings
+import bin.consomation.settings as settings
 import socket
 
 

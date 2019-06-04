@@ -1,9 +1,5 @@
-from bin.ccc_myproject_parser import Parser
 # import bin.ccc_myproject_parser as ccc_myproject_parser
-import os
-import shutil
-from bin.ccc_myproject_fileparser import FileParser
-from datetime import date
+from bin.consomation.ccc_myproject_fileparser import FileParser
 
 import json
 

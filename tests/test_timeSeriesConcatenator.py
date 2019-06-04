@@ -1,5 +1,5 @@
 from unittest import TestCase
-from bin.concatenate_into_time_serie import TimeSeriesConcatenator
+from bin.consomation.concatenate_into_time_serie import TimeSeriesConcatenator
 import json
 
 

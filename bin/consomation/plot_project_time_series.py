@@ -7,15 +7,15 @@ import datetime
 from bokeh.models import ColumnDataSource
 
 
-from bokeh.plotting import figure, output_file, show, save
+from bokeh.plotting import figure, output_file, save
 from bokeh.palettes import Spectral
 from bokeh.models import HoverTool
 from math import pi
 from bokeh.models import NumeralTickFormatter
 # output_notebook()
 
-import bin.settings as settings
-import bin.set_paths as set_paths
+import bin.consomation.settings as settings
+import bin.consomation.set_paths as set_paths
 
 # Initialise Global Variables
 settings.init()

@@ -1,7 +1,5 @@
 from unittest import TestCase
-import unittest.mock as mock
-from bin.ccc_myproject_fileparser import FileParser
-import bin.ccc_myproject_fileparser as ccc_myproject_fileparser
+from bin.consomation.ccc_myproject_fileparser import FileParser
 
 
 class TestFileParser(TestCase):

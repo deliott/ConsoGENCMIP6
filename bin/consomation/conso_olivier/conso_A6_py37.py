@@ -1,11 +1,8 @@
-import glob
-import matplotlib as mpl
-
 #mpl.use('Agg')
 import matplotlib.pyplot as plt
 from bin.libconso_py37 import *
-import bin.settings as settings
-import bin.set_paths as set_paths
+import bin.consomation.settings as settings
+import bin.consomation.set_paths as set_paths
 
 
 ########################################

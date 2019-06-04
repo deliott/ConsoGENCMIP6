@@ -1,14 +1,14 @@
 import os
 import shutil
 # from bin.ccc_myproject_parser import Parser
-from bin.ccc_myproject_fileparser import FileParser
-from bin.ccc_myproject_projectparser import ProjectParser
+from bin.consomation.ccc_myproject_fileparser import FileParser
+from bin.consomation.ccc_myproject_projectparser import ProjectParser
 
-from bin.concatenate_into_time_serie import TimeSeriesConcatenator
+from bin.consomation.concatenate_into_time_serie import TimeSeriesConcatenator
 
 
-import bin.settings as settings
-import bin.set_paths as set_paths
+import bin.consomation.settings as settings
+import bin.consomation.set_paths as set_paths
 
 # Initialise Global Variables
 settings.init()

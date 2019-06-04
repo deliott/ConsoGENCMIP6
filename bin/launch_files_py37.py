@@ -3,7 +3,7 @@ import os
 # import logging as log
 # import bin.conso_A6_py37
 # import bin.settings as settings
-import bin.set_paths as set_paths
+import bin.consomation.set_paths as set_paths
 
 ########################################
 if __name__ == '__main__':

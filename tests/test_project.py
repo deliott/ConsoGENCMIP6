@@ -1,5 +1,5 @@
 from unittest import TestCase
-from bin.ccc_myproject_parser import Parser
+
 
 # @TODO : Write this test suite
 class TestProject(TestCase):
