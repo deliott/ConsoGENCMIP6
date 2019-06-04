@@ -116,4 +116,6 @@ if __name__ == "__main__":
         project_concat.suppress_zeroes_from_timeseries()
         project_concat.dump_dict_to_json()
 
+    print("\nFin de l'Execution du parser et de la creation de la série temporelle JSON\n")
     print("\nEnd of execution\n")
+
