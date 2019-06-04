@@ -249,6 +249,10 @@ class Project(object):
 
   #---------------------------------------
   def get_date_init(self, filein):
+    """
+    Get the start date of the allocation from data in OUT_CONSO_UTHEO.
+    Computes it thanks to the suggested theoretical consuption of the allocation.
+    """
     data = np.genfromtxt(
       filein,
       skip_header=1,
