@@ -128,7 +128,7 @@ nb_plot = 1
 palette = list(reversed(Spectral[nb_sousprojets]))
 
 for header in list(df.columns):
-    print(header)
+    # print(header)
     if not header == 'Date':
         # Conditions pour afficher le sous projet :
             # sa dernière valeure n'est pas nulle
@@ -201,3 +201,4 @@ output_file(settings.path_to_plots + "/gencmip6_mips_timeseries.html", title="ge
 
 save(p)
 
+print('Bokeh plot saved on : ', settings.path_to_plots + "/gencmip6_mips_timeseries.html")
