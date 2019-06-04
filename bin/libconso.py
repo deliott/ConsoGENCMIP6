@@ -171,6 +171,15 @@ def get_last_file(dir_data, pattern):
 ########################################
 def get_input_files(dir_data, file_list, date=None):
   """
+  Return the list of filename or path corresponding to the pattern in file_list if the files are in the dir_data
+
+  :param dir_data: path to the directory where we look for the input files
+  :type dir_data: str
+  :param file_list:  list of name of files. Usually extracted from the config file.
+  :type file_list: list
+  :return res: list of strings with the name of the input files (used to get UTHEO and PARAM)
+  :rtype res: list
+
   """
   res = []
 
