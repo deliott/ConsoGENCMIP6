@@ -104,7 +104,7 @@ def parse_config(filename):
 def string_to_percent(x):
     """
     """
-    return float(x.strip("%")) / 100.
+    return float(x) / 100.
 
 
 ########################################
@@ -133,7 +133,7 @@ def string_to_float(x):
 def string_to_date(ssaammjj, fmt="%Y-%m-%d"):
     """
     """
-    return dt.datetime.strptime(ssaammjj, fmt)
+    return dt.datetime.strptime(str(ssaammjj), fmt)
 
 
 ########################################
