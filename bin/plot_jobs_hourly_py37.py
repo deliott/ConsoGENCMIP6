@@ -185,7 +185,8 @@ def plot_data(
   ax_jobsp.bar(
     # xcoord, penp, bottom=runp, width=width,
     # xcoord, penp, bottom=max(runp), width=width,
-    xcoord, penp, bottom=8000., width=width,
+    # xcoord, penp, bottom=8000., width=width,
+    xcoord, penp, bottom=3082., width=width,  # This change is not sure. Maybe it is bad
     linewidth=line_width, align="center",
     color="firebrick", antialiased=True,
     label="jobs pending"
