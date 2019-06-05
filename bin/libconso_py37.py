@@ -140,7 +140,9 @@ def string_to_date(ssaammjj, fmt="%Y-%m-%d"):
 ########################################
 def string_to_datetime(string, fmt="%Y-%m-%d-%H:%M"):
     """Convert a string in the proper format into a datetime  """
-    return dt.datetime.strptime(string, fmt)
+    # print('Decode String : ', string.decode())
+    # print('Decode String Type : ', type(string.decode()))
+    return dt.datetime.strptime(string.decode(), fmt)
 
 
 # ########################################
