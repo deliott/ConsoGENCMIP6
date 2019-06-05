@@ -323,7 +323,7 @@ def plot_config(
             ax.axvline(x=x, color="black", linewidth=1., linestyle=":")
 
     # 4) Define axes title
-    ax.set_ylabel("cœurs", fontweight="bold")
+    ax.set_ylabel(u"cœurs", fontweight="bold")
     ax.tick_params(axis="y", labelsize="small")
 
     # 5) Define plot size
