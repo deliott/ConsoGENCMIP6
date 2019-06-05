@@ -1,5 +1,5 @@
 from unittest import TestCase
-from bin.libconso_py37 import parse_config
+from bin.jobs.libconso_py37 import parse_config
 
 # @TODO: Test the rest of the function before splitting it. Just basic outputs are tested here
 

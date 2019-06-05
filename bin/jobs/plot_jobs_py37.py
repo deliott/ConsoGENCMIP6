@@ -2,17 +2,14 @@
 # -*- coding: utf-8 -*-
 
 # this must come first
-from __future__ import print_function, unicode_literals, division
+# TODO: Repair code since switched from python2 to python3
+
 
 # standard library imports
 from argparse import ArgumentParser
-# import os
-# import os.path
-# import datetime as dt
-# import numpy as np
 
 # Application library imports
-from bin.libconso import *
+from bin.jobs.libconso_py37 import *
 
 
 ########################################
@@ -30,7 +27,7 @@ class DataDict(dict):
         (deb, fin) = (0, int(delta.total_seconds() / 3600))
 
         dates = (date_beg + dt.timedelta(hours=i)
-                 for i in xrange(deb, fin, inc))
+                 for i in range(deb, fin, inc))
 
         for date in dates:
             self.add_item(date)
@@ -109,7 +106,7 @@ class DataDict(dict):
     def get_items_in_range(self, date_beg, date_end, inc=1):
         """
         """
-        items = (item for item in self.itervalues()
+        items = (item for item in self.values()
                  if item.date >= date_beg and
                  item.date <= date_end)
         items = sorted(items, key=lambda item: item.date)
@@ -120,7 +117,7 @@ class DataDict(dict):
     def get_items_in_full_range(self, inc=1):
         """
         """
-        items = (item for item in self.itervalues()
+        items = (item for item in self.values()
                  if item.date >= projet.date_init and
                  item.date <= projet.deadline and
                  item.date.hour == 0)
@@ -132,7 +129,7 @@ class DataDict(dict):
     def get_items(self, inc=1):
         """
         """
-        items = (item for item in self.itervalues()
+        items = (item for item in self.values()
                  if item.isfilled())
         items = sorted(items, key=lambda item: item.date)
 
@@ -279,7 +276,7 @@ def plot_config(
     # 2) Plot ideal daily consumption
     line_color = "blue"
     line_alpha = 0.5
-    line_label = "conso journalière idéale"
+    line_label = "conso journaliere ideale"
     ax.plot(
         [xi, xn, xn, xf], [yi, yi, yf, yf],
         color=line_color, alpha=line_alpha, label=line_label,
@@ -322,7 +319,7 @@ def plot_config(
             ax.axvline(x=x, color="black", linewidth=1., linestyle=":")
 
     # 4) Define axes title
-    ax.set_ylabel("cœurs", fontweight="bold")
+    ax.set_ylabel(u"cœurs", fontweight="bold")
     ax.tick_params(axis="y", labelsize="small")
 
     # 5) Define plot size
@@ -532,6 +529,7 @@ if __name__ == '__main__':
     # ... Save figure ...
     # -------------------
     img_in = os.path.join(DIR["PLOT"], "{}.pdf".format(img_name))
+    print(img_in)
     img_out = os.path.join(DIR["SAVEPLOT"],
                            "{}_w{:02d}.pdf".format(img_name, weeknum))
 

@@ -1,8 +1,7 @@
 import unittest
 from unittest import TestCase
-import numpy as np
 import datetime
-from bin.libconso_py37 import Project
+from bin.jobs.libconso_py37 import Project
 
 class TestProject(TestCase):
     def test_load_data_utheo(self):
