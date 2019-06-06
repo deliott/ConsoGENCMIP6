@@ -7,7 +7,7 @@ import datetime
 from bokeh.models import ColumnDataSource
 
 
-from bokeh.plotting import figure, output_file, save, show
+from bokeh.plotting import figure, output_file, save
 from bokeh.palettes import Spectral
 from bokeh.models import HoverTool
 from math import pi
@@ -268,6 +268,6 @@ p.yaxis.formatter = NumeralTickFormatter(format="0,")
 
 output_file(settings.path_to_plots + "/gencmip6_mips_timeseries.html", title="gencmip6 mips timeseries")
 
-show(p)
+save(p)
 
 print('Bokeh plot saved on : ', settings.path_to_plots + "/gencmip6_mips_timeseries.html")
