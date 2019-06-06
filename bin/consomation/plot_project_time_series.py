@@ -193,6 +193,52 @@ yy = [dfOpti['Conso_Optimale'][0],
       0]
 p.patch(xx, yy, alpha=0.2, line_width=2)
 
+# Ajout de la difference Optimale/Réelle:
+
+print(df['Total'].iloc[-1])
+
+last_opti = dfOpti['Conso_Optimale'][-(days_in_advance+1)]
+last_real = df['Total'].iloc[-1]
+last_date = df['Date'].iloc[-1]
+deltaConso = '{:,.0f}'.format(abs(last_opti - last_real)) + ' heures'
+
+
+if last_opti > last_real:
+    statut = 'Retard'
+    statut_color = 'red'
+    statut_top = last_opti
+    statut_bottom = last_real
+else:
+    statut = 'Avance'
+    statut_color = 'green'
+    statut_top = last_real
+    statut_bottom = last_opti
+
+
+source = ColumnDataSource(dict(
+        left=[last_date],
+        top=[statut_top],
+        right=[last_date + datetime.timedelta(days=0.01)],
+        bottom=[statut_bottom],
+        color=[statut_color],
+    )
+)
+retard_warning = p.quad(left="left", right="right", top="top", bottom="bottom",
+              color=None,
+              hover_color="color",
+              source=source,
+              alpha=0.3,
+              name=deltaConso
+                        )
+p.add_tools(HoverTool(
+    tooltips=[
+                (statut, '$name'),
+                # ('Courbe', '$name'),
+                # ('Hours', '$y{0,2f}'),  # use @{ } for field names with spaces
+            ],
+    renderers=[retard_warning],
+    mode='hline'))
+
 # Ajout du HoverTool
 p.add_tools(HoverTool(
             renderers=line_list,
