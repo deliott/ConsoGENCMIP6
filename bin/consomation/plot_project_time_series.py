@@ -84,11 +84,13 @@ df.insert(loc=1, value=dfTot, column='Total')
 
 #############################
 # Extract Theoretical Optimal Consumption Curve
+days_in_advance = 3
+
 
 allocated = jl['2019-05-13']['processor_type']['Skylake']["allocated"]
 deadline = jl['2019-05-13']['project_deadline']
 start_date = '2019-05-01'
-last_date = max(dates) + datetime.timedelta(days=int(3))
+last_date = max(dates) + datetime.timedelta(days=int(days_in_advance))
 
 date_list = pd.date_range(start=pd.to_datetime(start_date),
                           end=pd.to_datetime(last_date),
@@ -139,6 +141,7 @@ for header in list(df.columns):
                 if header == 'Total':
                     line_list.append(p.line('Date', header, source=source,
                            legend=header + ' ', # small hack to be able to display the name. Otherwise, without the ' ' there is a bug
+                           name=header + ' ', # small hack to be able to display the name. Otherwise, without the ' ' there is a bug
                            line_width=3,
                            color="black",
                            muted_color="black", muted_alpha=0.2
@@ -147,6 +150,7 @@ for header in list(df.columns):
                 else:
                     line_list.append(p.line('Date', header, source=source,
                            legend=header + ' ',
+                           name=header + ' ',
                            # small hack to be able to display the name. Otherwise, without the ' ' there is a bug
                            line_width=3,
                            color=palette[nb_plot],
@@ -164,6 +168,7 @@ source_opt = ColumnDataSource(dfOpti)
 line_list.append(
     p.line('Date', 'Conso_Optimale', source=source_opt,
                            legend='Conso_Optimale ',
+                            name='Conso_Optimale ',
                            # small hack to be able to display the name. Otherwise, without the ' ' there is a bug
                            line_width=1,
                            color='black',
@@ -193,6 +198,7 @@ p.add_tools(HoverTool(
             renderers=line_list,
             tooltips=[
                 ('Date', '$x{%F}'),
+                ('Courbe', '$name'),
                 ('Hours', '$y{0,2f}'),  # use @{ } for field names with spaces
             ],
 
