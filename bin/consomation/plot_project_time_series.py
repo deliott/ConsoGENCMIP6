@@ -7,7 +7,7 @@ import datetime
 from bokeh.models import ColumnDataSource
 
 
-from bokeh.plotting import figure, output_file, save
+from bokeh.plotting import figure, output_file, save, show
 from bokeh.palettes import Spectral
 from bokeh.models import HoverTool
 from math import pi
@@ -84,11 +84,13 @@ df.insert(loc=1, value=dfTot, column='Total')
 
 #############################
 # Extract Theoretical Optimal Consumption Curve
+days_in_advance = 3
+
 
 allocated = jl['2019-05-13']['processor_type']['Skylake']["allocated"]
 deadline = jl['2019-05-13']['project_deadline']
 start_date = '2019-05-01'
-last_date = max(dates) + datetime.timedelta(days=int(3))
+last_date = max(dates) + datetime.timedelta(days=int(days_in_advance))
 
 date_list = pd.date_range(start=pd.to_datetime(start_date),
                           end=pd.to_datetime(last_date),
@@ -139,6 +141,7 @@ for header in list(df.columns):
                 if header == 'Total':
                     line_list.append(p.line('Date', header, source=source,
                            legend=header + ' ', # small hack to be able to display the name. Otherwise, without the ' ' there is a bug
+                           name=header + ' ', # small hack to be able to display the name. Otherwise, without the ' ' there is a bug
                            line_width=3,
                            color="black",
                            muted_color="black", muted_alpha=0.2
@@ -147,6 +150,7 @@ for header in list(df.columns):
                 else:
                     line_list.append(p.line('Date', header, source=source,
                            legend=header + ' ',
+                           name=header + ' ',
                            # small hack to be able to display the name. Otherwise, without the ' ' there is a bug
                            line_width=3,
                            color=palette[nb_plot],
@@ -164,6 +168,7 @@ source_opt = ColumnDataSource(dfOpti)
 line_list.append(
     p.line('Date', 'Conso_Optimale', source=source_opt,
                            legend='Conso_Optimale ',
+                            name='Conso_Optimale ',
                            # small hack to be able to display the name. Otherwise, without the ' ' there is a bug
                            line_width=1,
                            color='black',
@@ -171,12 +176,76 @@ line_list.append(
                            )
 )
 
+# Ajout de la courbe de consomation théorique :
+delai_avant_penalite = 14
+volume_avant_penalite = dfOpti['Conso_Optimale'][delai_avant_penalite]
+
+xx = [dfOpti['Date'][0],
+      dfOpti['Date'][-1],
+      dfOpti['Date'][-1],
+      dfOpti['Date'][delai_avant_penalite],
+      dfOpti['Date'][0]]
+
+yy = [dfOpti['Conso_Optimale'][0],
+      dfOpti['Conso_Optimale'][-1],
+      dfOpti['Conso_Optimale'][-1] - volume_avant_penalite,
+      0,
+      0]
+p.patch(xx, yy, alpha=0.2, line_width=2)
+
+# Ajout de la difference Optimale/Réelle:
+
+print(df['Total'].iloc[-1])
+
+last_opti = dfOpti['Conso_Optimale'][-(days_in_advance+1)]
+last_real = df['Total'].iloc[-1]
+last_date = df['Date'].iloc[-1]
+deltaConso = '{:,.0f}'.format(abs(last_opti - last_real)) + ' heures'
+
+
+if last_opti > last_real:
+    statut = 'Retard'
+    statut_color = 'red'
+    statut_top = last_opti
+    statut_bottom = last_real
+else:
+    statut = 'Avance'
+    statut_color = 'green'
+    statut_top = last_real
+    statut_bottom = last_opti
+
+
+source = ColumnDataSource(dict(
+        left=[last_date],
+        top=[statut_top],
+        right=[last_date + datetime.timedelta(days=0.01)],
+        bottom=[statut_bottom],
+        color=[statut_color],
+    )
+)
+retard_warning = p.quad(left="left", right="right", top="top", bottom="bottom",
+              color=None,
+              hover_color="color",
+              source=source,
+              alpha=0.3,
+              name=deltaConso
+                        )
+p.add_tools(HoverTool(
+    tooltips=[
+                (statut, '$name'),
+                # ('Courbe', '$name'),
+                # ('Hours', '$y{0,2f}'),  # use @{ } for field names with spaces
+            ],
+    renderers=[retard_warning],
+    mode='hline'))
+
+# Ajout du HoverTool
 p.add_tools(HoverTool(
             renderers=line_list,
             tooltips=[
                 ('Date', '$x{%F}'),
+                ('Courbe', '$name'),
                 ('Hours', '$y{0,2f}'),  # use @{ } for field names with spaces
-                #         ( 'volume', '@volume{0.00 a}'      ),
             ],
 
             formatters={
@@ -199,6 +268,6 @@ p.yaxis.formatter = NumeralTickFormatter(format="0,")
 
 output_file(settings.path_to_plots + "/gencmip6_mips_timeseries.html", title="gencmip6 mips timeseries")
 
-save(p)
+show(p)
 
 print('Bokeh plot saved on : ', settings.path_to_plots + "/gencmip6_mips_timeseries.html")
