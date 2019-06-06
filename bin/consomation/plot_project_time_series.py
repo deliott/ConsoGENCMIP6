@@ -7,7 +7,7 @@ import datetime
 from bokeh.models import ColumnDataSource
 
 
-from bokeh.plotting import figure, output_file, save
+from bokeh.plotting import figure, output_file, save, show
 from bokeh.palettes import Spectral
 from bokeh.models import HoverTool
 from math import pi
@@ -171,12 +171,29 @@ line_list.append(
                            )
 )
 
+# Ajout de la courbe de consomation théorique :
+delai_avant_penalite = 14
+volume_avant_penalite = dfOpti['Conso_Optimale'][delai_avant_penalite]
+
+xx = [dfOpti['Date'][0],
+      dfOpti['Date'][-1],
+      dfOpti['Date'][-1],
+      dfOpti['Date'][delai_avant_penalite],
+      dfOpti['Date'][0]]
+
+yy = [dfOpti['Conso_Optimale'][0],
+      dfOpti['Conso_Optimale'][-1],
+      dfOpti['Conso_Optimale'][-1] - volume_avant_penalite,
+      0,
+      0]
+p.patch(xx, yy, alpha=0.2, line_width=2)
+
+# Ajout du HoverTool
 p.add_tools(HoverTool(
             renderers=line_list,
             tooltips=[
                 ('Date', '$x{%F}'),
                 ('Hours', '$y{0,2f}'),  # use @{ } for field names with spaces
-                #         ( 'volume', '@volume{0.00 a}'      ),
             ],
 
             formatters={
@@ -199,6 +216,6 @@ p.yaxis.formatter = NumeralTickFormatter(format="0,")
 
 output_file(settings.path_to_plots + "/gencmip6_mips_timeseries.html", title="gencmip6 mips timeseries")
 
-save(p)
+show(p)
 
 print('Bokeh plot saved on : ', settings.path_to_plots + "/gencmip6_mips_timeseries.html")
