@@ -6,8 +6,8 @@ from bin.jobs.libconso_py37 import parse_config
 class TestParse_config(TestCase):
 
     def setUp(self):
-        #self.path = '../tests/config_test.ini/'
-        self.path = '/home/edupont/Documents/mesocentre/ConsoGENCMIP6_git/ConsoGENCMIP6/tests/config_test.ini'
+        #self.path = '../test/config_test.ini/'
+        self.path = '/home/edupont/Documents/mesocentre/ConsoGENCMIP6_git/ConsoGENCMIP6/test/config_test.ini'
     def test_parse_config(self):
         self.assertEqual(2, 2)
 
