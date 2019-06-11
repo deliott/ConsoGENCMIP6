@@ -7,9 +7,8 @@
 ConsoGENCMIP6 is the project where the monitorring of computing resources is done for the differents projects of IPSL on the National Super Computers (TGCC and IDRIS). 
 There are two different monitoring done here : the cpu time consumption minotoring (whose code can be found in ./bin/consomation) and the cpu usage monitoring, depending on the number of jobs launched from IPSL and on the whole TGCC computer. These codes can be found on ./bin/jobs
 
-These are the codes used and formerly used to check the computing ressources use in TGCC for the CMIP6 projects
 
-Here is a brief overview of the computing chain used to get the graphs for the GENCMIP6 project : 
+Here is a brief overview of the computing chain (formerly) used to get the graphs for the GENCMIP6 project : 
 Two cron are currently runing to follow the computing time ([Figure 1]) and the runing and pending jobs from CMIP6 teams on IRENE ([Figure 2] ) 
 
 
