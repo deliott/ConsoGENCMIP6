@@ -37,8 +37,67 @@ class TestProjectData(TestCase):
 
         self. assertEqual(gencmip6_time_series_filename, 'timeseries_gencmip6_Irene_from_20190513_to_20190602.json')
 
+    def test_load_project_data(self):
+        pass
 
+    def test_set_dates(self):
+        date_list = ['2019-05-13', '2019-05-14', '2019-05-15', '2019-05-16',
+                     '2019-05-17', '2019-05-18', '2019-05-19', '2019-05-20',
+                     '2019-05-21', '2019-05-22', '2019-05-23', '2019-05-24',
+                     '2019-05-25', '2019-05-26', '2019-05-27', '2019-05-28',
+                     '2019-05-29', '2019-05-30', '2019-05-31', '2019-06-01',
+                     '2019-06-02']
 
+        self.gen0826_data.path_to_project_timeseries = '/home/edupont/ccc_myproject_data/mocks/mock_time_series/gen0826/'
+        self.gen0826_data.project_timeseries_filename = 'timeseries_gen0826_Irene_from_20190513_to_20190602.json'
+        self.gen0826_data.load_project_data()
+        self.gen0826_data.set_dates()
+
+        self.assertEqual(self.gen0826_data.dates, date_list)
+
+        self.gencmip6_data.path_to_project_timeseries = '/home/edupont/ccc_myproject_data/mocks/mock_time_series/gencmip6/'
+        self.gencmip6_data.project_timeseries_filename = 'timeseries_gencmip6_Irene_from_20190513_to_20190602.json'
+        self.gencmip6_data.load_project_data()
+        self.gencmip6_data.set_dates()
+
+        self.assertEqual(self.gencmip6_data.dates, date_list)
+        # import json
+        # print(json.dumps(self.gen0826_data.json_data, indent=4))
+
+    def test_set_processor_list(self):
+        self.gencmip6_data.path_to_project_timeseries = '/home/edupont/ccc_myproject_data/mocks/mock_time_series/gencmip6/'
+        self.gencmip6_data.project_timeseries_filename = 'timeseries_gencmip6_Irene_from_20190513_to_20190602.json'
+        self.gencmip6_data.load_project_data()
+        self.gencmip6_data.set_dates()
+        self.gencmip6_data.set_processor_list()
+
+        self.assertEqual(['Skylake'], self.gencmip6_data.processor_list)
+
+        self.gen0826_data.path_to_project_timeseries = '/home/edupont/ccc_myproject_data/mocks/mock_time_series/gen0826/'
+        self.gen0826_data.project_timeseries_filename = 'timeseries_gen0826_Irene_from_20190513_to_20190602.json'
+        self.gen0826_data.load_project_data()
+        self.gen0826_data.set_dates()
+        self.gen0826_data.set_processor_list()
+
+        self.assertEqual(['KNL', 'Skylake'], self.gen0826_data.processor_list)
+
+    # def test_set_subproject_list(self):
+    #     self.gencmip6_data.path_to_project_timeseries = '/home/edupont/ccc_myproject_data/mocks/mock_time_series/gencmip6/'
+    #     self.gencmip6_data.project_timeseries_filename = 'timeseries_gencmip6_Irene_from_20190513_to_20190602.json'
+    #     self.gencmip6_data.load_project_data()
+    #     self.gencmip6_data.set_dates()
+    #     self.gencmip6_data.set_processor_list()
+    #
+    #
+    #     self.assertEqual(['Skylake'], self.gencmip6_data.processor_list)
+    #
+    #     self.gen0826_data.path_to_project_timeseries = '/home/edupont/ccc_myproject_data/mocks/mock_time_series/gen0826/'
+    #     self.gen0826_data.project_timeseries_filename = 'timeseries_gen0826_Irene_from_20190513_to_20190602.json'
+    #     self.gen0826_data.load_project_data()
+    #     self.gen0826_data.set_dates()
+    #     self.gen0826_data.set_processor_list()
+    #
+    #     self.assertEqual(['KNL', 'Skylake'], self.gen0826_data.processor_list)
 
 
 if __name__ == '__main__':

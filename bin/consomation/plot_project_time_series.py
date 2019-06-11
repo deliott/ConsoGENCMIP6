@@ -36,17 +36,17 @@ set_paths.set_path_to_plots()
 pcmip6 = ProjectData('gencmip6')
 pcmip6.set_project_timeseries_filename()
 
-
 # Load data
-with open(pcmip6.path_to_project_timeseries + pcmip6.project_timeseries_filename) as file:
-
-    jl = json.load(file)
-    # print(json.dumps(jl, indent=4))
+pcmip6.load_project_data()
+jl = pcmip6.json_data
 
 # Extract dates from data
-dates = list(jl.keys())
-dates.sort()
-# print(dates)
+pcmip6.set_dates()
+dates = pcmip6.dates
+
+# # Extract Processor List
+# pcmip6.set_processor_list()
+# processor_list = pcmip6.processor_list
 
 # Extract Subprojects (MIPs) Names
 
@@ -58,7 +58,7 @@ mips = list(jl[dates[0]]['processor_type']['Skylake']['sous_projet'].keys())
 mips_data_dict = {}
 for mip in mips:
     mips_data_dict[mip] = []
-    for date in dates: # dates is a sorted list.
+    for date in dates:  # dates is a sorted list.
         hour_consumed_on_this_day = jl[date]['processor_type']['Skylake']['sous_projet'][mip]['subtotal']
         mips_data_dict[mip].append(hour_consumed_on_this_day)
 
