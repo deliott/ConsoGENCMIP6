@@ -4,6 +4,8 @@
   <content><![CDATA[
 # ${1:ConsoGENCMIP6}
 
+ConsoGENCMIP6 is the project where the monitorring of computing resources is done for the differents projects of IPSL on the National Super Computers (TGCC and IDRIS). 
+There are two different monitoring done here : the cpu time consumption minotoring (whose code can be found in ./bin/consomation) and the cpu usage monitoring, depending on the number of jobs launched from IPSL and on the whole TGCC computer. These codes can be found on ./bin/jobs
 
 These are the codes used and formerly used to check the computing ressources use in TGCC for the CMIP6 projects
 
@@ -43,6 +45,7 @@ No contribution need for now.
 ## History
 
 These scripts were written by the former person in charge of following computing time at IPSL.
+The project has been rebooted in April 2019. 
 They are now being modified to for maintenance and further development.
 
 
