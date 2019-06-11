@@ -6,7 +6,7 @@ from bin.consomation.ccc_myproject_parser import Parser
 class Test_CCC_MYPROJECT_Parser(TestCase):
 
     # def setUp(self):
-    #     # self.path = '../tests/config_test.ini/'
+    #     # self.path = '../test/config_test.ini/'
     #     self.path = '/home/edupont/ccc_myproject_data/mock_ccc_myproject.log'
 
     """def test_parser_init(self):
