@@ -2,44 +2,45 @@ import pandas as pd
 import json
 import os
 import datetime
+from math import pi
 
 
 from bokeh.models import ColumnDataSource
-
-
 from bokeh.plotting import figure, output_file, save
 from bokeh.palettes import Spectral
 from bokeh.models import HoverTool
-from math import pi
 from bokeh.models import NumeralTickFormatter
-# output_notebook()
 
 import bin.consomation.settings as settings
 import bin.consomation.set_paths as set_paths
 
-# Initialise Global Variables
-settings.init()
-set_paths.set_path_to_timeseries()
-set_paths.set_path_to_plots()
+from bin.consomation.data_for_plot_extractor import ProjectData
 
+"""
+This script is run by a bash script executed by a cron on ciclad. 
+So far it extract the data from the json timeseries of project GENCMIP6 on Irene.
+
+It has to be refactored to take into account other projects.
+So far there are no test associated with this scirpt.  
+
+"""
+
+# Initialise Global Variables
+# settings.init()
+# set_paths.set_path_to_timeseries()
 
 # Get path to data
-path_to_timeseries = settings.path_to_timeseries + 'gencmip6/'
 
+set_paths.set_path_to_plots()
 
-file_list = os.listdir(path_to_timeseries)
-timeseries_file_name = ''
-for file in file_list:
-    last_piece = file.split('.')[0].split('_')[-1]
-    if last_piece.isdigit() and 'timeseries' in file:
-        timeseries_file_name = file
+pcmip6 = ProjectData('gencmip6')
+pcmip6.set_project_timeseries_filename()
 
 
 # Load data
-with open(path_to_timeseries + timeseries_file_name) as file:
+with open(pcmip6.path_to_project_timeseries + pcmip6.project_timeseries_filename) as file:
 
     jl = json.load(file)
-
     # print(json.dumps(jl, indent=4))
 
 # Extract dates from data
