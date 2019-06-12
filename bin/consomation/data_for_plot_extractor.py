@@ -26,7 +26,9 @@ class ProjectData():
         self.project_timeseries_filename = ''
         self.json_data = None
         self.dates = []
-        self.processor_list =[]
+        self.processor_list = []
+        self.subproject_list = []
+        self.processor_dict = {}
 
     def set_project_timeseries_filename(self):
         """
@@ -59,6 +61,24 @@ class ProjectData():
         self.processor_list.sort()
         # print('Les dates sont : ', self.dates)
         # print(list(self.json_data[self.dates[0]]['processor_type'].keys()))
+
+    def set_subproject_list(self):
+        """Set the subproject_list attributes without duplicates and distinction between the different processor type of the project"""
+        for processor in self.processor_list:
+            self.subproject_list = self.subproject_list + list(self.json_data[self.dates[0]]
+                                                               ['processor_type'][processor]['sous_projet'].keys())
+            self.subproject_list = list(set(self.subproject_list))
+            self.subproject_list.sort()
+
+    def set_processor_subproject_list(self,processor):
+        """Set the subproject list attribute with the subprojects associated to the input given kind of processor"""
+        self.subproject_list = self.subproject_list + list(self.json_data[self.dates[0]]
+                                                           ['processor_type'][processor]['sous_projet'].keys())
+        self.subproject_list = list(set(self.subproject_list))
+        self.subproject_list.sort()
+
+
+
 
 
 

@@ -81,23 +81,53 @@ class TestProjectData(TestCase):
 
         self.assertEqual(['KNL', 'Skylake'], self.gen0826_data.processor_list)
 
-    # def test_set_subproject_list(self):
-    #     self.gencmip6_data.path_to_project_timeseries = '/home/edupont/ccc_myproject_data/mocks/mock_time_series/gencmip6/'
-    #     self.gencmip6_data.project_timeseries_filename = 'timeseries_gencmip6_Irene_from_20190513_to_20190602.json'
-    #     self.gencmip6_data.load_project_data()
-    #     self.gencmip6_data.set_dates()
-    #     self.gencmip6_data.set_processor_list()
-    #
-    #
-    #     self.assertEqual(['Skylake'], self.gencmip6_data.processor_list)
-    #
-    #     self.gen0826_data.path_to_project_timeseries = '/home/edupont/ccc_myproject_data/mocks/mock_time_series/gen0826/'
-    #     self.gen0826_data.project_timeseries_filename = 'timeseries_gen0826_Irene_from_20190513_to_20190602.json'
-    #     self.gen0826_data.load_project_data()
-    #     self.gen0826_data.set_dates()
-    #     self.gen0826_data.set_processor_list()
-    #
-    #     self.assertEqual(['KNL', 'Skylake'], self.gen0826_data.processor_list)
+    def test_set_subproject_list(self):
+        self.gencmip6_data.path_to_project_timeseries = '/home/edupont/ccc_myproject_data/mocks/mock_time_series/gencmip6/'
+        self.gencmip6_data.project_timeseries_filename = 'timeseries_gencmip6_Irene_from_20190513_to_20190602.json'
+        self.gencmip6_data.load_project_data()
+        self.gencmip6_data.set_dates()
+        self.gencmip6_data.set_processor_list()
+        self.gencmip6_data.set_subproject_list()
+
+        mock_list = ['anacmip6', 'c4mcmip6', 'cfmcmip6', 'checmip6', 'cm5cmip6', 'daacmip6', 'dcpcmip6', 'dekcmip6',
+                     'devcmip6', 'dmrcmip6', 'fafcmip6', 'geocmip6', 'gmmcmip6', 'hircmip6', 'ismcmip6', 'ls3cmip6',
+                     'lumcmip6', 'omicmip6', 'pmicmip6', 'rcecmip6', 'rfmcmip6', 'scecmip6', 'solcmip6', 'strcmip6',
+                     'volcmip6']
+        self.assertEqual(mock_list, self.gencmip6_data.subproject_list)
+
+        self.gen0826_data.path_to_project_timeseries = '/home/edupont/ccc_myproject_data/mocks/mock_time_series/gen0826/'
+        self.gen0826_data.project_timeseries_filename = 'timeseries_gen0826_Irene_from_20190513_to_20190602.json'
+        self.gen0826_data.load_project_data()
+        self.gen0826_data.set_dates()
+        self.gen0826_data.set_processor_list()
+        self.gen0826_data.set_subproject_list()
+
+        self.assertEqual(['gen0826'], self.gen0826_data.subproject_list)
+
+    def test_set_processor_subproject_list(self):
+        self.gencmip6_data.path_to_project_timeseries = '/home/edupont/ccc_myproject_data/mocks/mock_time_series/gencmip6/'
+        self.gencmip6_data.project_timeseries_filename = 'timeseries_gencmip6_Irene_from_20190513_to_20190602.json'
+        self.gencmip6_data.load_project_data()
+        self.gencmip6_data.set_dates()
+        self.gencmip6_data.set_processor_subproject_list('Skylake')
+
+        mock_list = ['anacmip6', 'c4mcmip6', 'cfmcmip6', 'checmip6', 'cm5cmip6', 'daacmip6', 'dcpcmip6', 'dekcmip6',
+                     'devcmip6', 'dmrcmip6', 'fafcmip6', 'geocmip6', 'gmmcmip6', 'hircmip6', 'ismcmip6', 'ls3cmip6',
+                     'lumcmip6', 'omicmip6', 'pmicmip6', 'rcecmip6', 'rfmcmip6', 'scecmip6', 'solcmip6', 'strcmip6',
+                     'volcmip6']
+        self.assertEqual(mock_list, self.gencmip6_data.subproject_list)
+
+        self.gen0826_data.path_to_project_timeseries = '/home/edupont/ccc_myproject_data/mocks/mock_time_series/gen0826/'
+        self.gen0826_data.project_timeseries_filename = 'timeseries_gen0826_Irene_from_20190513_to_20190602.json'
+        self.gen0826_data.load_project_data()
+        self.gen0826_data.set_dates()
+        self.gen0826_data.set_processor_subproject_list('KNL')
+
+        self.assertEqual(['gen0826'], self.gen0826_data.subproject_list)
+
+        self.gen0826_data.set_processor_subproject_list('Skylake')
+
+        self.assertEqual(['gen0826'], self.gen0826_data.subproject_list)
 
 
 if __name__ == '__main__':

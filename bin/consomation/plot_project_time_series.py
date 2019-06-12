@@ -30,7 +30,6 @@ So far there are no test associated with this scirpt.
 # set_paths.set_path_to_timeseries()
 
 # Get path to data
-
 set_paths.set_path_to_plots()
 
 pcmip6 = ProjectData('gencmip6')
@@ -49,12 +48,11 @@ dates = pcmip6.dates
 # processor_list = pcmip6.processor_list
 
 # Extract Subprojects (MIPs) Names
-
-mips = list(jl[dates[0]]['processor_type']['Skylake']['sous_projet'].keys())
-# print(mips)
+pcmip6.set_processor_subproject_list('Skylake')
+mips = pcmip6.subproject_list
 
 #############################
-# Create a pandas_dataframe with al the subprojects (MIPs) as columns
+# Create a pandas_dataframe with all the subprojects (MIPs) as columns
 mips_data_dict = {}
 for mip in mips:
     mips_data_dict[mip] = []
@@ -100,7 +98,7 @@ date_list = pd.date_range(start=pd.to_datetime(start_date),
 delta = pd.to_datetime(deadline) - pd.to_datetime(start_date)
 
 deltaH = allocated / delta.days
-print('Nombres d\'heures à consommer par jour : ' , deltaH )
+print('Nombres d\'heures à consommer par jour : ', deltaH)
 liste_consomation_optimale = []
 for indice in range(len(date_list)):
     liste_consomation_optimale.append(indice*deltaH)
@@ -124,7 +122,7 @@ p = figure(title="Consommation de l'allocation CMIP6 - Vue par MIPs",
 line_list = []
 
 # Ajout des lignes des sous projets au plot :
-#Nb de sous projets à ploter :
+# Nb de sous projets à ploter :
 nb_sousprojets = 10
 nb_plot = 1
 
@@ -242,19 +240,18 @@ p.add_tools(HoverTool(
 
 # Ajout du HoverTool
 p.add_tools(HoverTool(
-            renderers=line_list,
-            tooltips=[
-                ('Date', '$x{%F}'),
-                ('Courbe', '$name'),
-                ('Hours', '$y{0,2f}'),  # use @{ } for field names with spaces
-            ],
-
-            formatters={
-                '$x': 'datetime',  # use 'datetime' formatter for 'date' field
-            },
-
-            mode='mouse'
-        ))
+    renderers=line_list,
+    tooltips=[
+        ('Date', '$x{%F}'),
+        ('Courbe', '$name'),
+        ('Hours', '$y{0,2f}'),  # use @{ } for field names with spaces
+        ],
+    formatters={
+        '$x': 'datetime',  # use 'datetime' formatter for 'date' field
+        },
+    mode='mouse'
+                    )
+            )
 
 # Ajout de quelsues paramètres pour le graph
 
