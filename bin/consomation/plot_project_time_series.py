@@ -41,7 +41,6 @@ jl = pcmip6.json_data
 
 # Extract dates from data
 pcmip6.set_dates()
-dates = pcmip6.dates
 
 # # Extract Processor List
 # pcmip6.set_processor_list()
@@ -53,26 +52,15 @@ mips = pcmip6.subproject_list
 
 #############################
 # Create a pandas_dataframe with all the subprojects (MIPs) as columns
-mips_data_dict = {}
-for mip in mips:
-    mips_data_dict[mip] = []
-    for date in dates:  # dates is a sorted list.
-        hour_consumed_on_this_day = jl[date]['processor_type']['Skylake']['sous_projet'][mip]['subtotal']
-        mips_data_dict[mip].append(hour_consumed_on_this_day)
-
-# print('MIPs Data Dict : ', mips_data_dict)
-df = pd.DataFrame(mips_data_dict)
-
-
-# Set the Date column as the index of the dataframe
+pcmip6.set_subproject_subtotal_dataframe('Skylake')
 
 
 # Sort the columns according to their biggest last value
-df = df[df.iloc[-1, :].sort_values(ascending=False).index]
+pcmip6.sort_df_colomns_according_to_biggest_last_value()
+df = pcmip6.subproject_subtotal_dataframe
 
-dates = pd.to_datetime(dates)
-
-df.insert(0, "Date", dates, True)
+# Set the Date column as the index of the dataframe
+pcmip6.add_dates_to_dataframe()
 
 #############################
 # Extract the total of subproject value and add column to dataframe
@@ -85,6 +73,8 @@ df.insert(loc=1, value=dfTot, column='Total')
 # Extract Theoretical Optimal Consumption Curve
 days_in_advance = 3
 
+dates = pd.to_datetime(pcmip6.dates)
+# print(dates)
 
 allocated = jl['2019-05-13']['processor_type']['Skylake']["allocated"]
 deadline = jl['2019-05-13']['project_deadline']
@@ -104,8 +94,6 @@ for indice in range(len(date_list)):
     liste_consomation_optimale.append(indice*deltaH)
 
 dfOpti = {'Date': date_list, 'Conso_Optimale': liste_consomation_optimale}
-
-
 
 #############################
 # Configuration du Plot :
