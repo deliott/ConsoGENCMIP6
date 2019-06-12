@@ -12,6 +12,7 @@ import bin.consomation.set_paths as set_paths
 
 import os
 import json
+import pandas as pd
 
 # # Initialise Global Variables
 settings.init()
@@ -71,16 +72,34 @@ class ProjectData():
             self.subproject_list.sort()
 
     def set_processor_subproject_list(self,processor):
-        """Set the subproject list attribute with the subprojects associated to the input given kind of processor"""
+        """
+        Set the subproject list attribute with the subprojects associated to the input given kind of processor.
+        :param processor: name of the processor whose subproject are to be listed
+        :type processor: str
+        """
         self.subproject_list = self.subproject_list + list(self.json_data[self.dates[0]]
                                                            ['processor_type'][processor]['sous_projet'].keys())
         self.subproject_list = list(set(self.subproject_list))
         self.subproject_list.sort()
 
+    def get_subproject_subtotal_dataframe(self, processor):
+    # def get_subproject_dataframe(self):
+        """
+        Creates a pandas dataframe with all the subprojects (MIPs) as columns and the consumed hours as data.
 
+        :param processor: name of the processor whose subproject are to treated
+        :type processor: str
+        :return df:
+        :rtype df: pandas data frame
+        """
+        mips_data_dict = {}
+        for mip in self.subproject_list:
+            mips_data_dict[mip] = []
+            for date in self.dates:  # dates is a sorted list.
+                hour_consumed_on_this_day = self.json_data[date]['processor_type'][processor]['sous_projet'][mip]['subtotal']
+                mips_data_dict[mip].append(hour_consumed_on_this_day)
 
+        # print('MIPs Data Dict : ', mips_data_dict)
+        df = pd.DataFrame(mips_data_dict)
 
-
-
-# mips = list(jl[self.dates[0]]['processor_type']['Skylake']['sous_projet'].keys())
-
+        return df

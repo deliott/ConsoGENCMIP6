@@ -1,5 +1,6 @@
 from unittest import TestCase
 import unittest.main
+import pandas as pd
 
 import bin.consomation.settings as settings
 import bin.consomation.set_paths as set_paths
@@ -129,6 +130,57 @@ class TestProjectData(TestCase):
 
         self.assertEqual(['gen0826'], self.gen0826_data.subproject_list)
 
+    def test_get_subproject_subtotal_dataframe(self):
+        self.gencmip6_data.path_to_project_timeseries = '/home/edupont/ccc_myproject_data/mocks/mock_time_series/gencmip6/'
+        self.gencmip6_data.project_timeseries_filename = 'timeseries_gencmip6_Irene_from_20190513_to_20190602_MOCKED.json'
+        self.gencmip6_data.load_project_data()
+        self.gencmip6_data.set_dates()
+        self.gencmip6_data.set_processor_subproject_list('Skylake')
+        output = self.gencmip6_data.get_subproject_subtotal_dataframe('Skylake')
+
+        data1 = [[701413.69, 16573.01, 777896.99, 35.01], [761406.56, 16970.07, 801912.78, 35.01], [867443.26, 16970.07, 812899.98, 35.01]]
+        df1 = pd.DataFrame(data1, columns=['dcpcmip6', 'devcmip6', 'pmicmip6', 'rcecmip6'])
+
+        try:
+            pd.testing.assert_frame_equal(df1, output, check_exact=True)
+        except:
+            print('\nIssue with the pandas dataframe comparison.\n')
+            print('Function\'output  : \n',output)
+            print('Must be equal to : \n', df1)
+            self.assertTrue(False)
+
+        self.gen0826_data.path_to_project_timeseries = '/home/edupont/ccc_myproject_data/mocks/mock_time_series/gen0826/'
+        self.gen0826_data.project_timeseries_filename = 'timeseries_gen0826_Irene_from_20190513_to_20190602_MOCKED.json'
+        self.gen0826_data.load_project_data()
+        self.gen0826_data.set_dates()
+        self.gen0826_data.set_processor_subproject_list('Skylake')
+        output0826 = self.gen0826_data.get_subproject_subtotal_dataframe('Skylake')
+
+        data2 = [[7319.91], [7319.91], [7319.91]]
+        df2 = pd.DataFrame(data2, columns=['gen0826'])
+        try:
+            pd.testing.assert_frame_equal(df2, output0826, check_exact=True)
+        except:
+            print('\nIssue with the pandas dataframe comparison.\n')
+            print('Function\'output  : \n', output0826)
+            print('Must be equal to : \n', df2)
+            self.assertTrue(False)
+        self.gen0826_data.path_to_project_timeseries = '/home/edupont/ccc_myproject_data/mocks/mock_time_series/gen0826/'
+        self.gen0826_data.project_timeseries_filename = 'timeseries_gen0826_Irene_from_20190513_to_20190602_MOCKED.json'
+        self.gen0826_data.load_project_data()
+        self.gen0826_data.set_dates()
+        self.gen0826_data.set_processor_subproject_list('KNL')
+        output0826 = self.gen0826_data.get_subproject_subtotal_dataframe('KNL')
+
+        data3 = [[60222.24], [60222.24], [60222.24]]
+        df3 = pd.DataFrame(data3, columns=['gen0826'])
+        try:
+            pd.testing.assert_frame_equal(df3, output0826, check_exact=True)
+        except:
+            print('\nIssue with the pandas dataframe comparison.\n')
+            print('Function\'output  : \n', output0826)
+            print('Must be equal to : \n', df3)
+            self.assertTrue(False)
 
 if __name__ == '__main__':
     # Initialise Global Variables
