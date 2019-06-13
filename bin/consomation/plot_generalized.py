@@ -6,15 +6,17 @@ from bin.consomation.data_for_plot_extractor import ProjectData
 
 
 
-
+# processor = 'Skylake'
+# project_name = 'gencmip6'
 # data_for_plot = ProjectData('gencmip6')
 # df_data, df_opti = data_for_plot.run_data_for_plot_extractor('Skylake', '2019-05-01')
 
-data_for_plot = ProjectData('gen0826')
-df_data, df_opti = data_for_plot.run_data_for_plot_extractor('Skylake', '2018-10-31')
-
-data_for_plot = ProjectData('gen0826')
-df_data, df_opti = data_for_plot.run_data_for_plot_extractor('KNL', '2018-10-31')
+#
+# processor = 'KNL'
+processor = 'Skylake'
+project_name = 'gen0826'
+data_for_plot = ProjectData(project_name)
+df_data, df_opti = data_for_plot.run_data_for_plot_extractor(processor, '2018-10-31')
 
 
 
@@ -43,9 +45,9 @@ set_paths.set_path_to_plots()
 # Configuration du Plot :
 
 source = ColumnDataSource(df_data)
-p = figure(title="Consommation de l'allocation CMIP6 - Vue par MIPs",
+p = figure(title="Consommation de l'allocation " + project_name.swapcase() + " - Vue par MIPs/sous-projets",
            x_axis_label="Date",
-           y_axis_label="Irene skylake (heures)",
+           y_axis_label="Irene " + processor + " (heures)",
            x_axis_type="datetime",
            plot_width=1800, plot_height=800,
            sizing_mode='scale_width'
@@ -108,7 +110,8 @@ line_list.append(
 )
 
 # Ajout de la courbe de consomation théorique :
-delai_avant_penalite = 14
+# delai_avant_penalite = 14
+delai_avant_penalite = 60
 volume_avant_penalite = df_opti['Conso_Optimale'][delai_avant_penalite]
 
 xx = [df_opti['Date'][0],
@@ -196,8 +199,8 @@ p.yaxis.formatter = NumeralTickFormatter(format="0,")
 
 
 
-output_file(settings.path_to_plots + "/gencmip6_mips_timeseries.html", title="gencmip6 mips timeseries")
+output_file(settings.path_to_plots + "/" + project_name + "_mips_timeseries.html", title= project_name + " mips timeseries")
 
 save(p)
 
-print('Bokeh plot saved on : ', settings.path_to_plots + "/gencmip6_mips_timeseries.html")
+print('Bokeh plot saved on : ', settings.path_to_plots + "/" + project_name + "_mips_timeseries.html")
