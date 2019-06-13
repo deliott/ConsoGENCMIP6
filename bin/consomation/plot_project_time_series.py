@@ -65,13 +65,12 @@ pcmip6.add_dates_to_dataframe()
 #############################
 # Extract the total of subproject value and add column to dataframe
 
-dfTot = df.sum(axis=1, numeric_only=True)
-df.insert(loc=1, value=dfTot, column='Total')
+pcmip6.add_total_subprojects()
+
 
 
 #############################
 # Extract Theoretical Optimal Consumption Curve
-# @TODO : refactor in a different module than data_for_plot_extractor.py ?
 days_in_advance = 3
 
 pcmip6.set_allocated_dict()
@@ -80,7 +79,7 @@ start_date = '2019-05-01'
 allocated = pcmip6.allocated_dict['Skylake']
 
 pcmip6.set_last_date(days_in_advance)
-last_date = pcmip6.last_date
+last_date = pcmip6.last_date_of_plot
 
 pcmip6.set_start_date_to_dict('Skylake', '2019-05-01')
 pcmip6.set_optimal_daily_consumption('Skylake')

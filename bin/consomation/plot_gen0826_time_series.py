@@ -64,14 +64,10 @@ p0826.add_dates_to_dataframe()
 
 #############################
 # Extract the total of subproject value and add column to dataframe
-
-dfTot = df.sum(axis=1, numeric_only=True)
-df.insert(loc=1, value=dfTot, column='Total')
-
+p0826.add_total_subprojects()
 
 #############################
 # Extract Theoretical Optimal Consumption Curve
-# @TODO : refactor in a different module than data_for_plot_extractor.py ?
 days_in_advance = 3
 
 p0826.set_allocated_dict()
@@ -80,7 +76,7 @@ start_date = '2018-10-31'
 allocated = p0826.allocated_dict['Skylake']
 
 p0826.set_last_date(days_in_advance)
-last_date = p0826.last_date
+last_date = p0826.last_date_of_plot
 
 p0826.set_start_date_to_dict('Skylake', '2018-10-31')
 p0826.set_optimal_daily_consumption('Skylake')

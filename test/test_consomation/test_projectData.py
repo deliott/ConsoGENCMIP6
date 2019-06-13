@@ -232,6 +232,36 @@ class TestProjectData(TestCase):
             print('Must be equal to : \n', sorted_df1)
             self.assertTrue(False)
 
+    def test_add_total_subprojects(self):
+
+        self.gencmip6_data.path_to_project_timeseries = '/home/edupont/ccc_myproject_data/mocks/mock_time_series/gencmip6/'
+        self.gencmip6_data.project_timeseries_filename = 'timeseries_gencmip6_Irene_from_20190513_to_20190602_MOCKED.json'
+        self.gencmip6_data.load_project_data()
+        self.gencmip6_data.set_dates()
+        self.gencmip6_data.set_processor_subproject_list('Skylake')
+        # output = self.gencmip6_data.get_subproject_subtotal_dataframe('Skylake')
+        self.gencmip6_data.set_subproject_subtotal_dataframe('Skylake')
+        self.gencmip6_data.sort_df_colomns_according_to_biggest_last_value()
+        self.gencmip6_data.add_dates_to_dataframe()
+
+        self.gencmip6_data.add_total_subprojects()
+
+
+        sorted_data1 = [[datetime.strptime('2019-05-30', "%Y-%m-%d"), 1495918.70, 701413.69, 777896.99, 16573.01, 35.01],
+                        [datetime.strptime('2019-05-31', "%Y-%m-%d"), 1580324.42, 761406.56, 801912.78, 16970.07, 35.01],
+                        [datetime.strptime('2019-06-01', "%Y-%m-%d"), 1697348.32, 867443.26, 812899.98, 16970.07, 35.01]]
+        sorted_df1 = pd.DataFrame(sorted_data1, columns=['Date', 'Total', 'dcpcmip6', 'pmicmip6', 'devcmip6', 'rcecmip6'])
+
+        try:
+            pd.testing.assert_frame_equal(sorted_df1, round(self.gencmip6_data.subproject_subtotal_dataframe, 2), check_exact=True)
+        except:
+            print('\nIssue with the pandas dataframe comparison.\n')
+            print('Function\'output  : \n', self.gencmip6_data.subproject_subtotal_dataframe)
+            print('Must be equal to : \n', sorted_df1)
+            self.assertTrue(False)
+
+
+
     def test_set_allocated_dict(self):
 
         self.gencmip6_data.path_to_project_timeseries = '/home/edupont/ccc_myproject_data/mocks/mock_time_series/gencmip6/'
@@ -289,7 +319,7 @@ class TestProjectData(TestCase):
         self.gencmip6_data.set_last_date(days_in_advance=3)
 
         mock_last_date = datetime.strptime('2019-06-04', "%Y-%m-%d")
-        self.assertEqual(self.gencmip6_data.last_date, mock_last_date)
+        self.assertEqual(self.gencmip6_data.last_date_of_plot, mock_last_date)
 
     def test_get_list_of_dates_between_boundaries(self):
         date1 = '19-05-1925'
@@ -346,6 +376,7 @@ class TestProjectData(TestCase):
                           2434087.1934604906, 2507847.4114441415]
 
         self.assertTrue(test['Conso_Optimale'] == mock_last_date)
+
 
 
 

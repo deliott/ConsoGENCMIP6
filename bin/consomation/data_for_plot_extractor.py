@@ -24,6 +24,7 @@ set_paths.set_path_to_timeseries()
 
 class ProjectData:
     """This class extracts the project data from the json timeseries file"""
+    days_in_advance = 3
 
     def __init__(self, project_name):
         self.project_name = project_name
@@ -31,6 +32,8 @@ class ProjectData:
         self.project_timeseries_filename = ''
         self.json_data = None
         self.dates = []
+        self.deadline = ''
+        self.last_date_of_plot = pd.to_datetime('2000-05-31')
         self.processor_list = []
         self.subproject_list = []
         self.processor_dict = {}
@@ -92,8 +95,8 @@ class ProjectData:
         self.subproject_list = list(set(self.subproject_list))
         self.subproject_list.sort()
 
-    def get_subproject_subtotal_dataframe(self, processor):
     # def get_subproject_dataframe(self):
+    def get_subproject_subtotal_dataframe(self, processor):
         """
         Creates a pandas dataframe with all the subprojects (MIPs) as columns and the consumed hours as data.
 
@@ -136,6 +139,22 @@ class ProjectData:
         """
         dates_as_datetime = pd.to_datetime(self.dates)
         self.subproject_subtotal_dataframe.insert(0, "Date", dates_as_datetime, True)
+
+    # def add_total_subprojects(self, processor):
+
+    def add_total_subprojects(self):
+
+        """
+        Extract the total of subproject cpu time consumption and add column to self.subproject_subtotal_dataframe
+
+        :param processor: Not used
+        :return:
+        """
+        df_tot = self.subproject_subtotal_dataframe.sum(axis=1, numeric_only=True)
+        self.subproject_subtotal_dataframe.insert(loc=1,
+                                                  value=df_tot,
+                                                  column='Total'
+                                                  )
 
 #############################
 # Methods for Optimal Curve #
@@ -181,9 +200,10 @@ class ProjectData:
         :type days_in_advance: int
         :return: None
         """
-        self.last_date = max(pd.to_datetime(self.dates)) + datetime.timedelta(days=int(days_in_advance))
+        self.last_date_of_plot = max(pd.to_datetime(self.dates)) + datetime.timedelta(days=int(days_in_advance))
 
-    def get_list_of_dates_between_boundaries(self, start, end):
+    @staticmethod
+    def get_list_of_dates_between_boundaries(start, end):
         """
 
         :param start: str dd-mm-YYYY describing start boundary of the list
@@ -197,7 +217,8 @@ class ProjectData:
 
     def set_optimal_daily_consumption(self, processor):
         """
-        Sets the self.optimal_daily_consumption attributes to the number of hours that should be consummed everyday for optimal use of allocation
+        Sets the self.optimal_daily_consumption attributes to the number of hours
+        that should be consummed everyday for optimal use of allocation
         The following attributes have to be set up before using this method:
             - self.start_date_dict
             - self.allocated_dict
@@ -206,7 +227,6 @@ class ProjectData:
         """
         delta = pd.to_datetime(self.deadline) - pd.to_datetime(self.start_date_dict[processor])
         self.optimal_daily_consumption = self.allocated_dict[processor] / delta.days
-
 
     def get_theoretical_optimal_consumption_curve_dataframe(self, processor):
         """
@@ -219,7 +239,7 @@ class ProjectData:
         :param processor: str, Name of the processor.
         :return: dict with the data to plot the optimal consumption curve
         """
-        date_list = self.get_list_of_dates_between_boundaries(self.start_date_dict[processor], self.last_date)
+        date_list = self.get_list_of_dates_between_boundaries(self.start_date_dict[processor], self.last_date_of_plot)
 
         print('Nombres d\'heures à consommer par jour : ', round(self.optimal_daily_consumption, 0))
 
@@ -227,3 +247,55 @@ class ProjectData:
         for indice in range(len(date_list)):
             liste_consomation_optimale.append(indice * self.optimal_daily_consumption)
         return {'Date': date_list, 'Conso_Optimale': liste_consomation_optimale}
+
+
+
+    def run_data_for_plot_extractor(self, processor, start_date):
+        """
+        Sum up all the previous methods to output the dataframe and instanciate all the attributes.
+        Only methods to run before plotting a graph.
+
+        :return:
+        """
+
+        self.set_project_timeseries_filename()
+        self.load_project_data()
+        self.set_dates()
+        self.set_processor_list()
+        self.set_processor_subproject_list(processor)
+        self.set_subproject_subtotal_dataframe(processor)
+        self.sort_df_colomns_according_to_biggest_last_value()
+        self.add_dates_to_dataframe()
+        self.add_total_subprojects()
+        self.set_allocated_dict()
+        self.set_deadline()
+
+
+        self.set_last_date(ProjectData.days_in_advance)
+
+        self.set_start_date_to_dict(processor, start_date)  # used to be 'Skylake' and '2019-05-01' for gencmip6
+        self.set_optimal_daily_consumption(processor)
+
+        dfOpti = self.get_theoretical_optimal_consumption_curve_dataframe(processor)
+
+
+        return self.subproject_subtotal_dataframe ,dfOpti
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
