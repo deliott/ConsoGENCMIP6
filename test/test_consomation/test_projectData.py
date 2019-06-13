@@ -2,6 +2,7 @@ from unittest import TestCase
 import unittest.main
 import pandas as pd
 from datetime import datetime
+import numpy as np
 
 import bin.consomation.settings as settings
 import bin.consomation.set_paths as set_paths
@@ -230,6 +231,121 @@ class TestProjectData(TestCase):
             print('Function\'output  : \n', self.gencmip6_data.subproject_subtotal_dataframe)
             print('Must be equal to : \n', sorted_df1)
             self.assertTrue(False)
+
+    def test_set_allocated_dict(self):
+
+        self.gencmip6_data.path_to_project_timeseries = '/home/edupont/ccc_myproject_data/mocks/mock_time_series/gencmip6/'
+        self.gencmip6_data.project_timeseries_filename = 'timeseries_gencmip6_Irene_from_20190513_to_20190602_MOCKED.json'
+        self.gencmip6_data.load_project_data()
+        self.gencmip6_data.set_dates()
+        self.gencmip6_data.set_processor_list()
+        self.gencmip6_data.set_allocated_dict()
+
+        mock_allocation = {'Skylake': 27070000.0}
+        self. assertEqual(self.gencmip6_data.allocated_dict, mock_allocation)
+
+        self.gen0826_data.path_to_project_timeseries = '/home/edupont/ccc_myproject_data/mocks/mock_time_series/gen0826/'
+        self.gen0826_data.project_timeseries_filename = 'timeseries_gen0826_Irene_from_20190513_to_20190602_MOCKED.json'
+        self.gen0826_data.load_project_data()
+        self.gen0826_data.set_dates()
+        self.gen0826_data.set_processor_list()
+        self.gen0826_data.set_allocated_dict()
+
+        mock_allocation2 = {'Skylake':  40000.0, 'KNL': 200000.0}
+        self. assertEqual(self.gen0826_data.allocated_dict, mock_allocation2)
+
+    def test_set_deadline(self):
+        self.gencmip6_data.path_to_project_timeseries = '/home/edupont/ccc_myproject_data/mocks/mock_time_series/gencmip6/'
+        self.gencmip6_data.project_timeseries_filename = 'timeseries_gencmip6_Irene_from_20190513_to_20190602_MOCKED.json'
+        self.gencmip6_data.load_project_data()
+        self.gencmip6_data.set_dates()
+        self.gencmip6_data.set_deadline()
+
+        mock_deadline1 = '2020-05-02'
+        self.assertEqual(self.gencmip6_data.deadline, mock_deadline1)
+
+
+        self.gen0826_data.path_to_project_timeseries = '/home/edupont/ccc_myproject_data/mocks/mock_time_series/gen0826/'
+        self.gen0826_data.project_timeseries_filename = 'timeseries_gen0826_Irene_from_20190513_to_20190602_MOCKED.json'
+        self.gen0826_data.load_project_data()
+        self.gen0826_data.set_dates()
+        self.gen0826_data.set_deadline()
+
+        mock_deadline2 = '2019-11-04'
+        self.assertEqual(self.gen0826_data.deadline, mock_deadline2)
+
+    def test_start_date_to_dict(self):
+        self.gencmip6_data.set_start_date_to_dict('Skylake', '19-05-1925')
+
+        test_comparison = {}
+        test_comparison['Skylake'] = '19-05-1925'
+        self.assertDictEqual(self.gencmip6_data.start_date_dict, test_comparison)
+
+    def test_set_last_date(self):
+        self.gencmip6_data.path_to_project_timeseries = '/home/edupont/ccc_myproject_data/mocks/mock_time_series/gencmip6/'
+        self.gencmip6_data.project_timeseries_filename = 'timeseries_gencmip6_Irene_from_20190513_to_20190602_MOCKED.json'
+        self.gencmip6_data.load_project_data()
+        self.gencmip6_data.set_dates()
+        self.gencmip6_data.set_last_date(days_in_advance=3)
+
+        mock_last_date = datetime.strptime('2019-06-04', "%Y-%m-%d")
+        self.assertEqual(self.gencmip6_data.last_date, mock_last_date)
+
+    def test_get_list_of_dates_between_boundaries(self):
+        date1 = '19-05-1925'
+        date2 = '28-05-1925'
+        output = self.gencmip6_data.get_list_of_dates_between_boundaries(date1, date2)
+        test_list = pd.to_datetime(['19-05-1925', '20-05-1925', '21-05-1925', '22-05-1925', '23-05-1925',
+                        '24-05-1925', '25-05-1925', '26-05-1925', '27-05-1925', '28-05-1925', ])
+
+        self.assertTrue(all(output == test_list))
+
+    def test_set_optimal_daily_consumption(self):
+        self.gencmip6_data.path_to_project_timeseries = '/home/edupont/ccc_myproject_data/mocks/mock_time_series/gencmip6/'
+        self.gencmip6_data.project_timeseries_filename = 'timeseries_gencmip6_Irene_from_20190513_to_20190602_MOCKED.json'
+        self.gencmip6_data.load_project_data()
+        self.gencmip6_data.set_dates()
+        self.gencmip6_data.set_processor_list()
+
+        self.gencmip6_data.set_allocated_dict()
+        self.gencmip6_data.set_deadline()
+
+        self.gencmip6_data.set_start_date_to_dict('Skylake', '2019-05-01')
+        self.gencmip6_data.set_optimal_daily_consumption('Skylake')
+
+        test_result = 73760.0
+        self.assertEqual(test_result, round(self.gencmip6_data.optimal_daily_consumption, 0))
+
+
+    def test_get_theoretical_optimal_consumption_curve_dataframe(self):
+        self.gencmip6_data.path_to_project_timeseries = '/home/edupont/ccc_myproject_data/mocks/mock_time_series/gencmip6/'
+        self.gencmip6_data.project_timeseries_filename = 'timeseries_gencmip6_Irene_from_20190513_to_20190602_MOCKED.json'
+        self.gencmip6_data.load_project_data()
+        self.gencmip6_data.set_dates()
+
+        self.gencmip6_data.set_processor_list()
+        self.gencmip6_data.set_allocated_dict()
+        self.gencmip6_data.set_deadline()
+        self.gencmip6_data.set_last_date(days_in_advance=3)
+        self.gencmip6_data.set_start_date_to_dict('Skylake', '2019-05-01')
+        self.gencmip6_data.set_optimal_daily_consumption('Skylake')
+
+        test = self.gencmip6_data.get_theoretical_optimal_consumption_curve_dataframe('Skylake')
+
+        mock_last_date = [0.0, 73760.21798365122, 147520.43596730244,
+                          221280.65395095368, 295040.8719346049, 368801.0899182561,
+                          442561.30790190736, 516321.52588555857, 590081.7438692098,
+                          663841.961852861, 737602.1798365122, 811362.3978201634,
+                          885122.6158038147, 958882.8337874659, 1032643.0517711171,
+                          1106403.2697547683, 1180163.4877384196, 1253923.7057220708,
+                          1327683.923705722, 1401444.1416893732, 1475204.3596730244,
+                          1548964.5776566756, 1622724.7956403268, 1696485.013623978,
+                          1770245.2316076295, 1844005.4495912807, 1917765.6675749319,
+                          1991525.885558583, 2065286.1035422343, 2139046.3215258853,
+                          2212806.5395095367, 2286566.7574931877, 2360326.975476839,
+                          2434087.1934604906, 2507847.4114441415]
+
+        self.assertTrue(test['Conso_Optimale'] == mock_last_date)
 
 
 

@@ -43,7 +43,7 @@ jl = pcmip6.json_data
 pcmip6.set_dates()
 
 # # Extract Processor List
-# pcmip6.set_processor_list()
+pcmip6.set_processor_list()
 # processor_list = pcmip6.processor_list
 
 # Extract Subprojects (MIPs) Names
@@ -71,29 +71,22 @@ df.insert(loc=1, value=dfTot, column='Total')
 
 #############################
 # Extract Theoretical Optimal Consumption Curve
+# @TODO : refactor in a different module than data_for_plot_extractor.py ?
 days_in_advance = 3
 
-dates = pd.to_datetime(pcmip6.dates)
-# print(dates)
-
-allocated = jl['2019-05-13']['processor_type']['Skylake']["allocated"]
-deadline = jl['2019-05-13']['project_deadline']
+pcmip6.set_allocated_dict()
+pcmip6.set_deadline()
 start_date = '2019-05-01'
-last_date = max(dates) + datetime.timedelta(days=int(days_in_advance))
+allocated = pcmip6.allocated_dict['Skylake']
 
-date_list = pd.date_range(start=pd.to_datetime(start_date),
-                          end=pd.to_datetime(last_date),
-                          freq='D')
+pcmip6.set_last_date(days_in_advance)
+last_date = pcmip6.last_date
 
-delta = pd.to_datetime(deadline) - pd.to_datetime(start_date)
+pcmip6.set_start_date_to_dict('Skylake', '2019-05-01')
+pcmip6.set_optimal_daily_consumption('Skylake')
 
-deltaH = allocated / delta.days
-print('Nombres d\'heures à consommer par jour : ', deltaH)
-liste_consomation_optimale = []
-for indice in range(len(date_list)):
-    liste_consomation_optimale.append(indice*deltaH)
+dfOpti = pcmip6.get_theoretical_optimal_consumption_curve_dataframe('Skylake')
 
-dfOpti = {'Date': date_list, 'Conso_Optimale': liste_consomation_optimale}
 
 #############################
 # Configuration du Plot :
