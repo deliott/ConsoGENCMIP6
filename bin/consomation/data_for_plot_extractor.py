@@ -26,6 +26,7 @@ class ProjectData:
     """This class extracts the project data from the json timeseries file"""
 
     def __init__(self, project_name):
+        self.project_name = project_name
         self.path_to_project_timeseries = settings.path_to_timeseries + project_name + '/'
         self.project_timeseries_filename = ''
         self.json_data = None
