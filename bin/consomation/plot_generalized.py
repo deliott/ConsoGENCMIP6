@@ -6,17 +6,17 @@ from bin.consomation.data_for_plot_extractor import ProjectData
 
 
 
-processor = 'Skylake'
-project_name = 'gencmip6'
-data_for_plot = ProjectData('gencmip6')
-df_data, df_opti = data_for_plot.run_data_for_plot_extractor('Skylake', '2019-05-01')
-#
+# processor = 'Skylake'
+# project_name = 'gencmip6'
+# data_for_plot = ProjectData('gencmip6')
+# df_data, df_opti = data_for_plot.run_data_for_plot_extractor('Skylake', '2019-05-01')
+# #
 
-# processor = 'KNL'
-# # processor = 'Skylake'
-# project_name = 'gen0826'
-# data_for_plot = ProjectData(project_name)
-# df_data, df_opti = data_for_plot.run_data_for_plot_extractor(processor, '2018-10-31')
+processor = 'KNL'
+# processor = 'Skylake'
+project_name = 'gen0826'
+data_for_plot = ProjectData(project_name)
+df_data, df_opti = data_for_plot.run_data_for_plot_extractor(processor, '2018-10-31')
 
 #######################################################################################
 #######################################################################################
@@ -60,9 +60,13 @@ plot_set_up.add_optimal_consumption_patch(delai_avant_penalite, df_opti, p, 'ora
 # print('Last Total : ', df_data['Total'].iloc[-1])
 
 # Ajout des ticks de difference entre Conso Optimale et Totale
-days_in_advance = ProjectData.days_in_advance
-plot_set_up.add_optimal_total_difference_ticks(df_data, df_opti, p, days_in_advance)
+# # Ancienne version
+# # days_in_advance = ProjectData.days_in_advance
+# #plot_set_up.add_optimal_total_difference_ticks(df_data, df_opti, p, days_in_advance)
 
+# # Nouvelle version
+retard_warning = plot_set_up.add_optimal_total_difference_ticks_bis(df_data, df_opti, p)
+plot_set_up.add_warnings_hovertool(p, retard_warning)
 
 # Ajout du HoverTool pour les courbes de données
 

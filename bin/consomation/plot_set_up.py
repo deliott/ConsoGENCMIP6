@@ -186,13 +186,74 @@ def add_optimal_total_difference_ticks(df_data, df_opti, p, days_in_advance):
     p.add_tools(HoverTool(
         tooltips=[
             (statut, '$name'),
-            # ('Courbe', '$name'),
-            # ('Hours', '$y{0,2f}'),  # use @{ } for field names with spaces
-        ],
+            ],
         renderers=[retard_warning],
-        # mode='vline'
-        # mode='mouse'
         mode='hline'
+    ))
+
+
+def add_optimal_total_difference_ticks_bis(df_data, df_opti, p):
+    """
+    Add ticks to show difference between optimal curve and total of consumption.
+
+    :param df_data: dataframe with the cpu time consumption per project and total as columns. Indexed by dates.
+    :param df_opti: dataframe with the optimal cpu time consumption as column. Indexed by dates.
+    :param p: bokeh figure that will render the glyphs.
+    :param days_in_advance: Number of days the optimal curv
+    :return: None
+    """
+
+    days_in_start_difference_between_data_and_opti = (df_data['Date'].iloc[0] - df_opti['Date'][0]).days
+
+    retard_warning = []
+
+    for i in range(len(df_data['Date'])):
+        opti_value = df_opti['Conso_Optimale'][days_in_start_difference_between_data_and_opti + i]
+        total_value = df_data['Total'].iloc[i]
+
+        delta_conso = '{:,.0f}'.format(abs(opti_value - total_value)) + ' heures'
+
+        left = df_data['Date'].iloc[i]
+        right = df_data['Date'].iloc[i] + datetime.timedelta(days=0.1)
+
+        if opti_value > total_value:
+            statut = 'Retard'
+            statut_color = 'firebrick'
+            statut_top = opti_value
+            statut_bottom = total_value
+        else:
+            statut = 'Avance'
+            statut_color = 'lightgreen'
+            statut_top = total_value
+            statut_bottom = opti_value
+
+        source = ColumnDataSource(dict(
+            left=[left],
+            top=[statut_top],
+            right=[right],
+            bottom=[statut_bottom],
+            color=[statut_color],
+
+        ))
+        retard_warning.append(p.quad(left="left", right="right", top="top", bottom="bottom",
+                                     color=None,
+                                     hover_color="color",
+                                     source=source,
+                                     alpha=0.3,
+                                     name=statut + ' de ' + delta_conso
+                                     )
+                              )
+    return retard_warning
+
+
+def add_warnings_hovertool(p, warning_list):
+
+    p.add_tools(HoverTool(
+        renderers=warning_list,
+        tooltips=[
+            ('', '$name'),
+        ],
+        mode='mouse'
     ))
 
 
