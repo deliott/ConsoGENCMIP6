@@ -32,59 +32,56 @@ So far there are no test associated with this scirpt.
 # Get path to data
 set_paths.set_path_to_plots()
 
-pcmip6 = ProjectData('gencmip6')
-pcmip6.set_project_timeseries_filename()
+p0826 = ProjectData('gen0826')
+p0826.set_project_timeseries_filename()
 
 # Load data
-pcmip6.load_project_data()
-jl = pcmip6.json_data
+p0826.load_project_data()
+jl = p0826.json_data
 
 # Extract dates from data
-pcmip6.set_dates()
+p0826.set_dates()
 
 # # Extract Processor List
-pcmip6.set_processor_list()
+p0826.set_processor_list()
 # processor_list = pcmip6.processor_list
 
 # Extract Subprojects (MIPs) Names
-pcmip6.set_processor_subproject_list('Skylake')
-mips = pcmip6.subproject_list
+p0826.set_processor_subproject_list('Skylake')
+mips = p0826.subproject_list
 
 #############################
 # Create a pandas_dataframe with all the subprojects (MIPs) as columns
-pcmip6.set_subproject_subtotal_dataframe('Skylake')
+p0826.set_subproject_subtotal_dataframe('Skylake')
 
 
 # Sort the columns according to their biggest last value
-pcmip6.sort_df_colomns_according_to_biggest_last_value()
-df = pcmip6.subproject_subtotal_dataframe
+p0826.sort_df_colomns_according_to_biggest_last_value()
+df = p0826.subproject_subtotal_dataframe
 
 # Set the Date column as the index of the dataframe
-pcmip6.add_dates_to_dataframe()
+p0826.add_dates_to_dataframe()
 
 #############################
 # Extract the total of subproject value and add column to dataframe
-
-pcmip6.add_total_subprojects()
-
-
+p0826.add_total_subprojects()
 
 #############################
 # Extract Theoretical Optimal Consumption Curve
 days_in_advance = 3
 
-pcmip6.set_allocated_dict()
-pcmip6.set_deadline()
-start_date = '2019-05-01'
-allocated = pcmip6.allocated_dict['Skylake']
+p0826.set_allocated_dict()
+p0826.set_deadline()
+start_date = '2018-10-31'
+allocated = p0826.allocated_dict['Skylake']
 
-pcmip6.set_last_date(days_in_advance)
-last_date = pcmip6.last_date_of_plot
+p0826.set_last_date(days_in_advance)
+last_date = p0826.last_date_of_plot
 
-pcmip6.set_start_date_to_dict('Skylake', '2019-05-01')
-pcmip6.set_optimal_daily_consumption('Skylake')
+p0826.set_start_date_to_dict('Skylake', '2018-10-31')
+p0826.set_optimal_daily_consumption('Skylake')
 
-dfOpti = pcmip6.get_theoretical_optimal_consumption_curve_dataframe('Skylake')
+dfOpti = p0826.get_theoretical_optimal_consumption_curve_dataframe('Skylake')
 
 
 #############################
@@ -156,7 +153,7 @@ line_list.append(
 )
 
 # Ajout de la courbe de consomation théorique :
-delai_avant_penalite = 14
+delai_avant_penalite = 60
 volume_avant_penalite = dfOpti['Conso_Optimale'][delai_avant_penalite]
 
 xx = [dfOpti['Date'][0],
@@ -244,8 +241,8 @@ p.yaxis.formatter = NumeralTickFormatter(format="0,")
 
 
 
-output_file(settings.path_to_plots + "/gencmip6_mips_timeseries.html", title="gencmip6 mips timeseries")
+output_file(settings.path_to_plots + "/" + p0826.project_name +  "_mips_timeseries.html", title="gencmip6 mips timeseries")
 
 save(p)
 
-print('Bokeh plot saved on : ', settings.path_to_plots + "/gencmip6_mips_timeseries.html")
+print('Bokeh plot saved on : ', settings.path_to_plots +"/" + p0826.project_name +  "_mips_timeseries.html")
