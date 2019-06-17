@@ -68,6 +68,11 @@ class ProjectData:
         self.dates.sort()
 
     def set_processor_list(self):
+        """
+        Set the project processor list.
+        Method set_project_timeseries_filename(), load_project_data() and set_dates() have to be executed first.
+        :return:
+        """
         self.processor_list = list(self.json_data[self.dates[0]]['processor_type'].keys())
         self.processor_list.sort()
         # print('Les dates sont : ', self.dates)
@@ -280,22 +285,5 @@ class ProjectData:
 
 
         return self.subproject_subtotal_dataframe ,dfOpti
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
