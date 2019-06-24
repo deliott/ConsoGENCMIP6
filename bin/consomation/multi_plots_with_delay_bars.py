@@ -117,5 +117,6 @@ for project_name in list(project_dict.keys()):
         save(gridplot([figure_ligne1, figure_ligne2], plot_width=500, plot_height=350, sizing_mode='scale_width'))
 
 
-    print('Bokeh plot saved on : ', settings.path_to_plots + "/" + project_name + "_mips_timeseries.html")
+    # print('Bokeh plot saved on : ', settings.path_to_plots + "/" + project_name + "_mips_timeseries.html")
+    print('Bokeh plot saved on : ', settings.path_to_plots  + project_name + "_mips_timeseries.html")
     # print('Bokeh plot saved on : ', settings.path_to_plots + "/" + project_name + "_DELTA_PLOT.html")
