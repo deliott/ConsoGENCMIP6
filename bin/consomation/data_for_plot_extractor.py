@@ -260,7 +260,7 @@ class ProjectData:
         Sum up all the previous methods to output the dataframe and instanciate all the attributes.
         Only methods to run before plotting a graph.
 
-        :return:
+        :return: measured and optimal dataframe
         """
 
         self.set_project_timeseries_filename()
@@ -283,7 +283,6 @@ class ProjectData:
 
         dfOpti = self.get_theoretical_optimal_consumption_curve_dataframe(processor)
 
-
-        return self.subproject_subtotal_dataframe ,dfOpti
+        return self.subproject_subtotal_dataframe, dfOpti
 
 
