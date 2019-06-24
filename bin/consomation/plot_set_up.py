@@ -20,7 +20,7 @@ def plot_init(processor, project_name):
                x_axis_label="Date",
                y_axis_label="Irene " + processor + " (heures)",
                x_axis_type="datetime",
-               plot_width=1800, plot_height=800,
+               plot_width=900, plot_height=400,
                sizing_mode='scale_width'
                )
 
