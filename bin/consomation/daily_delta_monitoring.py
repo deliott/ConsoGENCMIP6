@@ -71,7 +71,7 @@ def test_add_optimal_total_difference_ticks_bis(data_for_plot, df_data, df_opti,
 
     days_in_start_difference_between_data_and_opti = (df_data['Date'].iloc[0] - df_opti['Date'][0]).days
 
-    print(data_for_plot.optimal_daily_consumption)
+    # print(data_for_plot.optimal_daily_consumption)
 
     retard_warning = []
 
@@ -144,7 +144,7 @@ def test_add_optimal_total_difference_ticks_ter(data_for_plot, df_data, df_opti,
 
     days_in_start_difference_between_data_and_opti = (df_data['Date'].iloc[0] - df_opti['Date'][0]).days
     # print('Time delta between start of minitoring and begining of allocation : ' , days_in_start_difference_between_data_and_opti)
-    print('Daily hours amount : ', data_for_plot.optimal_daily_consumption)
+    # print('Daily hours amount : ', data_for_plot.optimal_daily_consumption)
 
     p.line(df_data['Date'], [3 * data_for_plot.optimal_daily_consumption]*len(df_data['Date']),
            line_color="olive", line_width=2, alpha=0.7, legend="300 % Optimal daily consumption")
