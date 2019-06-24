@@ -17,7 +17,7 @@ import bin.consomation.plot_set_up as plot_set_up
 
 from bokeh.layouts import gridplot
 
-from bin.consomation.daily_delta_monitoring import plot_init_delta, test_add_optimal_total_difference_ticks_bis,\
+from bin.consomation.daily_delta_monitoring import plot_init_delta, plot_config_delta, test_add_optimal_total_difference_ticks_bis,\
     test_add_optimal_total_difference_ticks_ter, add_difference_hovertool
 
 set_paths.set_path_to_plots()
@@ -92,16 +92,17 @@ for project_name in list(project_dict.keys()):
         figure_ligne1.append(p)
 
 
-        # q = plot_init_delta(processor, project_name)
-        q = plot_set_up.plot_init(processor, project_name)
+        q = plot_init_delta(processor, project_name)
+        # q = plot_set_up.plot_init(processor, project_name)
         print('DF_OPTI : ', df_opti)
         print('DF_DATA : ', df_data)
 
         retard_warning = test_add_optimal_total_difference_ticks_ter(data_for_plot, df_data, df_opti, q)
-        # retard_warning = test_add_optimal_total_difference_ticks_bis(df_data, df_opti, q)
+        # retard_warning = test_add_optimal_total_difference_ticks_bis(data_for_plot, df_data, df_opti, q)
 
         add_difference_hovertool(q, retard_warning)
 
+        plot_config_delta(q)
         figure_ligne2.append(q)
 
 
