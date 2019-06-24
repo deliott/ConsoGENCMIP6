@@ -94,8 +94,6 @@ for project_name in list(project_dict.keys()):
 
         q = plot_init_delta(processor, project_name)
         # q = plot_set_up.plot_init(processor, project_name)
-        print('DF_OPTI : ', df_opti)
-        print('DF_DATA : ', df_data)
 
         retard_warning = test_add_optimal_total_difference_ticks_ter(data_for_plot, df_data, df_opti, q)
         # retard_warning = test_add_optimal_total_difference_ticks_bis(data_for_plot, df_data, df_opti, q)
@@ -107,7 +105,8 @@ for project_name in list(project_dict.keys()):
 
 
     # output_file(settings.path_to_plots + "/" + project_name + "_mips_timeseries.html", title= project_name + " mips timeseries")
-    output_file(settings.path_to_plots + "/" + project_name + "_DELTA_PLOT.html", title= project_name + " DELTA_PLOT")
+    # output_file(settings.path_to_plots + "/" + project_name + "_DELTA_PLOT.html", title= project_name + " DELTA_PLOT")
+    output_file(settings.path_to_plots + "/" + project_name + "_mips_timeseries.html", title= project_name + "_mips_timeseries.html")
 
 
 
@@ -118,5 +117,5 @@ for project_name in list(project_dict.keys()):
         save(gridplot([figure_ligne1, figure_ligne2], plot_width=500, plot_height=350, sizing_mode='scale_width'))
 
 
-    # print('Bokeh plot saved on : ', settings.path_to_plots + "/" + project_name + "_mips_timeseries.html")
-    print('Bokeh plot saved on : ', settings.path_to_plots + "/" + project_name + "_DELTA_PLOT.html")
+    print('Bokeh plot saved on : ', settings.path_to_plots + "/" + project_name + "_mips_timeseries.html")
+    # print('Bokeh plot saved on : ', settings.path_to_plots + "/" + project_name + "_DELTA_PLOT.html")
