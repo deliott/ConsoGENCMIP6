@@ -9,14 +9,16 @@ from math import pi
 # from bin.consomation.data_for_plot_extractor import ProjectData.days_in_advance
 
 
-def plot_init(processor, project_name):
+def plot_init(processor, project_name, allocation):
     """
     Initialize the bokeh plot
     :param processor: str name of the processor type whose data will be plotted
     :param project_name: str, name of the project plotted
+    :param allocation: float, number of hours allocated in this project to this processor type.
     :return p: bokeh figure
     """
-    p = figure(title="Consommation de l'allocation " + project_name.swapcase() + " - Vue par MIPs/sous-projets",
+    p = figure(title="Consommation de l'allocation " + project_name.swapcase() + ' - ' + processor + ' (' + str(int(allocation))
+                     + ' heures)' + " - Vue par MIPs/sous-projets",
                x_axis_label="Date",
                y_axis_label="Irene " + processor + " (heures)",
                x_axis_type="datetime",
@@ -122,7 +124,7 @@ def add_optimal_consumption_patch(delai_avant_penalite, df_opti, p, color):
     # delai_avant_penalite = 14
     # delai_avant_penalite = 60
 
-    if len(df_opti['Date']) < delai_avant_penalite:
+    if len(df_opti['Date']) <= delai_avant_penalite:
         delai_avant_penalite = min(len(df_opti['Date'])-1, 30)
         color = 'green'
 
