@@ -2,7 +2,6 @@ from os.path import join, dirname
 import datetime
 
 import pandas as pd
-from scipy.signal import savgol_filter
 
 from bokeh.io import curdoc
 from bokeh.layouts import row, column
@@ -58,19 +57,9 @@ def plot_initialisation( processor, project_name):
     return plot
 def make_plot_conso(source, title, processor, project_name):
 
-    # print(source.to_df())
-
-    # plot = plot_set_up.plot_init(processor, project_name, data_for_plot.allocated_dict[processor])
-
-
-    # plot = plot_set_up.plot_init(processor, project_name, 25000000)
-
-    print('plot initiated\n')
-    # plot = figure(x_axis_type="datetime", plot_width=800, tools="", toolbar_location=None)
     plot.title.text = title
 
-    line_list = []
-    plot_set_up.add_subprojects_to_line_list_bis(1, source, plot, line_list)
+    plot_set_up.add_subprojects_to_line_list_bis(1, source, plot, line_list=[])
 
     # fixed attributes
     plot.xaxis.axis_label = None
@@ -79,38 +68,35 @@ def make_plot_conso(source, title, processor, project_name):
     plot.x_range = DataRange1d(range_padding=0.0)
     plot.grid.grid_line_alpha = 0.3
 
-    # return plot
-
 
 def update_plot_conso(attrname, old, new):
-    city = city_select.value
-    plot.title.text = "Weather data for " + project_dict[city]
+    project = project_select.value
+    processor = processor_select.value
+    plot.title.text = "Weather data for " + project_dict[project]
 
-    src = get_dataset_conso(city, 'Skylake')
+    src = get_dataset_conso(project, processor)
 
     source.data.update(src.data)
 
 
 
-city = 'gencmip6'
-distribution = 'Discrete'
+project_name = 'gencmip6'
+processor = 'Skylake'
 
 
-city_select = Select(value=city, title='Project Name', options=sorted(project_dict.keys()))
-distribution_select = Select(value=distribution, title='Distribution', options=['Discrete', 'Smoothed'])
+project_select = Select(value=project_name, title='Project Name', options=sorted(project_dict.keys()))
+processor_select = Select(value=processor, title='Processor', options=['Skylake', 'KNL'])
 
-# df = pd.read_csv(join(dirname(__file__), 'data/2015_weather.csv'))
-source = get_dataset_conso(city, 'Skylake')
+source = get_dataset_conso(project_name, 'Skylake')
 
 
-plot = plot_initialisation( 'Skylake', city_select.value)
-# plot = make_plot_conso(source, "Weather data for " + project_dict[city], 'Skylake', city_select.value)
-make_plot_conso(source, "Weather data for " + project_dict[city], 'Skylake', city_select.value)
+plot = plot_initialisation('Skylake', project_select.value)
+make_plot_conso(source, "Weather data for " + project_dict[project_name], 'Skylake', project_select.value)
 
-city_select.on_change('value', update_plot_conso)
-distribution_select.on_change('value', update_plot_conso)
+project_select.on_change('value', update_plot_conso)
+processor_select.on_change('value', update_plot_conso)
 
-controls = column(city_select, distribution_select)
+controls = column(project_select, processor_select)
 
 curdoc().add_root(row(plot, controls))
 curdoc().title = "Consomation"
