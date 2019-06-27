@@ -43,7 +43,7 @@ for project_name in list(project_dict.keys()):
 
         #############################
         # Configuration du Plot :
-        p = plot_set_up.plot_init(processor, project_name)
+        p = plot_set_up.plot_init(processor, project_name, data_for_plot.allocated_dict[processor])
 
         # Ajout des glyphs à la liste
         nb_sousprojets = 10
