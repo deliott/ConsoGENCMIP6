@@ -124,7 +124,7 @@ def add_optimal_consumption_patch(delai_avant_penalite, df_opti, p, color):
     # delai_avant_penalite = 14
     # delai_avant_penalite = 60
 
-    if len(df_opti['Date']) < delai_avant_penalite:
+    if len(df_opti['Date']) <= delai_avant_penalite:
         delai_avant_penalite = min(len(df_opti['Date'])-1, 30)
         color = 'green'
 
