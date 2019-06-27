@@ -51,11 +51,9 @@ def get_dataset_conso(project_name, processor):
     return ColumnDataSource(df_data)
 
 
-def plot_initialisation( processor, project_name):
-    plot = plot_set_up.plot_init(processor, project_name, 25000000)
-
-    return plot
 def make_plot_conso(source, title, processor, project_name):
+
+    plot = plot_set_up.plot_init(processor, project_name, 25000000)
 
     plot.title.text = title
 
@@ -67,6 +65,8 @@ def make_plot_conso(source, title, processor, project_name):
     plot.axis.axis_label_text_font_style = "bold"
     plot.x_range = DataRange1d(range_padding=0.0)
     plot.grid.grid_line_alpha = 0.3
+
+    return plot
 
 
 def update_plot_conso(attrname, old, new):
@@ -89,9 +89,7 @@ processor_select = Select(value=processor, title='Processor', options=['Skylake'
 
 source = get_dataset_conso(project_name, 'Skylake')
 
-
-plot = plot_initialisation('Skylake', project_select.value)
-make_plot_conso(source, "Weather data for " + project_dict[project_name], 'Skylake', project_select.value)
+plot = make_plot_conso(source, "Weather data for " + project_dict[project_name], 'Skylake', project_select.value)
 
 project_select.on_change('value', update_plot_conso)
 processor_select.on_change('value', update_plot_conso)
