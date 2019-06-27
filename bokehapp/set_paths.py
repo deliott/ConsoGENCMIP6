@@ -1,6 +1,6 @@
 # set_config_path.py
 
-import bokehapp.settings as settings
+import settings as settings
 import socket
 
 

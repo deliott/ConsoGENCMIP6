@@ -3,14 +3,14 @@ This scripts plots the daily consumption monitoring.
 It gives a bar plot timeserie of the difference between daily total consumption and optimal consumption.
 It is plotted for each processor, etc.
 """
-from bokehapp.data_for_plot_extractor import ProjectData
+from data_for_plot_extractor import ProjectData
 ###############################################################
 from bokeh.plotting import figure, output_file, save
 
-import bokehapp.settings as settings
-import bokehapp.set_paths as set_paths
+import settings as settings
+import set_paths as set_paths
 
-import bokehapp.plot_set_up as plot_set_up
+import plot_set_up as plot_set_up
 
 from bokeh.layouts import gridplot
 import datetime

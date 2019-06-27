@@ -7,8 +7,8 @@ and allow the plot_project_timeseries.py script to use these data in its plots.
 """
 
 
-import bokehapp.settings as settings
-import bokehapp.set_paths as set_paths
+import settings as settings
+import set_paths as set_paths
 
 import os
 import json

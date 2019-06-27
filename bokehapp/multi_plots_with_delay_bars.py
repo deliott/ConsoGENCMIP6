@@ -10,14 +10,14 @@ from data_for_plot_extractor import ProjectData
 ###############################################################
 from bokeh.plotting import figure, output_file, save
 
-import bokehapp.settings as settings
-import bokehapp.set_paths as set_paths
+import settings as settings
+import set_paths as set_paths
 
-import bokehapp.plot_set_up as plot_set_up
+import plot_set_up as plot_set_up
 
 from bokeh.layouts import gridplot
 
-from bokehapp.daily_delta_monitoring import plot_init_delta, plot_config_delta, test_add_optimal_total_difference_ticks_bis,\
+from daily_delta_monitoring import plot_init_delta, plot_config_delta, test_add_optimal_total_difference_ticks_bis,\
     test_add_optimal_total_difference_ticks_ter, add_difference_hovertool
 
 set_paths.set_path_to_plots()
