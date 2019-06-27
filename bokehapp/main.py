@@ -49,7 +49,7 @@ def get_dataset_conso(project_name, processor):
     #         df[key] = savgol_filter(df[key], window, order)
 
     # return ColumnDataSource(data=df_data)
-    return df_data
+    return ColumnDataSource(df_data)
 
 
 def plot_initialisation( processor, project_name):
@@ -86,11 +86,8 @@ def update_plot_conso(attrname, old, new):
     city = city_select.value
     plot.title.text = "Weather data for " + project_dict[city]
 
-    temp = get_dataset_conso(city, 'Skylake')
-    src = ColumnDataSource(temp)
+    src = get_dataset_conso(city, 'Skylake')
 
-    print('New : ', temp)
-    print('Old : ', source.to_df())
     source.data.update(src.data)
 
 
@@ -103,8 +100,7 @@ city_select = Select(value=city, title='Project Name', options=sorted(project_di
 distribution_select = Select(value=distribution, title='Distribution', options=['Discrete', 'Smoothed'])
 
 # df = pd.read_csv(join(dirname(__file__), 'data/2015_weather.csv'))
-temp = get_dataset_conso(city, 'Skylake')
-source = ColumnDataSource(temp)
+source = get_dataset_conso(city, 'Skylake')
 
 
 plot = plot_initialisation( 'Skylake', city_select.value)
