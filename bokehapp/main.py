@@ -5,7 +5,7 @@ import pandas as pd
 
 from bokeh.io import curdoc
 from bokeh.layouts import row, column
-from bokeh.models import ColumnDataSource, DataRange1d, Select
+from bokeh.models import ColumnDataSource, DataRange1d, Select, MultiSelect
 from bokeh.palettes import Blues4
 from bokeh.plotting import figure
 
@@ -58,7 +58,8 @@ def make_plot_conso(source, title, processor, project_name):
     plot.title.text = title
 
     line_list = []
-    plot_set_up.add_subprojects_to_line_list_bis(1, source, plot, line_list=line_list)
+    # plot_set_up.add_subprojects_to_line_list_bis(1, source, plot, line_list=line_list)
+    plot_set_up.add_subprojects_to_line_list_ter(['Total'], source, plot, line_list=line_liste)
     # plot_set_up.add_optimal_consumption_curve(source_opt, plot, line_list)
 
     # fixed attributes
@@ -91,6 +92,13 @@ def update_plot_conso(attrname, old, new):
     source_opti.data.update(src_opti.data)
 
 
+def update_add_subproject(attrname, old, new):
+    selected_subprojects = ['Total'] + subproject_multiselect.value
+    print('\n XXXXXXXXXXXX', subproject_multiselect.value, '\n XXXXXXXXXXx')
+
+    plot_set_up.add_subprojects_to_line_list_ter(selected_subprojects, source, plot, line_list=line_liste)
+
+
 def project_ticker_change(attrname, old, new):
     """
     Change the processor tickers value depending on the project selected in order to avoid selecting non-existent data.
@@ -111,22 +119,62 @@ def processor_ticker_change(attrname, old, new):
         processor_select.options = ['Skylake', 'KNL']
 
 
+def subproject_multiselct_change(attrname, old, new):
+    subproject_list = get_subproject_list(project_select.value, processor_select.value)
+    subproject_multiselect.value = ['Total']
+    subproject_multiselect.options = list(zip(subproject_list, subproject_list))
+
+
+
+def get_subproject_list(project_name, processor_name):
+    print('\n', type(source.to_df().columns))
+    print(source.to_df().columns)
+    res = []
+    liste = list(source.to_df().columns)
+    # while liste != []:
+    while liste:
+        element = liste.pop()
+        if element == 'Date' or element == 'Total':
+            continue
+        else:
+            res.append(element)
+    print(res, '\n')
+    res.sort()
+    return res
+
+
 project_name = 'gencmip6'
 processor = 'Skylake'
 
-
+# Define the Widgets
 project_select = Select(value=project_name, title='Project Name', options=sorted(project_dict.keys()))
 processor_select = Select(value=processor, title='Processor', options=['Skylake'])
+
+
+line_liste = []
 
 source, source_opti = get_dataset_conso(project_name, 'Skylake')
 plot = make_plot_conso(source, "Consomation data for " + project_select.value + ' on ' + processor_select.value + ' nodes.', 'Skylake', project_select.value)
 plot = add_opti_curve(plot, source_opti, line_list=[])
 
-project_select.on_change('value', processor_ticker_change, project_ticker_change, update_plot_conso)
+# Define more widget
+subproject_list = get_subproject_list(project_select.value, processor_select.value)
+subproject_multiselect = MultiSelect(title="Subprojects:",
+                                     value=subproject_list,
+                                     # value=get_subproject_list(project_select.value, processor_select.value),
+                                     options=list(zip(subproject_list, subproject_list)),
+                                     size=8
+                                     )
+
+
+# get_subproject_list('gencmip6', 'Skylake')
+
+project_select.on_change('value', processor_ticker_change, project_ticker_change, update_plot_conso, subproject_multiselct_change)
 processor_select.on_change('value', update_plot_conso)
+subproject_multiselect.on_change('value', update_add_subproject)
 
 # set up layout
-controls = column(project_select, processor_select)
+controls = column(project_select, processor_select, subproject_multiselect)
 
 curdoc().add_root(row(plot, controls))
 curdoc().title = "Consomation"
