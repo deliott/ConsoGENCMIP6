@@ -60,19 +60,25 @@ def make_plot_conso(source, title, processor, project_name):
     plot_set_up.add_subprojects_to_line_list_bis(1, source, plot, line_list=[])
 
     # fixed attributes
-    plot.xaxis.axis_label = None
-    plot.yaxis.axis_label = "Temperature (F)"
     plot.axis.axis_label_text_font_style = "bold"
     plot.x_range = DataRange1d(range_padding=0.0)
     plot.grid.grid_line_alpha = 0.3
+
+    plot_set_up.plot_config(plot)
 
     return plot
 
 
 def update_plot_conso(attrname, old, new):
+    """
+    Update the main time series plot depending on the tickers selected.
+    Executed when tickers are changed.
+
+    :return: None
+    """
     project = project_select.value
     processor = processor_select.value
-    plot.title.text = "Weather data for " + project_dict[project]
+    plot.title.text = "Consomation data for " + project_select.value + ' on ' + processor_select.value + ' nodes.'
 
     src = get_dataset_conso(project, processor)
 
@@ -80,11 +86,19 @@ def update_plot_conso(attrname, old, new):
 
 
 def project_ticker_change(attrname, old, new):
+    """
+    Change the processor tickers value depending on the project selected in order to avoid selecting non-existent data.
+    :return: None
+    """
     if project_select.value == 'gencmip6':
         processor_select.value = 'Skylake'
 
 
 def processor_ticker_change(attrname, old, new):
+    """
+    Change the processor tickers options depending on the processor selected in order to avoid selecting non-existent data.
+    :return: None
+    """
     if project_select.value == 'gencmip6':
         processor_select.options = ['Skylake']
     else:
@@ -99,7 +113,7 @@ project_select = Select(value=project_name, title='Project Name', options=sorted
 processor_select = Select(value=processor, title='Processor', options=['Skylake'])
 
 source = get_dataset_conso(project_name, 'Skylake')
-plot = make_plot_conso(source, "Weather data for " + project_dict[project_name], 'Skylake', project_select.value)
+plot = make_plot_conso(source, "Consomation data for " + project_select.value + ' on ' + processor_select.value + ' nodes.', 'Skylake', project_select.value)
 
 project_select.on_change('value', processor_ticker_change, project_ticker_change, update_plot_conso)
 processor_select.on_change('value', update_plot_conso)

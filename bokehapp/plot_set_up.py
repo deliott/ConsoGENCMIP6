@@ -19,7 +19,7 @@ def plot_init(processor, project_name, allocation):
     """
     p = figure(title="Consommation de l'allocation " + project_name.swapcase() + ' - ' + processor + ' (' + str(int(allocation))
                      + ' heures)' + " - Vue par MIPs/sous-projets",
-               x_axis_label="Date",
+               x_axis_label=None,
                y_axis_label="Irene " + processor + " (heures)",
                x_axis_type="datetime",
                plot_width=900, plot_height=400,
