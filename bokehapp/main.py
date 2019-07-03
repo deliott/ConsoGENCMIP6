@@ -48,7 +48,7 @@ def get_dataset_conso(project_name, processor):
     #         df[key] = savgol_filter(df[key], window, order)
 
     # return ColumnDataSource(data=df_data)
-    return ColumnDataSource(df_data)
+    return ColumnDataSource(data=df_data)
 
 
 def make_plot_conso(source, title, processor, project_name):
@@ -79,21 +79,32 @@ def update_plot_conso(attrname, old, new):
     source.data.update(src.data)
 
 
+def project_ticker_change(attrname, old, new):
+    if project_select.value == 'gencmip6':
+        processor_select.value = 'Skylake'
+
+
+def processor_ticker_change(attrname, old, new):
+    if project_select.value == 'gencmip6':
+        processor_select.options = ['Skylake']
+    else:
+        processor_select.options = ['Skylake', 'KNL']
+
 
 project_name = 'gencmip6'
 processor = 'Skylake'
 
 
 project_select = Select(value=project_name, title='Project Name', options=sorted(project_dict.keys()))
-processor_select = Select(value=processor, title='Processor', options=['Skylake', 'KNL'])
+processor_select = Select(value=processor, title='Processor', options=['Skylake'])
 
 source = get_dataset_conso(project_name, 'Skylake')
-
 plot = make_plot_conso(source, "Weather data for " + project_dict[project_name], 'Skylake', project_select.value)
 
-project_select.on_change('value', update_plot_conso)
+project_select.on_change('value', processor_ticker_change, project_ticker_change, update_plot_conso)
 processor_select.on_change('value', update_plot_conso)
 
+# set up layout
 controls = column(project_select, processor_select)
 
 curdoc().add_root(row(plot, controls))
