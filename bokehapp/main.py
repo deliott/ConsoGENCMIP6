@@ -48,7 +48,7 @@ def get_dataset_conso(project_name, processor):
     #         df[key] = savgol_filter(df[key], window, order)
 
     # return ColumnDataSource(data=df_data)
-    return ColumnDataSource(data=df_data)
+    return ColumnDataSource(data=df_data), ColumnDataSource(data=df_opti)
 
 
 def make_plot_conso(source, title, processor, project_name):
@@ -57,7 +57,9 @@ def make_plot_conso(source, title, processor, project_name):
 
     plot.title.text = title
 
-    plot_set_up.add_subprojects_to_line_list_bis(1, source, plot, line_list=[])
+    line_list = []
+    plot_set_up.add_subprojects_to_line_list_bis(1, source, plot, line_list=line_list)
+    # plot_set_up.add_optimal_consumption_curve(source_opt, plot, line_list)
 
     # fixed attributes
     plot.axis.axis_label_text_font_style = "bold"
@@ -68,6 +70,9 @@ def make_plot_conso(source, title, processor, project_name):
 
     return plot
 
+def add_opti_curve(plot, source_opt, line_list):
+    plot_set_up.add_optimal_consumption_curve_bis(source_opt, plot, line_list)
+    return plot
 
 def update_plot_conso(attrname, old, new):
     """
@@ -80,9 +85,10 @@ def update_plot_conso(attrname, old, new):
     processor = processor_select.value
     plot.title.text = "Consomation data for " + project_select.value + ' on ' + processor_select.value + ' nodes.'
 
-    src = get_dataset_conso(project, processor)
+    src, src_opti = get_dataset_conso(project, processor)
 
     source.data.update(src.data)
+    source_opti.data.update(src_opti.data)
 
 
 def project_ticker_change(attrname, old, new):
@@ -112,8 +118,9 @@ processor = 'Skylake'
 project_select = Select(value=project_name, title='Project Name', options=sorted(project_dict.keys()))
 processor_select = Select(value=processor, title='Processor', options=['Skylake'])
 
-source = get_dataset_conso(project_name, 'Skylake')
+source, source_opti = get_dataset_conso(project_name, 'Skylake')
 plot = make_plot_conso(source, "Consomation data for " + project_select.value + ' on ' + processor_select.value + ' nodes.', 'Skylake', project_select.value)
+plot = add_opti_curve(plot, source_opti, line_list=[])
 
 project_select.on_change('value', processor_ticker_change, project_ticker_change, update_plot_conso)
 processor_select.on_change('value', update_plot_conso)

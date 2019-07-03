@@ -142,6 +142,29 @@ def add_subprojects_to_line_list_bis(nb_sousprojets, source, p, line_list):
     # return line_list
 
 
+def add_optimal_consumption_curve_bis(source_opt, p, line_list):
+    """
+    Append Bokeh Line Glyphs corresponding to the optimal consumption of the allocation to the list (line_list)
+    to be added to the figure (p).
+
+    :param df_opti: dataframe with the optimal cpu time consumption as column. Indexed by dates.
+    :param p: bokeh figure that will render the glyphs
+    :param line_list: list with the bokeh glyphs to be added to the p figure.
+    :return: None
+    """
+    # Ajout de la courbe de consomation théorique :
+    # source_opt = ColumnDataSource(df_opti)
+    line_list.append(
+        p.line('Date', 'Conso_Optimale', source=source_opt,
+               legend='Conso_Optimale ',
+               name='Conso_Optimale ',
+               # small hack to be able to display the name. Otherwise, without the ' ' there is a bug
+               line_width=1,
+               color='black',
+               muted_color='black', muted_alpha=0.2
+               )
+    )
+
 def add_optimal_consumption_curve(df_opti, p, line_list):
     """
     Append Bokeh Line Glyphs corresponding to the optimal consumption of the allocation to the list (line_list)
