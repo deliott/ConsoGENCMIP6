@@ -66,6 +66,7 @@ for project_name in list(project_dict.keys()):
         plot_set_up.add_subprojects_to_line_list(nb_sousprojets, df_data, p, line_list)
 
         plot_set_up.add_optimal_consumption_curve(df_opti, p, line_list)
+        plot_set_up.add_possible_bonus_curve(df_opti, p, line_list)
 
         # Ajout de la surface de sécurité de consomation théorique :
 
