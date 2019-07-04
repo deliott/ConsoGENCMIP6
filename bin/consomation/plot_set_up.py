@@ -5,6 +5,7 @@ from bokeh.palettes import Spectral
 
 import datetime
 from math import pi
+import pandas as pd
 
 # from bin.consomation.data_for_plot_extractor import ProjectData.days_in_advance
 
@@ -27,6 +28,27 @@ def plot_init(processor, project_name, allocation):
                )
 
     return p
+
+def set_plot_axis_default_range(plot, df_data, df_opti, start_date, vertical_margin_coef):
+    """
+    Set the axis range of the plot.
+
+    :param plot: bokeh figure
+    :param df_data: dataframe with the cpu time consumption per project and total as columns. Indexed by dates.
+    :param df_opti:
+    :param vertical_margin_coef: float representing the precentage of margin to be taken on vertical axis
+    :return:
+    """
+    fin = pd.to_datetime(df_opti['Date'][-1] + pd.Timedelta(2.5, unit='D'))
+    debut = max(fin - pd.Timedelta(60, unit='D'), pd.to_datetime(start_date))
+
+    plot.x_range.start = debut
+    plot.x_range.end = fin
+
+    plot.y_range.end = max(
+        df_opti['Conso_Optimale'][-1] * 1.25,  # 1.25 stands for the 25% bonus that can be gained at TGCC
+        max(df_data['Total'])
+    ) * vertical_margin_coef
 
 
 def add_subprojects_to_line_list(nb_sousprojets, df_data, p, line_list):
@@ -91,6 +113,7 @@ def add_optimal_consumption_curve(df_opti, p, line_list):
     to be added to the figure (p).
 
     :param df_opti: dataframe with the optimal cpu time consumption as column. Indexed by dates.
+    :type df_opti: python dict
     :param p: bokeh figure that will render the glyphs
     :param line_list: list with the bokeh glyphs to be added to the p figure.
     :return: None
@@ -101,12 +124,39 @@ def add_optimal_consumption_curve(df_opti, p, line_list):
         p.line('Date', 'Conso_Optimale', source=source_opt,
                legend='Conso_Optimale ',
                name='Conso_Optimale ',
-               # small hack to be able to display the name. Otherwise, without the ' ' there is a bug
                line_width=1,
                color='black',
                muted_color='black', muted_alpha=0.2
                )
     )
+
+
+def add_possible_bonus_curve(df_opti, p, line_list):
+    """
+    Append Bokeh Line Glyphs corresponding to the optimal consumption multiplied by  of the allocation to the list (line_list)
+    to be added to the figure (p).
+
+    :param df_opti: dataframe with the optimal cpu time consumption as column. Indexed by dates.
+    :type df_opti: python dict
+    :param p: bokeh figure that will render the glyphs
+    :param line_list: list with the bokeh glyphs to be added to the p figure.
+    :return: None
+    """
+
+    df_opti['Conso_Bonus'] = [i * 1.25 for i in df_opti['Conso_Optimale']]
+    # because df_opti is a python dict and not a pandas dataframe ... TO CHANGE ...
+    # Ajout de la courbe de consomation théorique :
+    source_opt = ColumnDataSource(df_opti)
+    line_list.append(
+        p.line('Date', 'Conso_Bonus', source=source_opt,
+               legend='125% Consomation Optimale ',
+               name='125% Conso Optimale ',
+               line_width=1,
+               color='pink',
+               muted_color='pink', muted_alpha=0.2
+               )
+    )
+
 
 
 def add_optimal_consumption_patch(delai_avant_penalite, df_opti, p, color):
