@@ -12,6 +12,8 @@ from bokeh.plotting import figure
 from data_for_plot_extractor import ProjectData
 import plot_set_up as plot_set_up
 
+import subprojects_display_methods as sdm
+
 import set_paths as set_paths
 set_paths.set_path_to_plots()
 
@@ -120,27 +122,10 @@ def processor_ticker_change(attrname, old, new):
 
 
 def subproject_multiselct_change(attrname, old, new):
-    subproject_list = get_subproject_list(project_select.value, processor_select.value)
+    subproject_list = sdm.get_subproject_list(source, project_select.value, processor_select.value)
     subproject_multiselect.value = ['Total']
     subproject_multiselect.options = list(zip(subproject_list, subproject_list))
 
-
-
-def get_subproject_list(project_name, processor_name):
-    print('\n', type(source.to_df().columns))
-    print(source.to_df().columns)
-    res = []
-    liste = list(source.to_df().columns)
-    # while liste != []:
-    while liste:
-        element = liste.pop()
-        if element == 'Date' or element == 'Total':
-            continue
-        else:
-            res.append(element)
-    print(res, '\n')
-    res.sort()
-    return res
 
 
 project_name = 'gencmip6'
@@ -158,7 +143,7 @@ plot = make_plot_conso(source, "Consomation data for " + project_select.value + 
 plot = add_opti_curve(plot, source_opti, line_list=[])
 
 # Define more widget
-subproject_list = get_subproject_list(project_select.value, processor_select.value)
+subproject_list = sdm.get_subproject_list(source, project_select.value, processor_select.value)
 subproject_multiselect = MultiSelect(title="Subprojects:",
                                      value=subproject_list,
                                      # value=get_subproject_list(project_select.value, processor_select.value),
