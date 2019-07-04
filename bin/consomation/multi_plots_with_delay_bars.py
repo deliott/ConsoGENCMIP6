@@ -57,6 +57,7 @@ for project_name in list(project_dict.keys()):
         #############################
         # Configuration du Plot :
         p = plot_set_up.plot_init(processor, project_name, data_for_plot.allocated_dict[processor])
+        plot_set_up.set_plot_axis_default_range(p, df_data, df_opti, start_date, vertical_margin_coef=1.05)
 
         # Ajout des glyphs à la liste
         nb_sousprojets = 10
@@ -66,6 +67,7 @@ for project_name in list(project_dict.keys()):
         plot_set_up.add_subprojects_to_line_list(nb_sousprojets, df_data, p, line_list)
 
         plot_set_up.add_optimal_consumption_curve(df_opti, p, line_list)
+        plot_set_up.add_possible_bonus_curve(df_opti, p, line_list)
 
         # Ajout de la surface de sécurité de consomation théorique :
 
