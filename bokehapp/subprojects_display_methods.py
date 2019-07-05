@@ -21,7 +21,7 @@ def get_subproject_list(source):
 
     while liste:
         element = liste.pop()
-        if element == 'Date' or element == 'Total':
+        if element == 'Date' : #or element == 'Total':
             continue
         else:
             if df[element].iloc[-1] > 0:
