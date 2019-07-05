@@ -86,11 +86,19 @@ def update_plot_conso(attrname, old, new):
     """
     project = project_select.value
     processor = processor_select.value
+    # print(project)
+    # print(source.column_names)
+    column_names_to_remove = source.column_names
+    column_names_to_remove.remove('Date')
+    column_names_to_remove.remove('Total')
+    print('\nColonnes à supprimer : ', column_names_to_remove)
+
     plot.title.text = "Consomation data for " + project_select.value + ' on ' + processor_select.value + ' nodes.'
 
     src, src_opti = get_dataset_conso(project, processor)
 
     source.data.update(src.data)
+    [source.remove(name) for name in column_names_to_remove]
     source_opti.data.update(src_opti.data)
 
 
@@ -121,10 +129,17 @@ def processor_ticker_change(attrname, old, new):
         processor_select.options = ['Skylake', 'KNL']
 
 
-def subproject_multiselct_change(attrname, old, new):
-    subproject_list = sdm.get_subproject_list(source, project_select.value, processor_select.value)
+def subproject_multiselect_change(attrname, old, new):
+    # subproject_list, res0 = sdm.get_subproject_list(source)
+
+    active_subproject_list, inactive_subproject_list = sdm.get_subproject_list(source)
+    subproject_list = active_subproject_list + inactive_subproject_list
+
+    # subproject_multiselect.value = ['Total']
     subproject_multiselect.value = ['Total']
-    subproject_multiselect.options = list(zip(subproject_list, subproject_list))
+    subproject_multiselect.options = list(zip(subproject_list,
+                                         active_subproject_list + sdm.modify_inactive_project_names(inactive_subproject_list)
+                                     ))
 
 
 
@@ -143,18 +158,25 @@ plot = make_plot_conso(source, "Consomation data for " + project_select.value + 
 plot = add_opti_curve(plot, source_opti, line_list=[])
 
 # Define more widget
-subproject_list = sdm.get_subproject_list(source, project_select.value, processor_select.value)
+active_subproject_list, inactive_subproject_list = sdm.get_subproject_list(source)
+subproject_list = active_subproject_list + inactive_subproject_list
+
 subproject_multiselect = MultiSelect(title="Subprojects:",
-                                     value=subproject_list,
-                                     # value=get_subproject_list(project_select.value, processor_select.value),
-                                     options=list(zip(subproject_list, subproject_list)),
+                                     value=active_subproject_list,
+                                     options=list(zip(
+                                         # active_subproject_list + sdm.modify_inactive_project_names(subproject_list),
+                                         subproject_list,
+                                         active_subproject_list + sdm.modify_inactive_project_names(inactive_subproject_list)
+                                     )),
                                      size=8
                                      )
 
 
-# get_subproject_list('gencmip6', 'Skylake')
-
-project_select.on_change('value', processor_ticker_change, project_ticker_change, update_plot_conso, subproject_multiselct_change)
+# Define widget actions
+project_select.on_change('value',
+                         update_plot_conso, processor_ticker_change,
+                         project_ticker_change, subproject_multiselect_change
+                         )
 processor_select.on_change('value', update_plot_conso)
 subproject_multiselect.on_change('value', update_add_subproject)
 
