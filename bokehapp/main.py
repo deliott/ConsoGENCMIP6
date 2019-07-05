@@ -104,7 +104,7 @@ def update_plot_conso(attrname, old, new):
 
 def update_add_subproject(attrname, old, new):
     selected_subprojects = ['Total'] + subproject_multiselect.value
-    print('\n XXXXXXXXXXXX', subproject_multiselect.value, '\n XXXXXXXXXXx')
+    print('\n MULTISELECT selection - new Value = ', subproject_multiselect.value, '\n')
 
     plot_set_up.add_subprojects_to_line_list_ter(selected_subprojects, source, plot, line_list=line_liste)
 
