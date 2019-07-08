@@ -21,7 +21,8 @@ project_dict = {}
 project_dict['gencmip6'] = '2019-05-01'
 project_dict['gen0826'] = '2018-10-31'
 
-STATISTICS = ['record_min_temp', 'actual_min_temp', 'average_min_temp', 'average_max_temp', 'actual_max_temp', 'record_max_temp']
+STATISTICS = ['record_min_temp', 'actual_min_temp', 'average_min_temp', 'average_max_temp', 'actual_max_temp',
+              'record_max_temp']
 
 def get_dataset_conso(project_name, processor):
 
@@ -50,18 +51,22 @@ def get_dataset_conso(project_name, processor):
     #         df[key] = savgol_filter(df[key], window, order)
 
     # return ColumnDataSource(data=df_data)
+    print('get_dataset_conso - DF_DATA : ', df_data)
     return ColumnDataSource(data=df_data), ColumnDataSource(data=df_opti)
 
 
-def make_plot_conso(source, title, processor, project_name):
+def make_plot_conso(source, title, processor, project_name, line_list):
 
     plot = plot_set_up.plot_init(processor, project_name, 25000000)
 
     plot.title.text = title
 
-    line_list = []
+    # line_list = []
     # plot_set_up.add_subprojects_to_line_list_bis(1, source, plot, line_list=line_list)
-    plot_set_up.add_subprojects_to_line_list_ter(['Total'], source, plot, line_list=line_liste)
+
+    plot_set_up.add_subprojects_to_line_list_ter(['Total'], source, plot, line_list=line_list)
+    # plot_set_up.add_subprojects_to_line_list_ter(['Total'], source, plot, line_list=line_liste)
+
     # plot_set_up.add_optimal_consumption_curve(source_opt, plot, line_list)
 
     # fixed attributes
@@ -86,8 +91,6 @@ def update_plot_conso(attrname, old, new):
     """
     project = project_select.value
     processor = processor_select.value
-    # print(project)
-    # print(source.column_names)
     column_names_to_remove = source.column_names
     column_names_to_remove.remove('Date')
     column_names_to_remove.remove('Total')
@@ -96,17 +99,55 @@ def update_plot_conso(attrname, old, new):
     plot.title.text = "Consomation data for " + project_select.value + ' on ' + processor_select.value + ' nodes.'
 
     src, src_opti = get_dataset_conso(project, processor)
-
     source.data.update(src.data)
+
+    # print(source.to_df())
+
+    # print('\nColonnes à supprimer : ', column_names_to_remove)
     [source.remove(name) for name in column_names_to_remove]
     source_opti.data.update(src_opti.data)
+    # print(source.to_df())
 
 
-def update_add_subproject(attrname, old, new):
-    selected_subprojects = ['Total'] + subproject_multiselect.value
-    print('\n MULTISELECT selection - new Value = ', subproject_multiselect.value, '\n')
 
-    plot_set_up.add_subprojects_to_line_list_ter(selected_subprojects, source, plot, line_list=line_liste)
+def update_plot_multiselect_subproject(attrname, old, new):
+    """
+
+    :param attrname:
+    :param old:
+    :param new:
+    :return:
+    """
+    # selected_subprojects = ['Total'] + subproject_multiselect.value
+    selected_subprojects = subproject_multiselect.value
+
+    # print('\n MULTISELECT selection - new Value = ', subproject_multiselect.value, '\n')
+    # print('PLOT : ', plot, '\n')
+    # print(plot.renderers)
+    # print("Test to remove line from plot")
+    # [print(line.name) for line in plotted_line_liste]
+    # print(plotted_line_liste)
+
+    # # Attempt to supress previous lines before plotting the new selected ones. --> buggy whith project selection
+    # # or processor selection
+    # for line in plotted_line_liste:
+    #     line2 = plot.select_one({'name': line.name})
+    # #     plot.renderers.remove(line2)
+    #     line2.visible = False
+
+    # [plot.renderers.remove[line.name] for line in plotted_line_liste]
+    # print(plotted_line_liste)
+    #
+    # print("Test to removed line from plot")
+
+
+    # from inspect import signature
+    # print(signature(plot.renderers))
+    plot_set_up.add_subprojects_to_line_list_ter(selected_subprojects, source, plot, line_list=plotted_line_liste)
+    # plot_set_up.add_subprojects_to_line_list_ter(selected_subprojects, source, plot, line_list=line_liste)
+
+
+    [print(line.name) for line in plotted_line_liste]
 
 
 def project_ticker_change(attrname, old, new):
@@ -120,7 +161,8 @@ def project_ticker_change(attrname, old, new):
 
 def processor_ticker_change(attrname, old, new):
     """
-    Change the processor tickers options depending on the processor selected in order to avoid selecting non-existent data.
+    Change the processor tickers options depending on the processor selected in order to avoid selecting
+    non-existent data.
     :return: None
     """
     if project_select.value == 'gencmip6':
@@ -138,8 +180,11 @@ def subproject_multiselect_change(attrname, old, new):
     # subproject_multiselect.value = ['Total']
     subproject_multiselect.value = ['Total']
     subproject_multiselect.options = list(zip(subproject_list,
-                                         active_subproject_list + sdm.modify_inactive_project_names(inactive_subproject_list)
-                                     ))
+                                         active_subproject_list
+                                              + sdm.modify_inactive_project_names(inactive_subproject_list)
+                                              )
+                                          )
+
 
 
 
@@ -151,11 +196,12 @@ project_select = Select(value=project_name, title='Project Name', options=sorted
 processor_select = Select(value=processor, title='Processor', options=['Skylake'])
 
 
-line_liste = []
+plotted_line_liste = []
 
 source, source_opti = get_dataset_conso(project_name, 'Skylake')
-plot = make_plot_conso(source, "Consomation data for " + project_select.value + ' on ' + processor_select.value + ' nodes.', 'Skylake', project_select.value)
-plot = add_opti_curve(plot, source_opti, line_list=[])
+plot = make_plot_conso(source, "Consomation data for " + project_select.value + ' on ' + processor_select.value
+                       + ' nodes.', 'Skylake', project_select.value, line_list=plotted_line_liste)
+plot = add_opti_curve(plot, source_opti, line_list=plotted_line_liste)
 
 # Define more widget
 active_subproject_list, inactive_subproject_list = sdm.get_subproject_list(source)
@@ -164,9 +210,9 @@ subproject_list = active_subproject_list + inactive_subproject_list
 subproject_multiselect = MultiSelect(title="Subprojects:",
                                      value=active_subproject_list,
                                      options=list(zip(
-                                         # active_subproject_list + sdm.modify_inactive_project_names(subproject_list),
                                          subproject_list,
-                                         active_subproject_list + sdm.modify_inactive_project_names(inactive_subproject_list)
+                                         active_subproject_list
+                                         + sdm.modify_inactive_project_names(inactive_subproject_list)
                                      )),
                                      size=8
                                      )
@@ -174,11 +220,16 @@ subproject_multiselect = MultiSelect(title="Subprojects:",
 
 # Define widget actions
 project_select.on_change('value',
-                         update_plot_conso, processor_ticker_change,
-                         project_ticker_change, subproject_multiselect_change
+                         processor_ticker_change,
+                         project_ticker_change,
+                         update_plot_conso,
+                         subproject_multiselect_change
                          )
+
 processor_select.on_change('value', update_plot_conso)
-subproject_multiselect.on_change('value', update_add_subproject)
+subproject_multiselect.on_change('value', update_plot_multiselect_subproject,
+                                 # subproject_multiselect_change,
+                                 )
 
 # set up layout
 controls = column(project_select, processor_select, subproject_multiselect)

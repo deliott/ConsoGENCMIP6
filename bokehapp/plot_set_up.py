@@ -154,7 +154,7 @@ def add_subprojects_to_line_list_ter(subproject_list, source, p, line_list):
     nb_plot = 1
     nb_sousprojets = len(subproject_list)
     df_data = source.to_df()
-    line_list = []
+    # line_list = []
     palette = list(reversed(Spectral[min(nb_sousprojets + 2, 11)]))
     for header in subproject_list:
         # print(header)
