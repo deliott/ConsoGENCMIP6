@@ -285,4 +285,54 @@ class ProjectData:
 
         return self.subproject_subtotal_dataframe, dfOpti
 
+    def select_processor_subproject_list(self, processor, selected_list):
+        """
+        Set the subproject list attribute equal to the list given in input.
+        Used to extract only parts of the dataframes.
+        :param porcessor:
+        :param selected_list:
+        :return:
+        """
 
+        keys = list(self.json_data[self.dates[0]]['processor_type'][processor]['sous_projet'].keys())
+
+        for key in keys:
+            if key in selected_list:
+                self.subproject_list += key
+        # self.subproject_list = self.subproject_list + list(self.json_data[self.dates[0]]
+        #                                                    ['processor_type'][processor]['sous_projet'].keys())
+        self.subproject_list = list(set(self.subproject_list))
+        self.subproject_list.sort()
+
+    def run_data_for_plot_extractor_selected_list(self, processor, start_date, selected_list):
+        """
+        Sum up all the previous methods to output the dataframe and instanciate all the attributes.
+        Only methods to run before plotting a graph.
+
+        :return: measured and optimal dataframe
+        """
+
+        self.set_project_timeseries_filename()
+        self.load_project_data()
+        self.set_dates()
+        self.set_processor_list()
+        self.set_processor_subproject_list(processor)
+        self.set_subproject_subtotal_dataframe(processor)
+
+        self.select_processor_subproject_list(processor, selected_list)
+
+        self.sort_df_colomns_according_to_biggest_last_value()
+        self.add_dates_to_dataframe()
+        self.add_total_subprojects()
+        self.set_allocated_dict()
+        self.set_deadline()
+
+
+        self.set_last_date(ProjectData.days_in_advance)
+
+        self.set_start_date_to_dict(processor, start_date)  # used to be 'Skylake' and '2019-05-01' for gencmip6
+        self.set_optimal_daily_consumption(processor)
+
+        dfOpti = self.get_theoretical_optimal_consumption_curve_dataframe(processor)
+
+        return self.subproject_subtotal_dataframe, dfOpti

@@ -58,3 +58,69 @@ def sort_active_subprojects(liste, df):
     result = [tuple_element[0] for tuple_element in tuple_list]
 
     return result
+
+
+
+
+def update_plot_conso(attrname, old, new):
+    """
+    Update the main time series plot depending on the tickers selected.
+    Executed when tickers are changed.
+
+    :return: None
+    """
+    project = project_select.value
+    processor = processor_select.value
+    column_names_to_remove = source.column_names
+    column_names_to_remove.remove('Date')
+    column_names_to_remove.remove('Total')
+    print('\nColonnes à supprimer : ', column_names_to_remove)
+
+    plot.title.text = "Consomation data for " + project_select.value + ' on ' + processor_select.value + ' nodes.'
+
+    src, src_opti = get_dataset_conso(project, processor)
+    source.data.update(src.data)
+
+
+
+    # print('\nColonnes à supprimer : ', column_names_to_remove)
+    [source.remove(name) for name in column_names_to_remove]
+    source_opti.data.update(src_opti.data)
+
+
+
+
+
+def update_plot_multiselect_subproject(attrname, old, new):
+    # selected_subprojects = ['Total'] + subproject_multiselect.value
+    selected_subprojects = subproject_multiselect.value
+    print('\n MULTISELECT selection - new Value = ', subproject_multiselect.value, '\n')
+    print('PLOT : ', plot, '\n')
+    # print(plot.__doc__)
+    print(plot.renderers)
+    # print(plot.renderers.remove(id=1006))
+    from inspect import signature
+    print("Test to remove line from plot")
+    # [print(line) plot.renderers.remove[line] for line in plotted_line_liste]
+    [print(line.name) for line in plotted_line_liste]
+    print(plotted_line_liste)
+
+    for line in plotted_line_liste:
+        line2 = plot.select_one({'name': line.name})
+        plot.renderers.remove(line2)
+    # [plot.renderers.remove[line.name] for line in plotted_line_liste]
+    print(plotted_line_liste)
+
+    print("Test to removed line from plot")
+
+
+
+
+
+
+
+
+
+
+
+
