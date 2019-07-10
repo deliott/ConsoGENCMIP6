@@ -1,6 +1,6 @@
 
 from bokeh.plotting import figure
-from bokeh.models import ColumnDataSource, HoverTool, NumeralTickFormatter
+from bokeh.models import ColumnDataSource, HoverTool, NumeralTickFormatter,  DataRange1d
 from bokeh.palettes import Spectral
 
 import datetime
@@ -427,3 +427,5 @@ def plot_config(p):
     p.xaxis[0].formatter.days = '%a - %d/%m/%Y'
     p.xaxis.major_label_orientation = pi / 3
     p.yaxis.formatter = NumeralTickFormatter(format="0,")
+    p.axis.axis_label_text_font_style = "bold"
+    p.x_range = DataRange1d(range_padding=0.0)

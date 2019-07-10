@@ -5,7 +5,7 @@ import pandas as pd
 
 from bokeh.io import curdoc
 from bokeh.layouts import row, column
-from bokeh.models import ColumnDataSource, DataRange1d, Select, MultiSelect
+from bokeh.models import ColumnDataSource, Select, MultiSelect
 from bokeh.palettes import Blues4
 from bokeh.plotting import figure
 
@@ -59,33 +59,33 @@ def get_dataset_conso(project_name, processor, subproject_list):
     return ColumnDataSource(data=df_data), ColumnDataSource(data=df_opti)
 
 
-def make_plot_conso(source, line_list):
-
-    plot = plot_set_up.plot_init(processor_select.value,  project_select.value, 27070000)
-
-    plot.title.text ="Consomation data for " + project_select.value + ' on ' + processor_select.value + ' nodes.'
-
-    # line_list = []
-    # plot_set_up.add_subprojects_to_line_list_bis(1, source, plot, line_list=line_list)
-
-    plot_set_up.add_subprojects_to_line_list_ter(['Total'], source, plot, line_list=line_list)
-    # plot_set_up.add_subprojects_to_line_list_ter(['Total'], source, plot, line_list=line_liste)
-
-    # plot_set_up.add_optimal_consumption_curve(source_opt, plot, line_list)
-
-    # fixed attributes
-    if processor_select.value == 'Skylake':
-        plot.axis.axis_label_text_font_style = "bold"
-    else:
-        plot.axis.axis_label_text_font_style = "italic"
-
-
-    plot.x_range = DataRange1d(range_padding=0.0)
-    plot.grid.grid_line_alpha = 0.3
-
-    plot_set_up.plot_config(plot)
-
-    return plot
+# def make_plot_conso(source, line_list):
+#
+#     plot = plot_set_up.plot_init(processor_select.value,  project_select.value, 27070000)
+#
+#     plot.title.text ="Consomation data for " + project_select.value + ' on ' + processor_select.value + ' nodes.'
+#
+#     # line_list = []
+#     # plot_set_up.add_subprojects_to_line_list_bis(1, source, plot, line_list=line_list)
+#
+#     plot_set_up.add_subprojects_to_line_list_ter(['Total'], source, plot, line_list=line_list)
+#     # plot_set_up.add_subprojects_to_line_list_ter(['Total'], source, plot, line_list=line_liste)
+#
+#     # plot_set_up.add_optimal_consumption_curve(source_opt, plot, line_list)
+#
+#     # fixed attributes
+#     if processor_select.value == 'Skylake':
+#         plot.axis.axis_label_text_font_style = "bold"
+#     else:
+#         plot.axis.axis_label_text_font_style = "italic"
+#
+#
+#     plot.x_range = DataRange1d(range_padding=0.0)
+#     plot.grid.grid_line_alpha = 0.3
+#
+#     plot_set_up.plot_config(plot)
+#
+#     return plot
 
 def create_figure():
     plot = plot_set_up.plot_init(processor_select.value, project_select.value, 27070000)
@@ -97,10 +97,11 @@ def create_figure():
     line_list = []
     plot_set_up.add_subprojects_to_line_list_ter(['Total'], source_data, plot, line_list=line_list)
 
+    # add_data_lines(plot, source_data, line_list)
 
     nb_plot = 1
     nb_sousprojets = len(subproject_list)
-    df_data = source.to_df()
+    df_data = source_data.to_df()
     # line_list = []
     from bokeh.palettes import Spectral
     palette = list(reversed(Spectral[min(nb_sousprojets + 2, 11)]))
@@ -130,38 +131,72 @@ def create_figure():
                 else:
                     print((nb_plot - 1) % 11)
                     line_list.append(plot.line('Date', header, source=source,
-                                            legend=header + ' ',
-                                            name=header + ' ',
-                                            # small hack to be able to display the name.
-                                            # Otherwise, without the ' ' there is a bug
-                                            line_width=3,
-                                            color=palette[(nb_plot-1) % 11],
-                                            muted_color=palette[(nb_plot-1 )% 11], muted_alpha=0.2
-                                            )
+                                               legend=header + ' ',
+                                               name=header + ' ',
+                                               # small hack to be able to display the name.
+                                               # Otherwise, without the ' ' there is a bug
+                                               # line_width=3,
+                                               color=palette[(nb_plot-1) % 11],
+                                               muted_color=palette[(nb_plot-1 )% 11], muted_alpha=0.2
+                                               )
                                      )
                 nb_plot = nb_plot + 1
 
     add_opti_curve(plot, source_opti, line_list)
 
-    # line_list.append(
-    #     plot.line('Date', 'Conso_Optimale', source=source_opti,
-    #            legend='Conso_Optimale ',
-    #            name='Conso_Optimale ',
-    #            # small hack to be able to display the name. Otherwise, without the ' ' there is a bug
-    #            line_width=1,
-    #            color='black',
-    #            muted_color='black', muted_alpha=0.2
-    #            )
-    # )
+    # Set up plot display details (legend, axis types, etc)
+    plot_set_up.plot_config(plot)
+
     return plot
 
 
-
-
+def add_data_lines(plot, source_data, line_list):
+    nb_plot = 1
+    nb_sousprojets = len(subproject_list)
+    df_data = source_data.to_df()
+    # line_list = []
+    from bokeh.palettes import Spectral
+    palette = list(reversed(Spectral[min(nb_sousprojets + 2, 11)]))
+    for header in subproject_list:
+        # print(header)
+        if not header == 'Date':
+            # Conditions pour afficher le sous projet :
+            # sa dernière valeure n'est pas nulle
+            # On pourrait rajouter d'autres conditions, telles que :
+            # - si la valeur a varié depuis longtemps.
+            # if not df_data[header].iloc[-1] == 0:
+            if nb_plot <= nb_sousprojets:
+                if header == 'Total':
+                    if len(list(df_data.columns)) > 3:
+                        line_list.append(plot.line('Date', header, source=source,
+                                                legend=header + ' ',
+                                                # small hack to be able to display the name.
+                                                # Otherwise, without the ' ' there is a bug
+                                                name=header + ' ',
+                                                # small hack to be able to display the name.
+                                                # Otherwise, without the ' ' there is a bug
+                                                line_width=3,
+                                                color="black",
+                                                muted_color="black", muted_alpha=0.2
+                                                )
+                                         )
+                else:
+                    print((nb_plot - 1) % 11)
+                    line_list.append(plot.line('Date', header, source=source,
+                                               legend=header + ' ',
+                                               name=header + ' ',
+                                               # small hack to be able to display the name.
+                                               # Otherwise, without the ' ' there is a bug
+                                               # line_width=3,
+                                               color=palette[(nb_plot-1) % 11],
+                                               muted_color=palette[(nb_plot-1 )% 11], muted_alpha=0.2
+                                               )
+                                     )
+                nb_plot = nb_plot + 1
 
 def add_opti_curve(plot, source_opt, line_list):
     plot_set_up.add_optimal_consumption_curve_bis(source_opt, plot, line_list)
-    return plot
+
 
 def update_plot_conso(attrname, old, new):
     """
@@ -177,7 +212,7 @@ def update_plot_conso(attrname, old, new):
     column_names_to_remove.remove('Total')
     print('\nColonnes à supprimer : ', column_names_to_remove)
 
-    plot.title.text = "Consomation data for " + project_select.value + ' on ' + processor_select.value + ' nodes.'
+    # plot.title.text = "Consomation data for " + project_select.value + ' on ' + processor_select.value + ' nodes.'
 
     src, src_opti = get_dataset_conso(project, processor, subproject_multiselect.value)
     source.data.update(src.data)
@@ -188,89 +223,6 @@ def update_plot_conso(attrname, old, new):
     [source.remove(name) for name in column_names_to_remove]
     source_opti.data.update(src_opti.data)
     # print(source.to_df())
-
-
-def update_plot_multiselect_subproject_bis(attrname, old, new):
-    """
-
-    :param attrname:
-    :param old:
-    :param new:
-    :return:
-    """
-    # selected_subprojects = ['Total'] + subproject_multiselect.value
-    selected_subprojects = subproject_multiselect.value
-
-
-    project = project_select.value
-    processor = processor_select.value
-    column_names_to_remove = source.column_names
-    column_names_to_remove.remove('Date')
-    column_names_to_remove.remove('Total')
-    print('\nColonnes à supprimer : ', column_names_to_remove)
-
-    string = ''
-    # string = [item + ', ' for item in selected_subprojects].join()
-    for item in selected_subprojects:
-        string += item + ', '
-    print('\n\nSELECTED_SUBPROKECT : ', selected_subprojects)
-    print('STRING : ', string)
-    # plot.title.text = "Consomation data for " + project_select.value + ' on ' + processor_select.value + ' nodes. ' + string
-    plot.title.text = "Consomation data for " + project_select.value + ' on ' + processor_select.value + ' nodes. '
-
-    src, src_opti = get_dataset_conso(project, processor, selected_subprojects)
-    source.data.update(src.data)
-
-
-    # print('\nColonnes à supprimer : ', column_names_to_remove)
-    [source.remove(name) for name in column_names_to_remove]
-    source_opti.data.update(src_opti.data)
-    # print(source.to_df())
-
-    # plot_set_up.add_subprojects_to_line_list_ter(selected_subprojects, source, plot, line_list=plotted_line_liste)
-
-
-    [print(line.name) for line in plotted_line_liste]
-
-
-
-def update_plot_multiselect_subproject(attrname, old, new):
-    """
-
-    :param attrname:
-    :param old:
-    :param new:
-    :return:
-    """
-    # selected_subprojects = ['Total'] + subproject_multiselect.value
-    selected_subprojects = subproject_multiselect.value
-
-    # print('\n MULTISELECT selection - new Value = ', subproject_multiselect.value, '\n')
-    # print('PLOT : ', plot, '\n')
-    # print(plot.renderers)
-    # print("Test to remove line from plot")
-    # [print(line.name) for line in plotted_line_liste]
-    # print(plotted_line_liste)
-
-    # # Attempt to supress previous lines before plotting the new selected ones. --> buggy whith project selection
-    # # or processor selection
-    # for line in plotted_line_liste:
-    #     line2 = plot.select_one({'name': line.name})
-    # #     plot.renderers.remove(line2)
-    #     line2.visible = False
-
-    # [plot.renderers.remove[line.name] for line in plotted_line_liste]
-    # print(plotted_line_liste)
-    #
-    # print("Test to removed line from plot")
-
-
-    # from inspect import signature
-    # print(signature(plot.renderers))
-    plot_set_up.add_subprojects_to_line_list_ter(selected_subprojects, source, plot, line_list=plotted_line_liste)
-    # plot_set_up.add_subprojects_to_line_list_ter(selected_subprojects, source, plot, line_list=line_liste)
-
-    [print(line.name) for line in plotted_line_liste]
 
 
 def project_ticker_change(attrname, old, new):
@@ -327,8 +279,8 @@ processor_select = Select(value=processor, title='Processor', options=['Skylake'
 plotted_line_liste = []
 
 source, source_opti = get_dataset_conso(project_name, 'Skylake', subproject_list)
-plot = make_plot_conso(source, line_list=plotted_line_liste)
-plot = add_opti_curve(plot, source_opti, line_list=plotted_line_liste)
+# plot = make_plot_conso(source, line_list=plotted_line_liste)
+# plot = add_opti_curve(plot, source_opti, line_list=plotted_line_liste)
 
 # Define more widget
 active_subproject_list, inactive_subproject_list = sdm.get_subproject_list(source)
@@ -352,16 +304,18 @@ project_select.on_change('value',
                          update_plot_conso,
                          subproject_multiselect_change
                          )
+# project_select.on_change('value',
+#                          processor_ticker_change,
+#                          project_ticker_change,
+#                          update,
+#                          subproject_multiselect_change
+#                          )
 
 # processor_select.on_change('value', update_plot_conso)
 processor_select.on_change('value', update)
 subproject_multiselect.on_change('value', update,
                                  # subproject_multiselect_change,
                                  )
-#
-# subproject_multiselect.on_change('value', update_plot_multiselect_subproject_bis,
-#                                  # subproject_multiselect_change,
-#                                  )
 
 # set up layout
 controls = column(project_select, processor_select, subproject_multiselect)
