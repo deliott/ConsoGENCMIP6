@@ -116,7 +116,7 @@ def create_figure():
             if nb_plot <= nb_sousprojets:
                 if header == 'Total':
                     if len(list(df_data.columns)) > 3:
-                        line_list.append(plot.line('Date', header, source=source,
+                        line_list.append(plot.line('Date', header, source=source_data,  # issue with this source
                                                 legend=header + ' ',
                                                 # small hack to be able to display the name.
                                                 # Otherwise, without the ' ' there is a bug
@@ -130,7 +130,7 @@ def create_figure():
                                          )
                 else:
                     print((nb_plot - 1) % 11)
-                    line_list.append(plot.line('Date', header, source=source,
+                    line_list.append(plot.line('Date', header, source=source_data, # issue with the source
                                                legend=header + ' ',
                                                name=header + ' ',
                                                # small hack to be able to display the name.
@@ -168,7 +168,7 @@ def add_data_lines(plot, source_data, line_list):
             if nb_plot <= nb_sousprojets:
                 if header == 'Total':
                     if len(list(df_data.columns)) > 3:
-                        line_list.append(plot.line('Date', header, source=source,
+                        line_list.append(plot.line('Date', header, source=source_data,
                                                 legend=header + ' ',
                                                 # small hack to be able to display the name.
                                                 # Otherwise, without the ' ' there is a bug
@@ -182,7 +182,7 @@ def add_data_lines(plot, source_data, line_list):
                                          )
                 else:
                     print((nb_plot - 1) % 11)
-                    line_list.append(plot.line('Date', header, source=source,
+                    line_list.append(plot.line('Date', header, source=source_data,
                                                legend=header + ' ',
                                                name=header + ' ',
                                                # small hack to be able to display the name.
@@ -278,12 +278,16 @@ processor_select = Select(value=processor, title='Processor', options=['Skylake'
 
 plotted_line_liste = []
 
+source_data_gencmip6, source_opti_gencmip6 = get_dataset_conso(project_select.value, processor_select.value, subproject_list)
+
 source, source_opti = get_dataset_conso(project_name, 'Skylake', subproject_list)
+
 # plot = make_plot_conso(source, line_list=plotted_line_liste)
 # plot = add_opti_curve(plot, source_opti, line_list=plotted_line_liste)
 
 # Define more widget
-active_subproject_list, inactive_subproject_list = sdm.get_subproject_list(source)
+# active_subproject_list, inactive_subproject_list = sdm.get_subproject_list(source)
+active_subproject_list, inactive_subproject_list = sdm.get_subproject_list(source_data_gencmip6)
 subproject_list = active_subproject_list + inactive_subproject_list
 
 subproject_multiselect = MultiSelect(title="Subprojects:",
