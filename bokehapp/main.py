@@ -55,7 +55,7 @@ def create_figure():
     line_list = []
 
     add_data_lines(plot, source_data, line_list, selected_subproject_list)
-    add_opti_curve(plot, source_opti, line_list)
+    add_opti_curve_and_patch(plot, source_opti, line_list)
 
     # Set up plot display details (legend, axis types, etc)
     plot_set_up.plot_config(plot)
@@ -67,8 +67,12 @@ def add_data_lines(plot, source_data, line_list, selected_subproject_list):
     plot_set_up.add_subprojects_to_line_list_bis(plot, source_data, line_list, selected_subproject_list)
 
 
-def add_opti_curve(plot, source_opt, line_list):
+def add_opti_curve_and_patch(plot, source_opt, line_list):
     plot_set_up.add_optimal_consumption_curve_bis(source_opt, plot, line_list)
+    delai_avant_penalite=60
+    print(type(source_opt.to_df()))
+    plot_set_up.add_optimal_consumption_patch_bis(delai_avant_penalite, source_opt.to_df(), plot, 'orange')
+
 
 
 def project_ticker_change(attrname, old, new):

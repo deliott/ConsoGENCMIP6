@@ -142,7 +142,7 @@ def add_optimal_consumption_curve_bis(source_opt, p, line_list):
     Append Bokeh Line Glyphs corresponding to the optimal consumption of the allocation to the list (line_list)
     to be added to the figure (p).
 
-    :param df_opti: dataframe with the optimal cpu time consumption as column. Indexed by dates.
+    :param source_opt: ColumnDataSource from which will be extracted the dataframe with the optimal cpu time consumption as column. Indexed by dates.
     :param p: bokeh figure that will render the glyphs
     :param line_list: list with the bokeh glyphs to be added to the p figure.
     :return: None
@@ -191,7 +191,7 @@ def add_optimal_consumption_patch(delai_avant_penalite, df_opti, p, color):
 
     :param delai_avant_penalite: Number of days before Computing Centers decides to take back part of the allocation.
     60 Days at TGCC.
-    :param df_opti: dataframe with the optimal cpu time consumption as column. Indexed by dates.
+    :param df_opti: dataframe (dict) with the optimal cpu time consumption as column. Indexed by dates.
     :param p: bokeh figure that will render the glyphs.
     :param color: string describing the color of the patch.
     :return: None
@@ -214,6 +214,42 @@ def add_optimal_consumption_patch(delai_avant_penalite, df_opti, p, color):
     yy = [df_opti['Conso_Optimale'][0],
           df_opti['Conso_Optimale'][-1],
           df_opti['Conso_Optimale'][-1] - volume_avant_penalite,
+          0,
+          0]
+    p.patch(xx, yy, alpha=0.1, line_width=2, legend=str(delai_avant_penalite) + ' days security area', color=color)
+
+
+def add_optimal_consumption_patch_bis(delai_avant_penalite, df_opti, p, color):
+    """
+    Add Bokeh Patch Glyph to the figurte (p) corresponding to the security area
+    before risk restriction of the allocation.
+    The bis method is able to deal with df_opti as a pandas dataframe.
+
+    :param delai_avant_penalite: Number of days before Computing Centers decides to take back part of the allocation.
+    60 Days at TGCC.
+    :param df_opti: pandas dataframe with the optimal cpu time consumption as column. Indexed by dates.
+    :param p: bokeh figure that will render the glyphs.
+    :param color: string describing the color of the patch.
+    :return: None
+    """
+    # delai_avant_penalite = 14
+    # delai_avant_penalite = 60
+
+    if len(df_opti['Date']) <= delai_avant_penalite:
+        delai_avant_penalite = min(len(df_opti['Date'])-1, 30)
+        color = 'green'
+
+    volume_avant_penalite = df_opti['Conso_Optimale'].iloc[delai_avant_penalite]
+
+    xx = [df_opti['Date'].iloc[0],
+          df_opti['Date'].iloc[-1],
+          df_opti['Date'].iloc[-1],
+          df_opti['Date'].iloc[delai_avant_penalite],
+          df_opti['Date'].iloc[0]]
+
+    yy = [df_opti['Conso_Optimale'].iloc[0],
+          df_opti['Conso_Optimale'].iloc[-1],
+          df_opti['Conso_Optimale'].iloc[-1] - volume_avant_penalite,
           0,
           0]
     p.patch(xx, yy, alpha=0.1, line_width=2, legend=str(delai_avant_penalite) + ' days security area', color=color)
