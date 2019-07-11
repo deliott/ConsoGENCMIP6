@@ -4,7 +4,7 @@ import datetime
 import pandas as pd
 
 from bokeh.io import curdoc
-from bokeh.layouts import row, column, layout, widgetbox
+from bokeh.layouts import row, column, layout, widgetbox, Spacer
 from bokeh.models import ColumnDataSource, Select, MultiSelect
 
 from data_for_plot_extractor import ProjectData
@@ -74,6 +74,8 @@ def create_figure():
 
 
     # Set up plot display details (legend, axis types, etc)
+
+    plot_set_up.set_plot_xaxis_default_range(plot, source_opti.to_df(), project_dict[str(project_select.value)])
     plot_set_up.plot_config(plot)
 
     return plot
@@ -98,6 +100,10 @@ def create_delta():
 
     add_difference_hovertool(q, retard_warning)
 
+
+    # plot_set_up.set_plot_xaxis_default_range(q, source_opti.to_df(), project_dict[str(project_select.value)])
+    # q.x_range = plots.children[0].x_range
+    q.x_range = layout.children[0].children[1].children[0].x_range
     plot_config_delta(q)
 
     return q
@@ -151,11 +157,14 @@ def subproject_multiselect_change(attrname, old, new):
 
 
 def update(attr, old, new):
-    # layout.children[1]= create_figure()
-    layout.children[0].children[1]= column(create_figure(), create_delta(),
-                                           # sizing_mode='scale_height',
-                                           sizing_mode='scale_width',
-                                           )
+    # p = create_figure()
+    # q = create_delta()
+    # layout.children[0].children[1] = column(p, q,
+    #                                        # sizing_mode='scale_height',
+    #                                        sizing_mode='scale_width',
+    #                                        )
+    layout.children[0].children[1].children[0] = create_figure()  # p
+    layout.children[0].children[1].children[1] = create_delta()   # q
 
 
 # Define variables for initialisation plot.
@@ -196,13 +205,17 @@ subproject_multiselect.on_change('value', update)
 
 # Set up layout
 controls = widgetbox(project_select, processor_select, subproject_multiselect, width=200)
-plots = column(create_figure(), create_delta(), sizing_mode='scale_both')
 
-# layout = row(controls, create_figure())
-# layout = layout(row(controls, plots, sizing_mode='scale_width'), sizing_mode='scale_width')
+# Create first plot and layout structure
+p = create_figure()
+plots = column(p, Spacer(), sizing_mode='scale_both')
+
 layout = layout(row(controls, plots), sizing_mode='scale_both')
-# layout = row(controls, column(create_figure(), create_figure()))
-# layout.sizing_mode = 'scale_width'
+
+# Insert second plot in layout structure.
+
+layout.children[0].children[1].children[1] = create_delta()
+
 
 curdoc().add_root(layout)
 curdoc().title = "Consomation"

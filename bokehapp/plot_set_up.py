@@ -1,10 +1,11 @@
 
 from bokeh.plotting import figure
-from bokeh.models import ColumnDataSource, HoverTool, NumeralTickFormatter,  DataRange1d
+from bokeh.models import ColumnDataSource, HoverTool, NumeralTickFormatter
 from bokeh.palettes import Spectral
 
 import datetime
 from math import pi
+import pandas as pd
 
 # from data_for_plot_extractor import ProjectData.days_in_advance
 
@@ -27,6 +28,44 @@ def plot_init(processor, project_name, allocation):
                )
 
     return p
+
+def set_plot_axis_default_range(plot, df_data, df_opti, start_date, vertical_margin_coef):
+    """
+    Set the axis range of the plot.
+
+    :param plot: bokeh figure
+    :param df_data: dataframe with the cpu time consumption per project and total as columns. Indexed by dates.
+    :param df_opti:
+    :param vertical_margin_coef: float representing the precentage of margin to be taken on vertical axis
+    :return:
+    """
+    fin = pd.to_datetime(df_opti['Date'][-1] + pd.Timedelta(2.5, unit='D'))
+    debut = max(fin - pd.Timedelta(60, unit='D'), pd.to_datetime(start_date))
+
+    plot.x_range.start = debut
+    plot.x_range.end = fin
+
+    plot.y_range.end = max(
+        df_opti['Conso_Optimale'][-1] * 1.25,  # 1.25 stands for the 25% bonus that can be gained at TGCC
+        max(df_data['Total'])
+    ) * vertical_margin_coef
+
+
+def set_plot_xaxis_default_range(plot, df_opti, start_date, ):
+    """
+    Set the xaxis range of the plot.
+
+    :param plot: bokeh figure
+    :param df_data: dataframe with the cpu time consumption per project and total as columns. Indexed by dates.
+    :param df_opti:
+    :param vertical_margin_coef: float representing the precentage of margin to be taken on vertical axis
+    :return:
+    """
+    fin = pd.to_datetime(df_opti['Date'].iloc[-1] + pd.Timedelta(2.5, unit='D'))
+    debut = max(fin - pd.Timedelta(60, unit='D'), pd.to_datetime(start_date))
+
+    plot.x_range.start = debut
+    plot.x_range.end = fin
 
 
 def add_subprojects_to_line_list(nb_sousprojets, df_data, p, line_list):
@@ -434,4 +473,3 @@ def plot_config(p):
     p.xaxis.major_label_orientation = pi / 3
     p.yaxis.formatter = NumeralTickFormatter(format="0,")
     p.axis.axis_label_text_font_style = "bold"
-    p.x_range = DataRange1d(range_padding=0.0)
