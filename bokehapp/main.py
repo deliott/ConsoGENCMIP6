@@ -63,6 +63,11 @@ def create_figure():
     line_list = []
 
     add_data_lines(plot, source_data, line_list, selected_subproject_list)
+
+    # # Nouvelle version
+    retard_warning = plot_set_up.add_optimal_total_difference_ticks_bis(source_data.to_df(), source_opti.to_df(), plot)
+    plot_set_up.add_warnings_hovertool(plot, retard_warning)
+
     add_opti_curve_patch_and_bonus(plot, source_opti, line_list)
 
     # Set up plot display details (legend, axis types, etc)
