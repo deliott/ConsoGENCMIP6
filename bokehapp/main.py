@@ -24,6 +24,8 @@ project_dict['gen0826'] = '2018-10-31'
 def get_dataset_conso(project_name, processor, subproject_list):
     """
     Check the usages of this function.
+    -> in the definition of the initialisation of the plot.
+    -> in create_figure
     """
     data_for_plot = ProjectData(project_name)
 
@@ -183,8 +185,6 @@ def subproject_multiselect_change(attrname, old, new):
                                                   + sdm.modify_inactive_project_names(inactive_subproject_list_gencmip6)
                                                   )
                                               )
-
-
     else:
         liste_sousprojets = [project_select.value]
         subproject_multiselect.value = [project_select.value]
@@ -195,6 +195,7 @@ def update(attr, old, new):
     layout.children[1] = create_figure()
 
 
+# Define variables for initialisation plot.
 project_name = 'gencmip6'
 processor = 'Skylake'
 subproject_list = ['dcpcmip6', 'pmicmip6', 'devcmip6', 'ls3cmip6', 'volcmip6',
@@ -202,33 +203,23 @@ subproject_list = ['dcpcmip6', 'pmicmip6', 'devcmip6', 'ls3cmip6', 'volcmip6',
                    'rcecmip6', 'anacmip6', 'c4mcmip6', 'cfmcmip6', 'cm5cmip6',
                    'daacmip6', 'dmrcmip6', 'fafcmip6', 'gmmcmip6', 'hircmip6', 'ismcmip6']
 
+source_data_gencmip6, source_opti_gencmip6 = get_dataset_conso(project_name, processor, subproject_list)
+active_subproject_list_gencmip6, inactive_subproject_list_gencmip6 = sdm.get_subproject_list(source_data_gencmip6)
+subproject_list_gencmip6 = active_subproject_list_gencmip6 + inactive_subproject_list_gencmip6
+
+
 # Define the Widgets
 project_select = Select(value=project_name, title='Project Name', options=sorted(project_dict.keys()))
 processor_select = Select(value=processor, title='Processor', options=['Skylake'])
-
-
-plotted_line_liste = []
-
-source_data_gencmip6, source_opti_gencmip6 = get_dataset_conso(project_select.value, processor_select.value, subproject_list)
-active_subproject_list_gencmip6, inactive_subproject_list_gencmip6 = sdm.get_subproject_list(source_data_gencmip6)
-
-# source, source_opti = get_dataset_conso(project_name, 'Skylake', subproject_list)
-
-
-# Define more widget
-active_subproject_list, inactive_subproject_list = sdm.get_subproject_list(source_data_gencmip6)
-subproject_list = active_subproject_list + inactive_subproject_list
-
 subproject_multiselect = MultiSelect(title="Subprojects:",
-                                     value=active_subproject_list,
+                                     value=active_subproject_list_gencmip6,
                                      options=list(zip(
-                                         subproject_list,
-                                         active_subproject_list
-                                         + sdm.modify_inactive_project_names(inactive_subproject_list)
+                                         subproject_list_gencmip6,
+                                         active_subproject_list_gencmip6
+                                         + sdm.modify_inactive_project_names(inactive_subproject_list_gencmip6)
                                      )),
                                      size=8
                                      )
-
 
 # Define widget actions
 project_select.on_change('value',
@@ -240,10 +231,8 @@ project_select.on_change('value',
 processor_select.on_change('value', update)
 subproject_multiselect.on_change('value', update)
 
-
-# set up layout
+# Set up layout
 controls = column(project_select, processor_select, subproject_multiselect)
-
 layout = row(controls, create_figure())
 
 curdoc().add_root(layout)
