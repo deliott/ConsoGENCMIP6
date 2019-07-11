@@ -89,10 +89,10 @@ def get_dataset_conso(project_name, processor, subproject_list):
 
 def create_figure():
     plot = plot_set_up.plot_init(processor_select.value, project_select.value, 27070000)
-    plot.title.text ="Consomation data for " + project_select.value + ' on ' + processor_select.value + ' nodes.'
+    plot.title.text = "Consomation data for " + project_select.value + ' on ' + processor_select.value + ' nodes.'
 
-    subproject_list = subproject_multiselect.value
-    source_data, source_opti = get_dataset_conso(project_select.value, processor_select.value, subproject_list)
+    selected_subproject_list = subproject_multiselect.value
+    source_data, source_opti = get_dataset_conso(project_select.value, processor_select.value, selected_subproject_list)
 
     line_list = []
     plot_set_up.add_subprojects_to_line_list_ter(['Total'], source_data, plot, line_list=line_list)
@@ -100,12 +100,12 @@ def create_figure():
     # add_data_lines(plot, source_data, line_list)
 
     nb_plot = 1
-    nb_sousprojets = len(subproject_list)
+    nb_sousprojets = len(selected_subproject_list)
     df_data = source_data.to_df()
     # line_list = []
     from bokeh.palettes import Spectral
     palette = list(reversed(Spectral[min(nb_sousprojets + 2, 11)]))
-    for header in subproject_list:
+    for header in selected_subproject_list:
         # print(header)
         if not header == 'Date':
             # Conditions pour afficher le sous projet :
@@ -194,35 +194,9 @@ def add_data_lines(plot, source_data, line_list):
                                      )
                 nb_plot = nb_plot + 1
 
+
 def add_opti_curve(plot, source_opt, line_list):
     plot_set_up.add_optimal_consumption_curve_bis(source_opt, plot, line_list)
-
-
-def update_plot_conso(attrname, old, new):
-    """
-    Update the main time series plot depending on the tickers selected.
-    Executed when tickers are changed.
-
-    :return: None
-    """
-    project = project_select.value
-    processor = processor_select.value
-    column_names_to_remove = source.column_names
-    column_names_to_remove.remove('Date')
-    column_names_to_remove.remove('Total')
-    print('\nColonnes à supprimer : ', column_names_to_remove)
-
-    # plot.title.text = "Consomation data for " + project_select.value + ' on ' + processor_select.value + ' nodes.'
-
-    src, src_opti = get_dataset_conso(project, processor, subproject_multiselect.value)
-    source.data.update(src.data)
-
-    # print(source.to_df())
-
-    # print('\nColonnes à supprimer : ', column_names_to_remove)
-    [source.remove(name) for name in column_names_to_remove]
-    source_opti.data.update(src_opti.data)
-    # print(source.to_df())
 
 
 def project_ticker_change(attrname, old, new):
@@ -309,7 +283,6 @@ subproject_multiselect = MultiSelect(title="Subprojects:",
 project_select.on_change('value',
                          processor_ticker_change,
                          project_ticker_change,
-                         # update_plot_conso,
                          update,
                          subproject_multiselect_change
                          )
@@ -320,7 +293,6 @@ project_select.on_change('value',
 #                          subproject_multiselect_change
 #                          )
 
-# processor_select.on_change('value', update_plot_conso)
 processor_select.on_change('value', update)
 subproject_multiselect.on_change('value', update,
                                  # subproject_multiselect_change,
