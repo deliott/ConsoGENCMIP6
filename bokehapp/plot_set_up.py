@@ -184,6 +184,34 @@ def add_optimal_consumption_curve(df_opti, p, line_list):
     )
 
 
+def add_possible_bonus_curve(df_opti, p, line_list):
+    """
+    Append Bokeh Line Glyphs corresponding to the optimal consumption multiplied by  of the allocation to the list (line_list)
+    to be added to the figure (p).
+
+    :param df_opti: dataframe with the optimal cpu time consumption as column. Indexed by dates.
+    :type df_opti: python dict
+    :param p: bokeh figure that will render the glyphs
+    :param line_list: list with the bokeh glyphs to be added to the p figure.
+    :return: None
+    """
+
+    df_opti['Conso_Bonus'] = [i * 1.25 for i in df_opti['Conso_Optimale']]
+    # because df_opti is a python dict and not a pandas dataframe ... TO CHANGE ...
+    # Ajout de la courbe de consomation théorique :
+    source_opt = ColumnDataSource(df_opti)
+    line_list.append(
+        p.line('Date', 'Conso_Bonus', source=source_opt,
+               legend='125% Consomation Optimale ',
+               name='125% Conso Optimale ',
+               line_width=1,
+               color='pink',
+               muted_color='pink', muted_alpha=0.2
+               )
+    )
+
+
+
 def add_optimal_consumption_patch(delai_avant_penalite, df_opti, p, color):
     """
     Add Bokeh Patch Glyph to the figurte (p) corresponding to the security area
