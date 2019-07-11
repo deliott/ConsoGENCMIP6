@@ -59,34 +59,6 @@ def get_dataset_conso(project_name, processor, subproject_list):
     return ColumnDataSource(data=df_data), ColumnDataSource(data=df_opti)
 
 
-# def make_plot_conso(source, line_list):
-#
-#     plot = plot_set_up.plot_init(processor_select.value,  project_select.value, 27070000)
-#
-#     plot.title.text ="Consomation data for " + project_select.value + ' on ' + processor_select.value + ' nodes.'
-#
-#     # line_list = []
-#     # plot_set_up.add_subprojects_to_line_list_bis(1, source, plot, line_list=line_list)
-#
-#     plot_set_up.add_subprojects_to_line_list_ter(['Total'], source, plot, line_list=line_list)
-#     # plot_set_up.add_subprojects_to_line_list_ter(['Total'], source, plot, line_list=line_liste)
-#
-#     # plot_set_up.add_optimal_consumption_curve(source_opt, plot, line_list)
-#
-#     # fixed attributes
-#     if processor_select.value == 'Skylake':
-#         plot.axis.axis_label_text_font_style = "bold"
-#     else:
-#         plot.axis.axis_label_text_font_style = "italic"
-#
-#
-#     plot.x_range = DataRange1d(range_padding=0.0)
-#     plot.grid.grid_line_alpha = 0.3
-#
-#     plot_set_up.plot_config(plot)
-#
-#     return plot
-
 def create_figure():
     plot = plot_set_up.plot_init(processor_select.value, project_select.value, 27070000)
     plot.title.text = "Consomation data for " + project_select.value + ' on ' + processor_select.value + ' nodes.'
