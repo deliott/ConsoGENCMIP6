@@ -247,18 +247,21 @@ def processor_ticker_change(attrname, old, new):
 
 
 def subproject_multiselect_change(attrname, old, new):
-    # subproject_list, res0 = sdm.get_subproject_list(source)
-
-    active_subproject_list, inactive_subproject_list = sdm.get_subproject_list(source)
-    subproject_list = active_subproject_list + inactive_subproject_list
-
-    # subproject_multiselect.value = ['Total']
-    subproject_multiselect.value = ['Total']
-    subproject_multiselect.options = list(zip(subproject_list,
-                                         active_subproject_list
-                                              + sdm.modify_inactive_project_names(inactive_subproject_list)
+    if project_select.value == 'gencmip6':
+        liste_sousprojets = active_subproject_list_gencmip6 + inactive_subproject_list_gencmip6
+        subproject_multiselect.value = ['Total']
+        subproject_multiselect.options = list(zip(liste_sousprojets,
+                                                  active_subproject_list_gencmip6
+                                                  + sdm.modify_inactive_project_names(inactive_subproject_list_gencmip6)
+                                                  )
                                               )
-                                          )
+
+
+    else:
+        liste_sousprojets = [project_select.value]
+        subproject_multiselect.value = [project_select.value]
+        subproject_multiselect.options = list(zip(liste_sousprojets,liste_sousprojets))
+
 
 def update(attr, old, new):
     layout.children[1] = create_figure()
@@ -279,6 +282,7 @@ processor_select = Select(value=processor, title='Processor', options=['Skylake'
 plotted_line_liste = []
 
 source_data_gencmip6, source_opti_gencmip6 = get_dataset_conso(project_select.value, processor_select.value, subproject_list)
+active_subproject_list_gencmip6, inactive_subproject_list_gencmip6 = sdm.get_subproject_list(source_data_gencmip6)
 
 source, source_opti = get_dataset_conso(project_name, 'Skylake', subproject_list)
 
@@ -305,7 +309,8 @@ subproject_multiselect = MultiSelect(title="Subprojects:",
 project_select.on_change('value',
                          processor_ticker_change,
                          project_ticker_change,
-                         update_plot_conso,
+                         # update_plot_conso,
+                         update,
                          subproject_multiselect_change
                          )
 # project_select.on_change('value',
