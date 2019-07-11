@@ -6,10 +6,9 @@ import pandas as pd
 from bokeh.io import curdoc
 from bokeh.layouts import row, column
 from bokeh.models import ColumnDataSource, Select, MultiSelect
-from bokeh.palettes import Blues4
-from bokeh.plotting import figure
 
 from data_for_plot_extractor import ProjectData
+
 import plot_set_up as plot_set_up
 
 import subprojects_display_methods as sdm
@@ -21,41 +20,26 @@ project_dict = {}
 project_dict['gencmip6'] = '2019-05-01'
 project_dict['gen0826'] = '2018-10-31'
 
-STATISTICS = ['record_min_temp', 'actual_min_temp', 'average_min_temp', 'average_max_temp', 'actual_max_temp',
-              'record_max_temp']
 
 def get_dataset_conso(project_name, processor, subproject_list):
-
+    """
+    Check the usages of this function.
+    """
     data_for_plot = ProjectData(project_name)
 
     data_for_plot.set_project_timeseries_filename()
     data_for_plot.load_project_data()
     data_for_plot.set_dates()
-    # load_project_data() and set_dates()
     data_for_plot.set_processor_list()
-    processor_list = data_for_plot.processor_list
 
     df_data, df_opti = data_for_plot.run_data_for_plot_extractor_selected_list(
         processor,
         project_dict[str(project_name)],
         subproject_list
     )
-
-    # df = src[src.airport == project_name].copy()
-    # del df['airport']
-    # df['date'] = pd.to_datetime(df.date)
-    # # timedelta here instead of pd.DateOffset to avoid pandas bug < 0.18 (Pandas issue #11925)
-    # df['left'] = df.date - datetime.timedelta(days=0.5)
-    # df['right'] = df.date + datetime.timedelta(days=0.5)
     df_data = df_data.set_index(['Date'])
     df_data.sort_index(inplace=True)
-    # if processor == 'Smoothed':
-    #     window, order = 51, 3
-    #     for key in STATISTICS:
-    #         df[key] = savgol_filter(df[key], window, order)
 
-    # return ColumnDataSource(data=df_data)
-    # print('get_dataset_conso - DF_DATA : ', df_data)
     return ColumnDataSource(data=df_data), ColumnDataSource(data=df_opti)
 
 
