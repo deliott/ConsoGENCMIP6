@@ -4,7 +4,7 @@ import datetime
 import pandas as pd
 
 from bokeh.io import curdoc
-from bokeh.layouts import row, column
+from bokeh.layouts import row, column, layout, widgetbox
 from bokeh.models import ColumnDataSource, Select, MultiSelect
 
 from data_for_plot_extractor import ProjectData
@@ -12,6 +12,11 @@ from data_for_plot_extractor import ProjectData
 import plot_set_up as plot_set_up
 
 import subprojects_display_methods as sdm
+
+
+from daily_delta_monitoring import plot_init_delta, plot_config_delta, test_add_optimal_total_difference_ticks_bis,\
+    test_add_optimal_total_difference_ticks_ter, add_difference_hovertool
+
 
 import set_paths as set_paths
 set_paths.set_path_to_plots()
@@ -63,6 +68,30 @@ def create_figure():
     return plot
 
 
+def create_delta():
+    """Don't forget to refactor this function."""
+    q = plot_init_delta(processor_select.value, project_select.value)
+    # q = plot_set_up.plot_init(processor, project_name)
+
+    data_for_plot = ProjectData(project_select.value)
+
+    data_for_plot.set_project_timeseries_filename()
+    data_for_plot.load_project_data()
+    data_for_plot.set_dates()
+    data_for_plot.set_processor_list()
+    data_for_plot.run_data_for_plot_extractor(processor_select.value, start_date=project_dict[project_select.value])
+
+    source_data, source_opti = get_dataset_conso(project_select.value, processor_select.value, subproject_multiselect.value)
+    retard_warning = test_add_optimal_total_difference_ticks_ter(data_for_plot, source_data.to_df(), source_opti.to_df(), q)
+    # retard_warning = test_add_optimal_total_difference_ticks_bis(data_for_plot, df_data, df_opti, q)
+
+    add_difference_hovertool(q, retard_warning)
+
+    plot_config_delta(q)
+
+    return q
+
+
 def add_data_lines(plot, source_data, line_list, selected_subproject_list):
     plot_set_up.add_subprojects_to_line_list_bis(plot, source_data, line_list, selected_subproject_list)
 
@@ -111,25 +140,29 @@ def subproject_multiselect_change(attrname, old, new):
 
 
 def update(attr, old, new):
-    layout.children[1] = create_figure()
+    # layout.children[1]= create_figure()
+    layout.children[0].children[1]= column(create_figure(), create_delta(),
+                                           # sizing_mode='scale_height',
+                                           sizing_mode='scale_width',
+                                           )
 
 
 # Define variables for initialisation plot.
-project_name = 'gencmip6'
-processor = 'Skylake'
+init_project_name = 'gencmip6'
+init_processor = 'Skylake'
 subproject_list = ['dcpcmip6', 'pmicmip6', 'devcmip6', 'ls3cmip6', 'volcmip6',
                    'rfmcmip6', 'dekcmip6', 'scecmip6', 'geocmip6', 'checmip6',
                    'rcecmip6', 'anacmip6', 'c4mcmip6', 'cfmcmip6', 'cm5cmip6',
                    'daacmip6', 'dmrcmip6', 'fafcmip6', 'gmmcmip6', 'hircmip6', 'ismcmip6']
 
-source_data_gencmip6, source_opti_gencmip6 = get_dataset_conso(project_name, processor, subproject_list)
+source_data_gencmip6, source_opti_gencmip6 = get_dataset_conso(init_project_name, init_processor, subproject_list)
 active_subproject_list_gencmip6, inactive_subproject_list_gencmip6 = sdm.get_subproject_list(source_data_gencmip6)
 subproject_list_gencmip6 = active_subproject_list_gencmip6 + inactive_subproject_list_gencmip6
 
 
 # Define the Widgets
-project_select = Select(value=project_name, title='Project Name', options=sorted(project_dict.keys()))
-processor_select = Select(value=processor, title='Processor', options=['Skylake'])
+project_select = Select(value=init_project_name, title='Project Name', options=sorted(project_dict.keys()))
+processor_select = Select(value=init_processor, title='Processor', options=['Skylake'])
 subproject_multiselect = MultiSelect(title="Subprojects:",
                                      value=active_subproject_list_gencmip6,
                                      options=list(zip(
@@ -151,8 +184,14 @@ processor_select.on_change('value', update)
 subproject_multiselect.on_change('value', update)
 
 # Set up layout
-controls = column(project_select, processor_select, subproject_multiselect)
-layout = row(controls, create_figure())
+controls = widgetbox(project_select, processor_select, subproject_multiselect, width=200)
+plots = column(create_figure(), create_delta(), sizing_mode='scale_both')
+
+# layout = row(controls, create_figure())
+# layout = layout(row(controls, plots, sizing_mode='scale_width'), sizing_mode='scale_width')
+layout = layout(row(controls, plots), sizing_mode='scale_both')
+# layout = row(controls, column(create_figure(), create_figure()))
+# layout.sizing_mode = 'scale_width'
 
 curdoc().add_root(layout)
 curdoc().title = "Consomation"
