@@ -140,24 +140,22 @@ def add_subprojects_to_line_list_bis(nb_sousprojets, source, p, line_list):
                     nb_plot = nb_plot + 1
 
     # return line_list
-def add_subprojects_to_line_list_ter(subproject_list, source, p, line_list):
+def add_subprojects_to_line_list_ter(plot, source_data, line_list, selected_subproject_list):
     """
     Append Bokeh Line Glyphs corresponding to subprojects data to the list (line_list) to be added to the figure (p).
 
-    :param nb_sousprojets: max number of subprojects to be plotted on the figure.
-    :param df_data: dataframe with the cpu time consumption per project and total as columns. Indexed by dates.
-    :param p: bokeh figure that will render the glyphs
-    :param line_list: list with the bokeh glyphs to be added to the p figure.
-    # :return line_list: updated list of bokeh glyphs added to be added to the figure.
+    :param plot: Bokeh figure where the subprojects are to be plotted.
+    :param source_data: dataframe with the cpu time consumption per project and total as columns. Indexed by dates.
+    :param line_list: list with the bokeh glyphs to be added to the plot figure.
+    :param selected_subproject_list: list the subproject names to be added to the plot.
     :return: None
     """
     nb_plot = 1
-    nb_sousprojets = len(subproject_list)
-    df_data = source.to_df()
-    # line_list = []
+    nb_sousprojets = len(selected_subproject_list)
+    df_data = source_data.to_df()
+    from bokeh.palettes import Spectral
     palette = list(reversed(Spectral[min(nb_sousprojets + 2, 11)]))
-    for header in subproject_list:
-        # print(header)
+    for header in selected_subproject_list:
         if not header == 'Date':
             # Conditions pour afficher le sous projet :
             # sa dernière valeure n'est pas nulle
@@ -167,7 +165,7 @@ def add_subprojects_to_line_list_ter(subproject_list, source, p, line_list):
             if nb_plot <= nb_sousprojets:
                 if header == 'Total':
                     if len(list(df_data.columns)) > 3:
-                        line_list.append(p.line('Date', header, source=source,
+                        line_list.append(plot.line('Date', header, source=source_data,  # issue with this source
                                                 legend=header + ' ',
                                                 # small hack to be able to display the name.
                                                 # Otherwise, without the ' ' there is a bug
@@ -180,19 +178,18 @@ def add_subprojects_to_line_list_ter(subproject_list, source, p, line_list):
                                                 )
                                          )
                 else:
-                    line_list.append(p.line('Date', header, source=source,
-                                            legend=header + ' ',
-                                            name=header + ' ',
-                                            # small hack to be able to display the name.
-                                            # Otherwise, without the ' ' there is a bug
-                                            line_width=3,
-                                            color=palette[nb_plot-1 % 11],
-                                            muted_color=palette[nb_plot-1 % 11], muted_alpha=0.2
-                                            )
+                    print((nb_plot - 1) % 11)
+                    line_list.append(plot.line('Date', header, source=source_data, # issue with the source
+                                               legend=header + ' ',
+                                               name=header + ' ',
+                                               # small hack to be able to display the name.
+                                               # Otherwise, without the ' ' there is a bug
+                                               # line_width=3,
+                                               color=palette[(nb_plot-1) % 11],
+                                               muted_color=palette[(nb_plot-1 )% 11], muted_alpha=0.2
+                                               )
                                      )
                 nb_plot = nb_plot + 1
-
-    # return line_list
 
 
 def add_optimal_consumption_curve_bis(source_opt, p, line_list):

@@ -64,46 +64,7 @@ def create_figure():
 
 
 def add_data_lines(plot, source_data, line_list, selected_subproject_list):
-    nb_plot = 1
-    nb_sousprojets = len(selected_subproject_list)
-    df_data = source_data.to_df()
-    from bokeh.palettes import Spectral
-    palette = list(reversed(Spectral[min(nb_sousprojets + 2, 11)]))
-    for header in selected_subproject_list:
-        if not header == 'Date':
-            # Conditions pour afficher le sous projet :
-            # sa dernière valeure n'est pas nulle
-            # On pourrait rajouter d'autres conditions, telles que :
-            # - si la valeur a varié depuis longtemps.
-            # if not df_data[header].iloc[-1] == 0:
-            if nb_plot <= nb_sousprojets:
-                if header == 'Total':
-                    if len(list(df_data.columns)) > 3:
-                        line_list.append(plot.line('Date', header, source=source_data,  # issue with this source
-                                                legend=header + ' ',
-                                                # small hack to be able to display the name.
-                                                # Otherwise, without the ' ' there is a bug
-                                                name=header + ' ',
-                                                # small hack to be able to display the name.
-                                                # Otherwise, without the ' ' there is a bug
-                                                line_width=3,
-                                                color="black",
-                                                muted_color="black", muted_alpha=0.2
-                                                )
-                                         )
-                else:
-                    print((nb_plot - 1) % 11)
-                    line_list.append(plot.line('Date', header, source=source_data, # issue with the source
-                                               legend=header + ' ',
-                                               name=header + ' ',
-                                               # small hack to be able to display the name.
-                                               # Otherwise, without the ' ' there is a bug
-                                               # line_width=3,
-                                               color=palette[(nb_plot-1) % 11],
-                                               muted_color=palette[(nb_plot-1 )% 11], muted_alpha=0.2
-                                               )
-                                     )
-                nb_plot = nb_plot + 1
+    plot_set_up.add_subprojects_to_line_list_ter(plot, source_data, line_list, selected_subproject_list)
 
 
 def add_opti_curve(plot, source_opt, line_list):
