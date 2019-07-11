@@ -85,62 +85,7 @@ def add_subprojects_to_line_list(nb_sousprojets, df_data, p, line_list):
     # return line_list
 
 
-def add_subprojects_to_line_list_bis(nb_sousprojets, source, p, line_list):
-    """
-    Append Bokeh Line Glyphs corresponding to subprojects data to the list (line_list) to be added to the figure (p).
-
-    :param nb_sousprojets: max number of subprojects to be plotted on the figure.
-    :param df_data: dataframe with the cpu time consumption per project and total as columns. Indexed by dates.
-    :param p: bokeh figure that will render the glyphs
-    :param line_list: list with the bokeh glyphs to be added to the p figure.
-    # :return line_list: updated list of bokeh glyphs added to be added to the figure.
-    :return: None
-    """
-    nb_plot = 1
-
-    df_data = source.to_df()
-    # source = ColumnDataSource(df_data)
-
-    palette = list(reversed(Spectral[nb_sousprojets+2]))
-
-    for header in list(df_data.columns):
-        # print(header)
-        if not header == 'Date':
-            # Conditions pour afficher le sous projet :
-            # sa dernière valeure n'est pas nulle
-            # On pourrait rajouter d'autres conditions, telles que :
-            # - si la valeur a varié depuis longtemps.
-            if not df_data[header].iloc[-1] == 0:
-                if nb_plot <= nb_sousprojets:
-                    if header == 'Total':
-                        if len(list(df_data.columns)) > 3:
-                            line_list.append(p.line('Date', header, source=source,
-                                                    legend=header + ' ',
-                                                    # small hack to be able to display the name.
-                                                    # Otherwise, without the ' ' there is a bug
-                                                    name=header + ' ',
-                                                    # small hack to be able to display the name.
-                                                    # Otherwise, without the ' ' there is a bug
-                                                    line_width=3,
-                                                    color="black",
-                                                    muted_color="black", muted_alpha=0.2
-                                                    )
-                                             )
-                    else:
-                        line_list.append(p.line('Date', header, source=source,
-                                                legend=header + ' ',
-                                                name=header + ' ',
-                                                # small hack to be able to display the name.
-                                                # Otherwise, without the ' ' there is a bug
-                                                line_width=3,
-                                                color=palette[nb_plot],
-                                                muted_color=palette[nb_plot], muted_alpha=0.2
-                                                )
-                                         )
-                    nb_plot = nb_plot + 1
-
-    # return line_list
-def add_subprojects_to_line_list_ter(plot, source_data, line_list, selected_subproject_list):
+def add_subprojects_to_line_list_bis(plot, source_data, line_list, selected_subproject_list):
     """
     Append Bokeh Line Glyphs corresponding to subprojects data to the list (line_list) to be added to the figure (p).
 

@@ -64,7 +64,7 @@ def create_figure():
 
 
 def add_data_lines(plot, source_data, line_list, selected_subproject_list):
-    plot_set_up.add_subprojects_to_line_list_ter(plot, source_data, line_list, selected_subproject_list)
+    plot_set_up.add_subprojects_to_line_list_bis(plot, source_data, line_list, selected_subproject_list)
 
 
 def add_opti_curve(plot, source_opt, line_list):
