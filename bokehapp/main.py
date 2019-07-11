@@ -55,6 +55,9 @@ def create_figure():
     plot.title.text = "Consomation data for " + project_select.value + ' on ' + processor_select.value + ' nodes.'
 
     selected_subproject_list = subproject_multiselect.value
+    if project_select.value == 'gencmip6':
+        selected_subproject_list = ['Total'] + selected_subproject_list
+
     source_data, source_opti = get_dataset_conso(project_select.value, processor_select.value, selected_subproject_list)
 
     line_list = []
