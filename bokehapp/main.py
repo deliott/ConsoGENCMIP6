@@ -59,13 +59,14 @@ def create_figure():
         selected_subproject_list = ['Total'] + selected_subproject_list
 
     source_data, source_opti = get_dataset_conso(project_select.value, processor_select.value, selected_subproject_list)
+    df_opti = source_opti.to_df()
 
     line_list = []
 
     add_data_lines(plot, source_data, line_list, selected_subproject_list)
 
     # # Nouvelle version
-    retard_warning = plot_set_up.add_optimal_total_difference_ticks_bis(source_data.to_df(), source_opti.to_df(), plot)
+    retard_warning = plot_set_up.add_optimal_total_difference_ticks_bis(source_data.to_df(), df_opti, plot)
     plot_set_up.add_warnings_hovertool(plot, retard_warning)
 
     add_opti_curve_patch_and_bonus(plot, source_opti, line_list)
@@ -75,7 +76,7 @@ def create_figure():
 
     # Set up plot display details (legend, axis types, etc)
 
-    plot_set_up.set_plot_xaxis_default_range(plot, source_opti.to_df(), project_dict[str(project_select.value)])
+    plot_set_up.set_plot_xaxis_default_range(plot, df_opti, project_dict[str(project_select.value)])
     plot_set_up.plot_config(plot)
 
     return plot
