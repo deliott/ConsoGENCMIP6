@@ -102,11 +102,9 @@ def create_figure():
     nb_plot = 1
     nb_sousprojets = len(selected_subproject_list)
     df_data = source_data.to_df()
-    # line_list = []
     from bokeh.palettes import Spectral
     palette = list(reversed(Spectral[min(nb_sousprojets + 2, 11)]))
     for header in selected_subproject_list:
-        # print(header)
         if not header == 'Date':
             # Conditions pour afficher le sous projet :
             # sa dernière valeure n'est pas nulle
@@ -258,13 +256,10 @@ plotted_line_liste = []
 source_data_gencmip6, source_opti_gencmip6 = get_dataset_conso(project_select.value, processor_select.value, subproject_list)
 active_subproject_list_gencmip6, inactive_subproject_list_gencmip6 = sdm.get_subproject_list(source_data_gencmip6)
 
-source, source_opti = get_dataset_conso(project_name, 'Skylake', subproject_list)
+# source, source_opti = get_dataset_conso(project_name, 'Skylake', subproject_list)
 
-# plot = make_plot_conso(source, line_list=plotted_line_liste)
-# plot = add_opti_curve(plot, source_opti, line_list=plotted_line_liste)
 
 # Define more widget
-# active_subproject_list, inactive_subproject_list = sdm.get_subproject_list(source)
 active_subproject_list, inactive_subproject_list = sdm.get_subproject_list(source_data_gencmip6)
 subproject_list = active_subproject_list + inactive_subproject_list
 
@@ -286,22 +281,13 @@ project_select.on_change('value',
                          update,
                          subproject_multiselect_change
                          )
-# project_select.on_change('value',
-#                          processor_ticker_change,
-#                          project_ticker_change,
-#                          update,
-#                          subproject_multiselect_change
-#                          )
-
 processor_select.on_change('value', update)
-subproject_multiselect.on_change('value', update,
-                                 # subproject_multiselect_change,
-                                 )
+subproject_multiselect.on_change('value', update)
+
 
 # set up layout
 controls = column(project_select, processor_select, subproject_multiselect)
 
-# layout = row(controls, plot)
 layout = row(controls, create_figure())
 
 curdoc().add_root(layout)
