@@ -70,6 +70,9 @@ def create_figure():
 
     add_opti_curve_patch_and_bonus(plot, source_opti, line_list)
 
+    plot_set_up.add_curves_hovertool(plot, line_list)
+
+
     # Set up plot display details (legend, axis types, etc)
     plot_set_up.plot_config(plot)
 
