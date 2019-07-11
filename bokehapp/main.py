@@ -53,10 +53,8 @@ def create_figure():
     source_data, source_opti = get_dataset_conso(project_select.value, processor_select.value, selected_subproject_list)
 
     line_list = []
-    # plot_set_up.add_subprojects_to_line_list_ter(['Total'], source_data, plot, line_list=line_list)
 
     add_data_lines(plot, source_data, line_list, selected_subproject_list)
-
     add_opti_curve(plot, source_opti, line_list)
 
     # Set up plot display details (legend, axis types, etc)
