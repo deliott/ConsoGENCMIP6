@@ -233,7 +233,27 @@ class ProjectData:
         delta = pd.to_datetime(self.deadline) - pd.to_datetime(self.start_date_dict[processor])
         self.optimal_daily_consumption = self.allocated_dict[processor] / delta.days
 
-    def get_theoretical_optimal_consumption_curve_dataframe(self, processor):
+    # def get_theoretical_optimal_consumption_curve_dataframe(self, processor):
+    #     """
+    #     Creates the dataframe used to plot the optimal consumption curve for a given processor type of the project.
+    #     The following attributes have to be set up before using this method:
+    #         - self.start_date_dict
+    #         - self.last_date
+    #         - self.optimal_daily_consumption
+    #
+    #     :param processor: str, Name of the processor.
+    #     :return: dict with the data to plot the optimal consumption curve
+    #     """
+    #     date_list = self.get_list_of_dates_between_boundaries(self.start_date_dict[processor], self.last_date_of_plot)
+    #
+    #     print('Nombres d\'heures à consommer par jour : ', round(self.optimal_daily_consumption, 0))
+    #
+    #     liste_consomation_optimale = []
+    #     for indice in range(len(date_list)):
+    #         liste_consomation_optimale.append(indice * self.optimal_daily_consumption)
+    #     return {'Date': date_list, 'Conso_Optimale': liste_consomation_optimale}
+
+    def get_theoretical_optimal_consumption_curve_dataframe_bis(self, processor):
         """
         Creates the dataframe used to plot the optimal consumption curve for a given processor type of the project.
         The following attributes have to be set up before using this method:
@@ -251,7 +271,9 @@ class ProjectData:
         liste_consomation_optimale = []
         for indice in range(len(date_list)):
             liste_consomation_optimale.append(indice * self.optimal_daily_consumption)
-        return {'Date': date_list, 'Conso_Optimale': liste_consomation_optimale}
+        return pd.DataFrame({'Date': date_list, 'Conso_Optimale': liste_consomation_optimale},
+                            columns=['Date', 'Conso_Optimale']
+                            )
 
 
 
@@ -281,7 +303,7 @@ class ProjectData:
         self.set_start_date_to_dict(processor, start_date)  # used to be 'Skylake' and '2019-05-01' for gencmip6
         self.set_optimal_daily_consumption(processor)
 
-        dfOpti = self.get_theoretical_optimal_consumption_curve_dataframe(processor)
+        dfOpti = self.get_theoretical_optimal_consumption_curve_dataframe_bis(processor)
 
         return self.subproject_subtotal_dataframe, dfOpti
 
@@ -333,6 +355,6 @@ class ProjectData:
         self.set_start_date_to_dict(processor, start_date)  # used to be 'Skylake' and '2019-05-01' for gencmip6
         self.set_optimal_daily_consumption(processor)
 
-        dfOpti = self.get_theoretical_optimal_consumption_curve_dataframe(processor)
+        dfOpti = self.get_theoretical_optimal_consumption_curve_dataframe_bis(processor)
 
         return self.subproject_subtotal_dataframe, dfOpti
