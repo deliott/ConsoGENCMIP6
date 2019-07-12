@@ -5,7 +5,7 @@ import pandas as pd
 
 from bokeh.io import curdoc
 from bokeh.layouts import row, column, layout, widgetbox, Spacer
-from bokeh.models import ColumnDataSource, Select, MultiSelect
+from bokeh.models import ColumnDataSource, Select, MultiSelect, CustomJS
 
 from data_for_plot_extractor import ProjectData
 
@@ -195,6 +195,35 @@ def update(attrname, old, new):
     print('OLD : ', old)
     print('NEW : ', new)
 
+def update_conso(attrname, old, new):
+    """
+    Can be used to speed up the update when multiselct is used.
+    So far it breaks the x-axis link between the plots.
+    """
+
+    print(layout.children[0].children[1].children[0].x_range)
+
+    p = create_figure()  #
+    layout.children[0].children[1].children[0] = p
+
+    print(p.x_range)
+    print('Update of top plot : done ')
+
+    # Re-create the link between the x-axis. (Since the conso plot has been changed.)
+
+    # print(layout.children[0].children[1].children[1].x_range)
+
+    # layout.children[0].children[1].children[1].x_range = layout.children[0].children[1].children[0].x_range
+    layout.children[0].children[1].children[1].x_range = p.x_range
+
+    print(layout.children[0].children[1].children[1].x_range)
+
+
+    print('\nX-axis link : recreated. --> So far there is a issue.')
+    print('OLD : ', old)
+    print('NEW : ', new)
+
+
 
 # Define variables for initialisation plot.
 init_project_name = 'gencmip6'
@@ -236,7 +265,8 @@ project_select.on_change('value',
                          subproject_multiselect_change
                          )
 processor_select.on_change('value', update)
-subproject_multiselect.on_change('value', update)
+# subproject_multiselect.on_change('value', update)
+subproject_multiselect.on_change('value', update_conso)
 
 # Set up layout
 controls = widgetbox(project_select, processor_select, subproject_multiselect, width=200)
@@ -248,7 +278,6 @@ plots = column(p, Spacer(), sizing_mode='scale_both')
 layout = layout(row(controls, plots), sizing_mode='scale_both')
 
 # Insert second plot in layout structure.
-
 layout.children[0].children[1].children[1] = create_delta()
 
 
