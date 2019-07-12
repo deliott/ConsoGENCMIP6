@@ -32,6 +32,7 @@ def get_dataset_conso(project_name, processor, subproject_list):
     -> in the definition of the initialisation of the plot.
     -> in create_figure
     """
+    print("\n\nCall of get_dataset_conso with : ", project_name, " - ", processor, " - ", subproject_list , "\n\n")
     data_for_plot = ProjectData(project_name)
 
     data_for_plot.set_project_timeseries_filename()
@@ -44,6 +45,7 @@ def get_dataset_conso(project_name, processor, subproject_list):
         project_dict[str(project_name)],
         subproject_list
     )
+    # df_data = df_data.set_index(['Date'], inplace=True)
     df_data = df_data.set_index(['Date'])
     df_data.sort_index(inplace=True)
 
@@ -54,6 +56,68 @@ def get_dataset_conso(project_name, processor, subproject_list):
     return ColumnDataSource(data=df_data), ColumnDataSource(data=df_opti)
 
 
+def instance_data_for_plot(project_name):
+    """
+    Check the usages of this function.
+    -> in the definition of the initialisation of the plot.
+    -> in create_figure
+    """
+    # print("\n\nCall of get_dataset_conso with : ", project_name, " - ", processor, " - ", subproject_list , "\n\n")
+    data_for_plot = ProjectData(project_name)
+
+    data_for_plot.set_project_timeseries_filename()
+    data_for_plot.load_project_data()
+    data_for_plot.set_dates()
+    data_for_plot.set_processor_list()
+
+    return data_for_plot
+
+def get_dataset_conso_bis(project_name, processor, subproject_list, data_for_plot):
+    """
+    Check the usages of this function.
+    -> in the definition of the initialisation of the plot.
+    -> in create_figure
+    """
+
+    df_data, df_opti = data_for_plot.run_data_for_plot_extractor_selected_list(
+        processor,
+        project_dict[str(project_name)],
+        subproject_list
+    )
+    # df_data = df_data.set_index(['Date'], inplace=True)
+    df_data = df_data.set_index(['Date'])
+    df_data.sort_index(inplace=True)
+
+    # df_opti = df_opti.set_index(['Date'], inplace=True)
+    df_opti = df_opti.set_index(['Date'])
+
+
+
+    return ColumnDataSource(data=df_data), ColumnDataSource(data=df_opti)
+
+def get_dataset_conso_ter(project_name, processor, subproject_list, data_for_plot):
+    """
+    Same as bis just different output type.
+    Check the usages of this function.
+    -> in the definition of the initialisation of the plot.
+    -> in create_figure
+    """
+
+    df_data, df_opti = data_for_plot.run_data_for_plot_extractor_selected_list(
+        processor,
+        project_dict[str(project_name)],
+        subproject_list
+    )
+    # df_data = df_data.set_index(['Date'], inplace=True)
+    df_data = df_data.set_index(['Date'])
+    df_data.sort_index(inplace=True)
+
+    # df_opti = df_opti.set_index(['Date'], inplace=True)
+    df_opti = df_opti.set_index(['Date'])
+
+    return df_data, df_opti
+
+
 def create_figure():
     plot = plot_set_up.plot_init(processor_select.value, project_select.value, 27070000)
     plot.title.text = "Consomation data for " + project_select.value + ' on ' + processor_select.value + ' nodes.'
@@ -62,7 +126,11 @@ def create_figure():
     if project_select.value == 'gencmip6':
         selected_subproject_list = ['Total'] + selected_subproject_list
 
-    source_data, source_opti = get_dataset_conso(project_select.value, processor_select.value, selected_subproject_list)
+    # source_data, source_opti = get_dataset_conso(project_select.value, processor_select.value, selected_subproject_list)
+    source_data, source_opti = get_dataset_conso_bis(project_select.value,
+                                                     processor_select.value,
+                                                     selected_subproject_list,
+                                                     instance_data_for_plot(project_select.value))
     df_opti = source_opti.to_df()
 
     line_list = []
@@ -88,18 +156,20 @@ def create_figure():
 def create_delta():
     """Don't forget to refactor this function."""
     q = plot_init_delta(processor_select.value, project_select.value)
-    # q = plot_set_up.plot_init(processor, project_name)
 
-    data_for_plot = ProjectData(project_select.value)
+    data_for_plot = instance_data_for_plot(project_select.value)
 
-    data_for_plot.set_project_timeseries_filename()
-    data_for_plot.load_project_data()
-    data_for_plot.set_dates()
-    data_for_plot.set_processor_list()
-    data_for_plot.run_data_for_plot_extractor(processor_select.value, start_date=project_dict[project_select.value])
+    df_data, df_opti = get_dataset_conso_ter(project_select.value,
+                                                     processor_select.value,
+                                                     subproject_multiselect.value,
+                                                     data_for_plot
+                                                     )
 
-    source_data, source_opti = get_dataset_conso(project_select.value, processor_select.value, subproject_multiselect.value)
-    retard_warning = test_add_optimal_total_difference_ticks_ter(data_for_plot, source_data.to_df(), source_opti.to_df(), q)
+    retard_warning = test_add_optimal_total_difference_ticks_ter(data_for_plot,
+                                                                 df_data,
+                                                                 df_opti,
+                                                                 q
+                                                                 )
     # retard_warning = test_add_optimal_total_difference_ticks_bis(data_for_plot, df_data, df_opti, q)
 
     add_difference_hovertool(q, retard_warning)
@@ -159,7 +229,7 @@ def subproject_multiselect_change(attrname, old, new):
         subproject_multiselect.options = list(zip(liste_sousprojets,liste_sousprojets))
 
 
-def update(attr, old, new):
+def update(attrname, old, new):
     # p = create_figure()
     # q = create_delta()
     # layout.children[0].children[1] = column(p, q,
@@ -167,7 +237,11 @@ def update(attr, old, new):
     #                                        sizing_mode='scale_width',
     #                                        )
     layout.children[0].children[1].children[0] = create_figure()  # p
+    print('\nUpdate de P done ')
     layout.children[0].children[1].children[1] = create_delta()   # q
+    print('\nUpdate de Q done')
+    print('OLD : ', old)
+    print('NEW : ', new)
 
 
 # Define variables for initialisation plot.
