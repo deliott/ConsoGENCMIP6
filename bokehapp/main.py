@@ -47,6 +47,10 @@ def get_dataset_conso(project_name, processor, subproject_list):
     df_data = df_data.set_index(['Date'])
     df_data.sort_index(inplace=True)
 
+    # df_opti = df_opti.set_index(['Date'], inplace=True)
+    df_opti = df_opti.set_index(['Date'])
+
+
     return ColumnDataSource(data=df_data), ColumnDataSource(data=df_opti)
 
 
@@ -72,7 +76,6 @@ def create_figure():
     add_opti_curve_patch_and_bonus(plot, source_opti, line_list)
 
     plot_set_up.add_curves_hovertool(plot, line_list)
-
 
     # Set up plot display details (legend, axis types, etc)
 
@@ -101,7 +104,6 @@ def create_delta():
 
     add_difference_hovertool(q, retard_warning)
 
-
     # plot_set_up.set_plot_xaxis_default_range(q, source_opti.to_df(), project_dict[str(project_select.value)])
     # q.x_range = plots.children[0].x_range
     q.x_range = layout.children[0].children[1].children[0].x_range
@@ -116,7 +118,7 @@ def add_data_lines(plot, source_data, line_list, selected_subproject_list):
 
 def add_opti_curve_patch_and_bonus(plot, source_opt, line_list):
     plot_set_up.add_optimal_consumption_curve_bis(source_opt, plot, line_list)
-    delai_avant_penalite=60
+    delai_avant_penalite = 60
     plot_set_up.add_optimal_consumption_patch_bis(delai_avant_penalite, source_opt.to_df(), plot, 'orange')
     plot_set_up.add_possible_bonus_curve(source_opt.to_df(), plot, line_list)
 
