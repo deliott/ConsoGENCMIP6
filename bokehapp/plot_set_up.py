@@ -136,8 +136,6 @@ def add_subprojects_to_line_list_bis(plot, source_data, line_list, selected_subp
     """
     nb_plot = 1
     nb_sousprojets = len(selected_subproject_list)
-    df_data = source_data.to_df()
-    from bokeh.palettes import Spectral
     palette = list(reversed(Spectral[min(nb_sousprojets + 2, 11)]))
     for header in selected_subproject_list:
         if not header == 'Date':
@@ -145,10 +143,10 @@ def add_subprojects_to_line_list_bis(plot, source_data, line_list, selected_subp
             # sa dernière valeure n'est pas nulle
             # On pourrait rajouter d'autres conditions, telles que :
             # - si la valeur a varié depuis longtemps.
-            # if not df_data[header].iloc[-1] == 0:
+            # if not df_data[header].iloc[-1] == 0: (avec df_data = source_data.to_df() )
             if nb_plot <= nb_sousprojets:
                 if header == 'Total':
-                    if len(list(df_data.columns)) > 3:
+                    if len(list(source_data.data.keys())) > 3:
                         line_list.append(plot.line('Date', header, source=source_data,  # issue with this source
                                                 legend=header + ' ',
                                                 # small hack to be able to display the name.
