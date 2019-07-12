@@ -21,7 +21,7 @@ from daily_delta_monitoring import plot_init_delta, plot_config_delta, test_add_
 import set_paths as set_paths
 set_paths.set_path_to_plots()
 
-project_dict = {}
+project_dict = dict()
 project_dict['gencmip6'] = '2019-05-01'
 project_dict['gen0826'] = '2018-10-31'
 
