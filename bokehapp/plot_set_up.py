@@ -39,7 +39,7 @@ def set_plot_axis_default_range(plot, df_data, df_opti, start_date, vertical_mar
     :param vertical_margin_coef: float representing the precentage of margin to be taken on vertical axis
     :return:
     """
-    fin = pd.to_datetime(df_opti['Date'][-1] + pd.Timedelta(2.5, unit='D'))
+    fin = pd.to_datetime(df_opti.index[-1] + pd.Timedelta(2.5, unit='D'))
     debut = max(fin - pd.Timedelta(60, unit='D'), pd.to_datetime(start_date))
 
     plot.x_range.start = debut
@@ -61,7 +61,7 @@ def set_plot_xaxis_default_range(plot, df_opti, start_date, ):
     :param vertical_margin_coef: float representing the precentage of margin to be taken on vertical axis
     :return:
     """
-    fin = pd.to_datetime(df_opti['Date'].iloc[-1] + pd.Timedelta(2.5, unit='D'))
+    fin = pd.to_datetime(df_opti.index[-1] + pd.Timedelta(2.5, unit='D'))
     debut = max(fin - pd.Timedelta(60, unit='D'), pd.to_datetime(start_date))
 
     plot.x_range.start = debut
@@ -266,17 +266,17 @@ def add_optimal_consumption_patch(delai_avant_penalite, df_opti, p, color):
     # delai_avant_penalite = 14
     # delai_avant_penalite = 60
 
-    if len(df_opti['Date']) <= delai_avant_penalite:
-        delai_avant_penalite = min(len(df_opti['Date'])-1, 30)
+    if len(df_opti.index) <= delai_avant_penalite:
+        delai_avant_penalite = min(len(df_opti.index)-1, 30)
         color = 'green'
 
     volume_avant_penalite = df_opti['Conso_Optimale'][delai_avant_penalite]
 
-    xx = [df_opti['Date'][0],
-          df_opti['Date'][-1],
-          df_opti['Date'][-1],
-          df_opti['Date'][delai_avant_penalite],
-          df_opti['Date'][0]]
+    xx = [df_opti.index[0],
+          df_opti.index[-1],
+          df_opti.index[-1],
+          df_opti.index[delai_avant_penalite],
+          df_opti.index[0]]
 
     yy = [df_opti['Conso_Optimale'][0],
           df_opti['Conso_Optimale'][-1],
@@ -302,17 +302,17 @@ def add_optimal_consumption_patch_bis(delai_avant_penalite, df_opti, p, color):
     # delai_avant_penalite = 14
     # delai_avant_penalite = 60
 
-    if len(df_opti['Date']) <= delai_avant_penalite:
-        delai_avant_penalite = min(len(df_opti['Date'])-1, 30)
+    if len(df_opti.index) <= delai_avant_penalite:
+        delai_avant_penalite = min(len(df_opti.index)-1, 30)
         color = 'green'
 
     volume_avant_penalite = df_opti['Conso_Optimale'].iloc[delai_avant_penalite]
 
-    xx = [df_opti['Date'].iloc[0],
-          df_opti['Date'].iloc[-1],
-          df_opti['Date'].iloc[-1],
-          df_opti['Date'].iloc[delai_avant_penalite],
-          df_opti['Date'].iloc[0]]
+    xx = [df_opti.index[0],
+          df_opti.index[-1],
+          df_opti.index[-1],
+          df_opti.index[delai_avant_penalite],
+          df_opti.index[0]]
 
     yy = [df_opti['Conso_Optimale'].iloc[0],
           df_opti['Conso_Optimale'].iloc[-1],
@@ -334,7 +334,7 @@ def add_optimal_total_difference_ticks(df_data, df_opti, p, days_in_advance):
     """
     last_opti = df_opti['Conso_Optimale'][-(days_in_advance + 1)]
     last_real = df_data['Total'].iloc[-1]
-    last_date = df_data['Date'].iloc[-1]
+    last_date = df_data.index[-1]
     delta_conso = '{:,.0f}'.format(abs(last_opti - last_real)) + ' heures'
 
     if last_opti > last_real:
@@ -383,18 +383,18 @@ def add_optimal_total_difference_ticks_bis(df_data, df_opti, p):
     :return: None
     """
 
-    days_in_start_difference_between_data_and_opti = (df_data['Date'].iloc[0] - df_opti['Date'][0]).days
+    days_in_start_difference_between_data_and_opti = (df_data.index[0] - df_opti.index[0]).days
 
     retard_warning = []
 
-    for i in range(len(df_data['Date'])):
+    for i in range(len(df_data.index)):
         opti_value = df_opti['Conso_Optimale'][days_in_start_difference_between_data_and_opti + i]
         total_value = df_data['Total'].iloc[i]
 
         delta_conso = '{:,.0f}'.format(abs(opti_value - total_value)) + ' heures'
 
-        left = df_data['Date'].iloc[i]
-        right = df_data['Date'].iloc[i] + datetime.timedelta(days=0.1)
+        left = df_data.index[i]
+        right = df_data.index[i] + datetime.timedelta(days=0.1)
 
         if opti_value > total_value:
             statut = 'Retard'
