@@ -31,7 +31,7 @@ def get_list_of_ccc_raw_logs(path):
 
 def get_list_of_projects(path):
     """
-
+    Give the list of projects names corresponding to the raw log in available at path destination
     :param path: path to raw_data logs directory
     :return liste_of_files:
     """
