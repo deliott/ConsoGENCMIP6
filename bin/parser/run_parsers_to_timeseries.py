@@ -60,6 +60,7 @@ if __name__ == "__main__":
 
     settings.init()
     set_paths.set_path_to_raw_data_for_parser()
+    set_paths.set_path_to_timeseries()
     print('Initialisation réussite\n')
 
     # raw_data_path = '/home/edupont/ccc_myproject_data/'
@@ -114,7 +115,8 @@ if __name__ == "__main__":
         project_concat = TimeSeriesConcatenator(project_timeseries_path)
         project_concat.create_timeseries()
         project_concat.suppress_zeroes_from_timeseries()
-        project_concat.dump_dict_to_json()
+        # project_concat.dump_dict_to_json()
+        project_concat.dump_dict_to_json(settings.path_to_timeseries + name_of_project_file)
 
     print("\nFin de l'Execution du parser et de la creation de la série temporelle JSON\n")
     print("\nEnd of execution\n")
