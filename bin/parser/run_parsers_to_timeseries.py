@@ -2,7 +2,7 @@ import os
 import shutil
 # from bin.ccc_myproject_parser import Parser
 from bin.parser.ccc_myproject_fileparser import FileParser
-from bin.parser.ccc_myproject_projectparser import ProjectParser
+from bin.parser.ccc_myproject_projectparser import IreneProjectParser
 
 from bin.parser.concatenate_into_time_serie import TimeSeriesConcatenator
 
@@ -84,7 +84,7 @@ if __name__ == "__main__":
 
         for name_of_project_file in project_list:
             # print('PROJECT NAME : ', name_of_project_file)
-            project_to_parse = ProjectParser(projects_path + '/' + name_of_project_file)
+            project_to_parse = IreneProjectParser(projects_path + '/' + name_of_project_file)
             project_to_parse.build_complete_dictionary()
             project_to_parse.set_output_name()
             # print(project_to_parse.project_name)

@@ -40,7 +40,7 @@ output should look like this :
 """
 
 
-class ProjectParser(FileParser):
+class IreneProjectParser(FileParser):
 
     def __init__(self, path_to_one_file_to_parse):
         """
