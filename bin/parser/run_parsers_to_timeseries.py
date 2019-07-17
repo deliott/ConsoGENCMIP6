@@ -78,9 +78,11 @@ if __name__ == "__main__":
     print('Initialisation réussite\n')
 
     # raw_data_path = '/home/edupont/ccc_myproject_data/'
-    raw_data_path = settings.path_to_ccc_myproject_raw_data
+    raw_ccc_data_path = settings.path_to_ccc_myproject_raw_data
+    raw_cpt_data_path = settings.path_to_cpt_raw_data
 
-    file_liste = get_list_of_ccc_raw_logs(raw_data_path)
+    ccc_file_liste = get_list_of_ccc_raw_logs(raw_ccc_data_path)
+    cpt_file_liste = get_list_of_cpt_raw_logs(raw_cpt_data_path)
 
     projects_name_list = []
 
