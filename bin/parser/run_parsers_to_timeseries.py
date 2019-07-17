@@ -29,6 +29,20 @@ def get_list_of_ccc_raw_logs(path):
             liste_of_files.append(name)
     return liste_of_files
 
+def get_list_of_cpt_raw_logs(path):
+    """
+
+    :param path: path to raw_data logs directory
+    :return liste_of_files:
+    """
+
+    liste = os.listdir(path)
+    liste_of_files = []
+    for name in liste :
+        if 'cpt_' in name and name.endswith('.log'):
+            liste_of_files.append(name)
+    return liste_of_files
+
 def get_list_of_projects(path):
     """
     Give the list of projects names corresponding to the raw log in available at path destination
