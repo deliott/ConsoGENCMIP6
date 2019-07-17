@@ -312,7 +312,7 @@ class AdaProjectParser(FileParser):
 if __name__ == "__main__":
 
     # path_log = '/home/edupont/cpt_data/mocks/mock_cpt_20190528.log'
-    path_log = '/home/edupont/cpt_data/cpt_20190528.log'
+    path_log = '/home/edupont/cpt_data/cpt_20190531.log'
     # self.empty_file_to_parse = FileParser(path_log)
     project_to_parse = AdaProjectParser(path_log)
     project_to_parse.build_complete_dictionary()
