@@ -163,6 +163,19 @@ class TimeSeriesConcatenator():
             json.dump(self.time_series_dict, outfile)
             pass
 
+    def dump_dict_to_json(self, dump_path):
+        """
+        Dumps the complete dictionary to a json file.
+        Requires the name to be set before.
+        Not tested
+        """
+        path = dump_path + '/' + self.get_timeseries_name()
+        print('Le path vers la timeseries est :', path)
+
+        with open(path, 'w') as outfile:
+            json.dump(self.time_series_dict, outfile)
+            pass
+
 if __name__ == "__main__":
 
     print("\nBeginning of execution\n")
@@ -174,6 +187,15 @@ if __name__ == "__main__":
     gencmip6_concat = TimeSeriesConcatenator('/home/edupont/ccc_myproject_data/time_series_gencmip6')
     gencmip6_concat.create_timeseries()
     gencmip6_concat.dump_dict_to_json()
+
+
+    # ada_concat = TimeSeriesConcatenator('/home/edupont/cpt_data/daily_jsons')
+    ada_concat = TimeSeriesConcatenator('/home/edupont/consomation_data/cpt_data/daily_jsons')
+    ada_concat.create_timeseries()
+    ada_concat.suppress_zeroes_from_timeseries()
+    ada_concat.dump_dict_to_json()
+
+
 
     print("\nEnd of execution\n")
 

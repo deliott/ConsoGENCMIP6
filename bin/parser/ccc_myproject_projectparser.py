@@ -295,7 +295,8 @@ class IreneProjectParser(FileParser):
 
     def get_output_path(self):
 
-        outfile = '/'.join(self.path_to_project_file.split('/')[:-1]) + '/' + self.output_name
+        # outfile = '/'.join(self.path_to_project_file.split('/')[:-1]) + '/' + self.output_name
+        outfile = '/'.join(self.path_to_project_file.split('/')[:-2]) + '/daily_jsons/' + self.output_name
         return outfile
 
     def dump_dict_to_json(self):
@@ -303,6 +304,12 @@ class IreneProjectParser(FileParser):
         requires the name to be set before."""
         path = self.get_output_path()
         with open(path, 'w') as outfile:
+            json.dump(self.complete_dictionary, outfile)
+
+    def dump_dict_to_json(self, dump_path):
+        """dumps the complete dictionary to a json file."""
+        # path = self.get_output_path()
+        with open(dump_path, 'w') as outfile:
             json.dump(self.complete_dictionary, outfile)
 
 # if __name__ == "__main__":
