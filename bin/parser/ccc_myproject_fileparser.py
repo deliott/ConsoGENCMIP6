@@ -1,4 +1,4 @@
-from bin.consomation.ccc_myproject_parser import Parser
+from bin.parser.ccc_myproject_parser import Parser
 # import bin.ccc_myproject_parser as ccc_myproject_parser
 import os
 import shutil

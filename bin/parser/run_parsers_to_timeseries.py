@@ -1,10 +1,10 @@
 import os
 import shutil
 # from bin.ccc_myproject_parser import Parser
-from bin.consomation.ccc_myproject_fileparser import FileParser
-from bin.consomation.ccc_myproject_projectparser import ProjectParser
+from bin.parser.ccc_myproject_fileparser import FileParser
+from bin.parser.ccc_myproject_projectparser import ProjectParser
 
-from bin.consomation.concatenate_into_time_serie import TimeSeriesConcatenator
+from bin.parser.concatenate_into_time_serie import TimeSeriesConcatenator
 
 
 import bin.consomation.settings as settings

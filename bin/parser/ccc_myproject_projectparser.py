@@ -1,5 +1,5 @@
 # import bin.ccc_myproject_parser as ccc_myproject_parser
-from bin.consomation.ccc_myproject_fileparser import FileParser
+from bin.parser.ccc_myproject_fileparser import FileParser
 
 import json
 
