@@ -16,7 +16,7 @@ output should look like this :
       "alllocated": 4700000,
       "sous_projets": {
         "100592": {
-          "logins_conso": {
+          "login_conso": {
             "pierre": 752.5,
             "paul": 125.4,
             "jacques": 0
@@ -24,7 +24,7 @@ output should look like this :
           "subtotal": 877.9
         },
         "geocmip6": {
-          "logins_conso": {
+          "login_conso": {
             "pierre": 552.4,
             "andre": 125.4,
             "jacques": 0
@@ -128,7 +128,6 @@ class AdaProjectParser(FileParser):
                     self.project_start_date = self.convert_jjmmyyyy_to_yyyymmjj(start_date)
                     break
 
-
     def get_subproject_namelist(self):
         """Get the names of the project from the split log of ccc_myproject.
         Warning : if project has no subproject, name has to be set (get_project_name() method)
@@ -151,173 +150,174 @@ class AdaProjectParser(FileParser):
                         store_subproject_name_at_next_line = False
                     elif "Login" in ligne:
                         store_subproject_name_at_next_line = True
-        print(name_list)
+        # print(name_list)
         return name_list
-    #
-    # def set_subproject(self):
-    #     """Set the subprojects name in the subproject dictionary datastructure of the class"""
-    #     processor_list = self.project_processor_list
-    #     liste = self.get_subproject_namelist()
-    #     for processor_name in processor_list:
-    #         self.processor_type_dict[processor_name]['sous_projet'] = {}
-    #         for subproject_name in liste:
-    #             # self.subproject[subproject_name] = {} # Add new entry
-    #             self.processor_type_dict[processor_name]['sous_projet'][subproject_name] = {}  # Add new entry
-    #
-    # def set_processor_type(self):
-    #     """Add a new empty dictionary in the processor_type_dict attribute.
-    #      Do it for each processor type in the list project_processor_list attribute."""
-    #     self.get_processor_type_list()
-    #     liste = self.project_processor_list
-    #     for processor_type in liste:
-    #         self.processor_type_dict[processor_type] = {}  # Add new entry
-    #
-    # def set_subtotals(self):
-    #     """Set the subprojects subtotal in the subproject dictionary datastructure of the class"""
-    #     with open(self.path_to_project_file, "r") as filein:
-    #         key_detected = False
-    #
-    #         for processor_name in self.processor_type_dict.keys():
-    #             if self.has_subproject:  # cas avec sous projets
-    #                 for key in self.processor_type_dict[processor_name]['sous_projet'].keys():
-    #                     for ligne in filein:
-    #                         if not key_detected:
-    #                             if key in ligne:
-    #                                 key_detected = True
-    #                         if key not in ligne and 'Subtotal' in ligne:
-    #                             sous_total = ligne.split()[1]
-    #                             self.subproject[key] = {'subtotal': float(sous_total)}
-    #                             self.processor_type_dict[processor_name]['sous_projet'][key] = {'subtotal': float(sous_total)}
-    #                             key_detected = False
-    #                             break
-    #
-    #             else:  # cas sans sous projets
-    #                 for key in self.processor_type_dict[processor_name]['sous_projet'].keys():
-    #                     for ligne in filein:
-    #                         if not key_detected:
-    #                             if key in ligne:
-    #                                 key_detected = True
-    #                         if key not in ligne and 'Total' in ligne:
-    #                             sous_total = ligne.split()[1]
-    #                             self.subproject[key] = {'subtotal': float(sous_total)}
-    #                             self.processor_type_dict[processor_name]['sous_projet'][key] = {'subtotal': float(sous_total)}
-    #                             key_detected = False
-    #                             break
-    #
-    # def set_total(self):
-    #     """Set the total consumption to each processor on a project in the processor_type_dict
-    #
-    #     has to be run after set_subtotals"""
-    #     with open(self.path_to_project_file, "r") as filein:
-    #         local_processor = ''
-    #         for ligne in filein:
-    #             if 'Accounting' in ligne:
-    #                 local_processor = ligne.split()[6]
-    #             if "Total" in ligne:
-    #                 total_value = float(ligne.split()[1])
-    #                 self.processor_type_dict[local_processor]['total'] = total_value
-    #
-    # def set_allocated(self):
-    #     """Set the allocated time value to each processor on a project in the processor_type_dict
-    #
-    #     has to be run after set_subtotals"""
-    #     with open(self.path_to_project_file, "r") as filein:
-    #         local_processor = ''
-    #         for ligne in filein:
-    #             if 'Accounting' in ligne:
-    #                 local_processor = ligne.split()[6]
-    #             if "Allocated" in ligne:
-    #                 allocated_value = float(ligne.split()[1])
-    #                 self.processor_type_dict[local_processor]['allocated'] = allocated_value
-    #
-    # def set_login_for_a_subproject(self, subproject_name):
-    #     """Set the login_conso dictionary inside the data structure for the given subproject.
-    #     Has to be called after self.set_subtotals().
-    #     Modify the processor_type_dict attribute
-    #     """
-    #     with open(self.path_to_project_file, "r") as filein:
-    #         # for each processor in the dictionary
-    #
-    #         for processor_name in self.processor_type_dict.keys():
-    #             # create an empty dictionary to store the login conso data
-    #             self.processor_type_dict[processor_name]['sous_projet'][subproject_name]['login_conso'] = {}
-    #             current_file_processor = ''
-    #
-    #         if self.has_subproject:
-    #             for ligne in filein:
-    #                 # first set the processor the read lines are about
-    #                 if "Accounting" in ligne:
-    #                     current_file_processor = ligne.split(' ')[6]
-    #                 if len(ligne.split()) > 1 and ligne.split()[1] == subproject_name:
-    #                     # set a new login entry in the dict and associates its consumption data
-    #                     self.processor_type_dict[current_file_processor]['sous_projet']\
-    #                         [subproject_name]['login_conso'][ligne.split()[0]] = float(ligne.split()[2])
-    #         else:
-    #             for ligne in filein:
-    #                 # first set the processor the read lines are about
-    #                 if "Accounting" in ligne:
-    #                     current_file_processor = ligne.split(' ')[6]
-    #                 # test to detect the logins lines in the project log file.
-    #                 #   check if lines has at least two words
-    #                 #  and
-    #                 #   check if first word is only lower case (and therefore is a login) (test is a bit weak)
-    #                 if len(ligne.split()) > 1 and ligne.split()[0].islower():
-    #                     # set a new login entry in the dict and associates its consumption data
-    #                     self.processor_type_dict[current_file_processor]['sous_projet']\
-    #                         [subproject_name]['login_conso'][ligne.split()[0]] = float(ligne.split()[1])
-    #
-    # def set_login_for_all_subprojects(self):
-    #     """Set the login_conso dictionary inside the data structure
-    #     Call of _login_for_a_subproject on all the subprojects."""
-    #     project_list = self.get_subproject_namelist()
-    #     for project in project_list:
-    #         self.set_login_for_a_subproject(project)
-    #
-    # def build_complete_dictionary(self):
-    #
-    #     self.check_has_subproject()
-    #     self.set_project_name()
-    #     self.set_processor_type()
-    #     self.set_subproject()
-    #
-    #     self.set_subtotals()
-    #     self.set_total()
-    #     self.set_allocated()
-    #
-    #     self.set_login_for_all_subprojects()
-    #
-    #     self.set_file_date()
-    #     self.set_project_deadline()
-    #     self.set_project_machine()
-    #
-    #     self.complete_dictionary['date'] = self.file_date
-    #     self.complete_dictionary['project'] = self.project_name
-    #     self.complete_dictionary['project_deadline'] = self.project_deadline
-    #     self.complete_dictionary['machine'] = self.project_machine
-    #     self.complete_dictionary['processor_type'] = self.processor_type_dict
-    #
-    # def set_output_name(self):
-    #     """Set the output name attribute before dumping the data structure to a .json file"""
-    #     self.output_name = self.project_machine + '_' + self.project_name + '_' \
-    #                        + ''.join(self.file_date.split('-')) + '.json'
-    #
-    # def get_output_path(self):
-    #
-    #     outfile = '/'.join(self.path_to_project_file.split('/')[:-1]) + '/' + self.output_name
-    #     return outfile
-    #
-    # def dump_dict_to_json(self):
-    #     """dumps the complete dictionary to a json file.
-    #     requires the name to be set before."""
-    #     path = self.get_output_path()
-    #     with open(path, 'w') as outfile:
-    #         json.dump(self.complete_dictionary, outfile)
 
-# if __name__ == "__main__":
-#
-#     path_log = '/home/edupont/cpt_data/mocks/mock_cpt20190528.log'
-#     # self.empty_file_to_parse = FileParser(path_log)
-#     empty_project_to_parse = AdaProjectParser(path_log)
+    def set_processor_type(self):
+        """Add a new empty dictionary in the processor_type_dict attribute.
+         Do it for each processor type in the list project_processor_list attribute."""
+        self.get_processor_type_list()
+        liste = self.project_processor_list
+        for processor_type in liste:
+            self.processor_type_dict[processor_type] = {}  # Add new entry
+
+    def set_subproject(self):
+        """Set the subprojects name in the subproject dictionary datastructure of the class"""
+        processor_list = self.project_processor_list
+        liste = self.get_subproject_namelist()
+        for processor_name in processor_list:
+            self.processor_type_dict[processor_name]['sous_projet'] = {}
+            for subproject_name in liste:
+                # self.subproject[subproject_name] = {} # Add new entry
+                self.processor_type_dict[processor_name]['sous_projet'][subproject_name] = {}  # Add new entry
+
+
+    def set_subtotals(self):
+        """Set the subprojects subtotal in the subproject dictionary datastructure of the class"""
+        with open(self.path_to_project_file, "r") as filein:
+            key_detected = False
+
+            for processor_name in self.processor_type_dict.keys():
+                # first part of if statement never met at IDRIS.
+                if self.has_subproject:  # cas avec sous projets
+                    for key in self.processor_type_dict[processor_name]['sous_projet'].keys():
+                        for ligne in filein:
+                            if not key_detected:
+                                if key in ligne:
+                                    key_detected = True
+                            if key not in ligne and 'Subtotal' in ligne:
+                                sous_total = ligne.split()[1]
+                                self.subproject[key] = {'subtotal': float(sous_total)}
+                                self.processor_type_dict[processor_name]['sous_projet'][key] = {'subtotal': float(sous_total)}
+                                key_detected = False
+                                break
+
+                else:  # cas sans sous projets (Tous les cas à IDRIS)
+                    for key in self.processor_type_dict[processor_name]['sous_projet'].keys():
+                        for ligne in filein:
+                            if not key_detected:
+                                if key in ligne:
+                                    key_detected = True
+                            if key not in ligne and 'Totaux' in ligne:
+                                sous_total = ligne.split()[1]
+                                self.subproject[key] = {'subtotal': float(sous_total)}
+                                self.processor_type_dict[processor_name]['sous_projet'][key] = {'subtotal': float(sous_total)}
+                                key_detected = False
+                                break
+
+    def set_total(self):
+        """
+        Set the total consumption to each processor on a project in the processor_type_dict
+        has to be run after set_subtotals.
+        """
+        with open(self.path_to_project_file, "r") as filein:
+            local_processor = [*self.processor_type_dict][0]
+            for ligne in filein:
+                if "Totaux" in ligne:
+                    total_value = float(ligne.split()[1])
+                    self.processor_type_dict[local_processor]['total'] = total_value
+                    break
+
+    def set_allocated(self):
+        """Set the allocated time value to each processor on a project in the processor_type_dict
+
+        has to be run after set_subtotals"""
+        with open(self.path_to_project_file, "r") as filein:
+            local_processor = [*self.processor_type_dict][0]
+            for ligne in filein:
+                if "Allocation : " in ligne:
+                    allocated_value = float(ligne.split()[7])
+                    self.processor_type_dict[local_processor]['allocated'] = allocated_value
+
+    def set_login_for_a_subproject(self, subproject_name):
+        """Set the login_conso dictionary inside the data structure for the given subproject.
+        Has to be called after self.set_subtotals().
+        Modify the processor_type_dict attribute
+        """
+        with open(self.path_to_project_file, "r") as filein:
+            # for each processor in the dictionary
+            for processor_name in self.processor_type_dict.keys():
+                # create an empty dictionary to store the login conso data
+                self.processor_type_dict[processor_name]['sous_projet'][subproject_name]['login_conso'] = {}
+                current_file_processor = [*self.processor_type_dict][0]
+
+            for ligne in filein:
+                # test to detect the logins lines in the project log file.
+                #   check if lines has at least two words
+                #  and
+                #   check if first word is only lower case (and therefore is a login) (test is a bit weak)
+                if len(ligne.split()) == 5 and ligne.split()[0].islower():
+                    # set a new login entry in the dict and associates its consumption data
+                    if ligne.split()[2] == '-':
+                        self.processor_type_dict[current_file_processor]['sous_projet'] \
+                            [subproject_name]['login_conso'][ligne.split()[0]] = 0.0
+                    else:
+                        self.processor_type_dict[current_file_processor]['sous_projet']\
+                        [subproject_name]['login_conso'][ligne.split()[0]] = float(ligne.split()[2])
+
+    def set_login_for_all_subprojects(self):
+        """Set the login_conso dictionary inside the data structure
+        Call of _login_for_a_subproject on all the subprojects."""
+        project_list = self.get_subproject_namelist()
+        print(project_list)
+        for project in project_list:
+            self.set_login_for_a_subproject(project)
+
+    def build_complete_dictionary(self):
+
+        # self.check_has_subproject()
+        print('PROJECT_NAME = ', self.project_name)
+        self.set_project_name()
+        # print(self.project_name)
+        print('PROJECT_NAME = ', self.project_name)
+
+        self.set_processor_type()
+        self.set_subproject()
+
+        self.set_subtotals()
+        self.set_total()
+        self.set_allocated()
+
+        self.set_login_for_all_subprojects()
+
+        self.set_file_date()
+        self.set_project_deadline()
+        self.set_project_startdate()
+        self.set_project_machine()
+
+        self.complete_dictionary['date'] = self.file_date
+        self.complete_dictionary['project'] = self.project_name
+        self.complete_dictionary['project_deadline'] = self.project_deadline
+        self.complete_dictionary['project_startdate'] = self.project_start_date
+        self.complete_dictionary['machine'] = self.project_machine
+        self.complete_dictionary['processor_type'] = self.processor_type_dict
+
+    def set_output_name(self):
+        """Set the output name attribute before dumping the data structure to a .json file"""
+        self.output_name = self.project_machine + '_' + self.project_name + '_' \
+                           + ''.join(self.file_date.split('-')) + '.json'
+
+    def get_output_path(self):
+        self.set_output_name()
+        outfile = '/'.join(self.path_to_project_file.split('/')[:-1]) + '/daily_jsons/' + self.output_name
+        return outfile
+
+    def dump_dict_to_json(self):
+        """dumps the complete dictionary to a json file.
+        requires the name to be set before."""
+        path = self.get_output_path()
+        with open(path, 'w') as outfile:
+            json.dump(self.complete_dictionary, outfile)
+
+if __name__ == "__main__":
+
+    # path_log = '/home/edupont/cpt_data/mocks/mock_cpt_20190528.log'
+    path_log = '/home/edupont/cpt_data/cpt_20190528.log'
+    # self.empty_file_to_parse = FileParser(path_log)
+    project_to_parse = AdaProjectParser(path_log)
+    project_to_parse.build_complete_dictionary()
+    print(project_to_parse.get_output_path())
+    project_to_parse.dump_dict_to_json()
 
 
 
