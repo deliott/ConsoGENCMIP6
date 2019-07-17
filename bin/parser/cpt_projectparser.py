@@ -309,6 +309,13 @@ class AdaProjectParser(FileParser):
         with open(path, 'w') as outfile:
             json.dump(self.complete_dictionary, outfile)
 
+    def dump_dict_to_json(self, dump_path):
+        """dumps the complete dictionary to a json file.
+        requires the name to be set before."""
+        # path = self.get_output_path()
+        with open(dump_path, 'w') as outfile:
+            json.dump(self.complete_dictionary, outfile)
+
 if __name__ == "__main__":
 
     # path_log = '/home/edupont/cpt_data/mocks/mock_cpt_20190528.log'

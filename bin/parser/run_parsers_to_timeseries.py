@@ -3,6 +3,7 @@ import shutil
 # from bin.ccc_myproject_parser import Parser
 from bin.parser.ccc_myproject_fileparser import FileParser
 from bin.parser.ccc_myproject_projectparser import IreneProjectParser
+from bin.parser.cpt_projectparser import AdaProjectParser
 
 from bin.parser.concatenate_into_time_serie import TimeSeriesConcatenator
 
@@ -79,12 +80,44 @@ if __name__ == "__main__":
 
     # raw_data_path = '/home/edupont/ccc_myproject_data/'
     raw_ccc_data_path = settings.path_to_ccc_myproject_raw_data
+
+    print('raw_ccc_data_path = ', raw_ccc_data_path)
+
     raw_cpt_data_path = settings.path_to_cpt_raw_data
+
 
     ccc_file_liste = get_list_of_ccc_raw_logs(raw_ccc_data_path)
     cpt_file_liste = get_list_of_cpt_raw_logs(raw_cpt_data_path)
 
+    file_dict = dict()
+    file_dict['ccc'] = ccc_file_liste
+    file_dict['cpt'] = cpt_file_liste
+
+
+    print('cptfilelist = ', cpt_file_liste)
+
     project_daily_jsons_path_dict = dict()
+
+    for file_name in cpt_file_liste: #[0:5]:
+
+        project_to_parse = AdaProjectParser(raw_cpt_data_path + file_name)
+        project_to_parse.build_complete_dictionary()
+        project_to_parse.set_output_name()
+
+        # Create the appropriate folders to store the daily jsons, (if does not exist)
+        daily_jsons_project_directory_list = os.listdir(raw_cpt_data_path + 'daily_jsons/')
+
+        project_daily_jsons_path = raw_cpt_data_path + 'daily_jsons/' + project_to_parse.project_name
+        if project_to_parse.project_name not in daily_jsons_project_directory_list:
+            os.makedirs(project_daily_jsons_path)
+
+        # Dump the daily json parsed files into the appropriate folders.
+        project_to_parse.dump_dict_to_json(project_daily_jsons_path + '/' + project_to_parse.output_name)
+
+        # Store into dictionary the project names and path where daily json data is dumped.
+        if project_to_parse.project_name not in [*project_daily_jsons_path_dict.keys()]:
+            project_daily_jsons_path_dict[project_to_parse.project_name] = project_daily_jsons_path #+ '/' + project_to_parse.output_name
+
 
     for file_name in ccc_file_liste: #[0:5]:
         # Create directories and split the log into project logs
@@ -96,6 +129,7 @@ if __name__ == "__main__":
         # Parse the different projects
 
         projects_path = file_to_parse.set_path_to_individual_projects_directory()
+
         project_list = get_list_of_projects(projects_path)
 
 
@@ -120,6 +154,7 @@ if __name__ == "__main__":
                 project_daily_jsons_path_dict[project_to_parse.project_name] = project_daily_jsons_path #+ '/' + project_to_parse.output_name
 
 
+
     for name_of_project_file in [*project_daily_jsons_path_dict.keys()]:
         # print('PROJECT PATH NAME  : ', project_timeseries_path)
 
@@ -127,6 +162,10 @@ if __name__ == "__main__":
         project_concat.create_timeseries()
         project_concat.suppress_zeroes_from_timeseries()
         # project_concat.dump_dict_to_json()
+
+        if name_of_project_file not in os.listdir(settings.path_to_timeseries):
+            os.makedirs(settings.path_to_timeseries + name_of_project_file)
+
         project_concat.dump_dict_to_json(settings.path_to_timeseries + name_of_project_file)
 
     print("\nFin de l'Execution du parser et de la creation de la série temporelle JSON\n")
