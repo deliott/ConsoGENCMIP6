@@ -1,7 +1,7 @@
 import unittest
 from unittest import TestCase
-from bin.consomation.ccc_myproject_projectparser import ProjectParser
-from bin.consomation.ccc_myproject_fileparser import FileParser
+from bin.parser.ccc_myproject_projectparser import ProjectParser
+from bin.parser.ccc_myproject_fileparser import FileParser
 
 
 class TestProjectParser(TestCase):

@@ -1,5 +1,5 @@
 from unittest import TestCase
-from bin.consomation.ccc_myproject_fileparser import FileParser
+from bin.parser.ccc_myproject_fileparser import FileParser
 
 
 class TestFileParser(TestCase):

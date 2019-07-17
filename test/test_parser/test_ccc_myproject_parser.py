@@ -1,6 +1,6 @@
 from unittest import TestCase
 # import bin.ccc_myproject_parser
-from bin.consomation.ccc_myproject_parser import Parser
+from bin.parser.ccc_myproject_parser import Parser
 
 
 class Test_CCC_MYPROJECT_Parser(TestCase):
