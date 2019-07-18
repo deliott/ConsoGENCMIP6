@@ -62,42 +62,37 @@ def get_list_of_projects(path):
 if __name__ == "__main__":
 
 
-    print("\nBeginning of execution\n")
+    print("\nBeginning of execution: run_parsers_to_timeseries.py\n")
     print("Don't forget to update the raw logs database : \n    On ciclad run : dataCCCMYPROJECTS_update and give"
           "password, \n    On local machine run dataCCCMYPROJECTS_update \nThis will update our "
           "ccc_myproject log repository.\n")
-    print("So far this script seems to work with data from ccc_myproject run on shared account.")
 
 
 
     # Initialise Global Variables
-    print('\nInitialisation of Global Variables (paths)\n')
-
+    print('\nInitialisation of Global Variables (paths).')
     settings.init()
     set_paths.set_path_to_raw_data_for_parser()
     set_paths.set_path_to_timeseries()
-    print('Initialisation réussite\n')
 
-    # raw_data_path = '/home/edupont/ccc_myproject_data/'
     raw_ccc_data_path = settings.path_to_ccc_myproject_raw_data
-
-    print('raw_ccc_data_path = ', raw_ccc_data_path)
-
     raw_cpt_data_path = settings.path_to_cpt_raw_data
+    print('End of Initialisation.\n')
 
-
+    print('Initialisation des listes de fichier et du dictionnaire.')
     ccc_file_liste = get_list_of_ccc_raw_logs(raw_ccc_data_path)
     cpt_file_liste = get_list_of_cpt_raw_logs(raw_cpt_data_path)
 
     file_dict = dict()
     file_dict['ccc'] = ccc_file_liste
     file_dict['cpt'] = cpt_file_liste
+    print('Fin de l\'initialisation des listes de fichier et du dictionnaire.\n')
 
 
-    print('cptfilelist = ', cpt_file_liste)
 
     project_daily_jsons_path_dict = dict()
 
+    print('Début du parsing des logs de ADA.')
     for file_name in cpt_file_liste: #[0:5]:
 
         project_to_parse = AdaProjectParser(raw_cpt_data_path + file_name)
@@ -118,7 +113,9 @@ if __name__ == "__main__":
         if project_to_parse.project_name not in [*project_daily_jsons_path_dict.keys()]:
             project_daily_jsons_path_dict[project_to_parse.project_name] = project_daily_jsons_path #+ '/' + project_to_parse.output_name
 
+    print('Fin du parsing des logs de ADA.\n')
 
+    print('Début du parsing des logs de IRENE.')
     for file_name in ccc_file_liste: #[0:5]:
         # Create directories and split the log into project logs
         file_to_parse = FileParser(raw_ccc_data_path + file_name)
@@ -152,8 +149,10 @@ if __name__ == "__main__":
             # Store into dictionary the project names and path where daily json data is dumped.
             if project_to_parse.project_name not in [*project_daily_jsons_path_dict.keys()]:
                 project_daily_jsons_path_dict[project_to_parse.project_name] = project_daily_jsons_path #+ '/' + project_to_parse.output_name
+    print('Fin du parsing des logs de IRENE.\n ')
 
 
+    print('Début de la création des Séries Temporelles.')
 
     for name_of_project_file in [*project_daily_jsons_path_dict.keys()]:
         # print('PROJECT PATH NAME  : ', project_timeseries_path)
@@ -168,6 +167,7 @@ if __name__ == "__main__":
 
         project_concat.dump_dict_to_json(settings.path_to_timeseries + name_of_project_file)
 
-    print("\nFin de l'Execution du parser et de la creation de la série temporelle JSON\n")
-    print("\nEnd of execution\n")
+    print('Fin de la création des Séries Temporelles.\n')
+
+    print("\nEnd of execution: run_parsers_to_timeseries.py\n")
 
