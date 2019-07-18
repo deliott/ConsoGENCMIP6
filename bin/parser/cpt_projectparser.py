@@ -91,9 +91,10 @@ class AdaProjectParser(FileParser):
             for ligne in filein:
                 if "PROJET" in ligne:
                     self.project_processor_list.append(ligne.split()[3])
+
     @staticmethod
     def convert_jjmmyyyy_to_yyyymmjj(jj_mm_yyyy):
-        return(jj_mm_yyyy[6:10] + '-' + jj_mm_yyyy[3:5] + '-' + jj_mm_yyyy[0:2])
+        return jj_mm_yyyy[6:10] + '-' + jj_mm_yyyy[3:5] + '-' + jj_mm_yyyy[0:2]
 
     def set_file_date(self):
         """Get the date of the given project log.
@@ -170,7 +171,6 @@ class AdaProjectParser(FileParser):
             for subproject_name in liste:
                 # self.subproject[subproject_name] = {} # Add new entry
                 self.processor_type_dict[processor_name]['sous_projet'][subproject_name] = {}  # Add new entry
-
 
     def set_subtotals(self):
         """Set the subprojects subtotal in the subproject dictionary datastructure of the class"""
@@ -249,7 +249,7 @@ class AdaProjectParser(FileParser):
                 if len(ligne.split()) == 5 and ligne.split()[0].islower():
                     # set a new login entry in the dict and associates its consumption data
                     if ligne.split()[2] == '-':
-                        self.processor_type_dict[current_file_processor]['sous_projet'] \
+                        self.processor_type_dict[current_file_processor]['sous_projet']\
                             [subproject_name]['login_conso'][ligne.split()[0]] = 0.0
                     else:
                         self.processor_type_dict[current_file_processor]['sous_projet']\
@@ -259,17 +259,13 @@ class AdaProjectParser(FileParser):
         """Set the login_conso dictionary inside the data structure
         Call of _login_for_a_subproject on all the subprojects."""
         project_list = self.get_subproject_namelist()
-        print(project_list)
         for project in project_list:
             self.set_login_for_a_subproject(project)
 
     def build_complete_dictionary(self):
 
         # self.check_has_subproject()
-        print('PROJECT_NAME = ', self.project_name)
         self.set_project_name()
-        # print(self.project_name)
-        print('PROJECT_NAME = ', self.project_name)
 
         self.set_processor_type()
         self.set_subproject()
@@ -316,6 +312,7 @@ class AdaProjectParser(FileParser):
         with open(dump_path, 'w') as outfile:
             json.dump(self.complete_dictionary, outfile)
 
+
 if __name__ == "__main__":
 
     # path_log = '/home/edupont/cpt_data/mocks/mock_cpt_20190528.log'
@@ -326,30 +323,3 @@ if __name__ == "__main__":
     print(project_to_parse.get_output_path())
     project_to_parse.dump_dict_to_json()
 
-
-
-#     print("\nBeginning of execution\n")
-#     # file_to_parse = FileParser('/home/edupont/ccc_myproject_data/mocks/mock_ccc_myproject.log')
-#     file_to_parse = FileParser('/home/edupont/ccc_myproject_data/mocks/mock_ccc_myproject_20190514.log')
-#     # file_to_parse = FileParser('/home/edupont/ccc_myproject_data/ccc_myproject_20190516.log')
-#     project_to_parse2 = ProjectParser(file_to_parse.set_path_to_individual_projects_directory() + "/project_2.log")
-#     project_to_parse2.build_complete_dictionary()
-#
-#     project_to_parse2.set_output_name()
-#
-#     # string = json.dumps(project_to_parse2.complete_dictionary, indent=2)
-#     # print(string)
-#     project_to_parse2.dump_dict_to_json()
-#
-#     # complete_file_to_parse = FileParser('/home/edupont/ccc_myproject_data/ccc_myproject_20190515.log')
-#
-#     complete_file_to_parse = FileParser('/home/edupont/ccc_myproject_data/test_data/p86caub_ccc_myproject.txt')
-#     complete_project_to_parse1 = ProjectParser(complete_file_to_parse.set_path_to_individual_projects_directory() + "/project_2.log")
-#     complete_project_to_parse1.build_complete_dictionary()
-#     complete_project_to_parse1.set_output_name()
-#
-#     complete_project_to_parse1.dump_dict_to_json()
-#
-#
-#
-#     print("\nEnd of execution\n")
