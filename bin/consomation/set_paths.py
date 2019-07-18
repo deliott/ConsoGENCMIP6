@@ -44,8 +44,8 @@ def set_path_to_raw_data_for_parser():
         settings.path_to_cpt_raw_data = "/home/edupont/consomation_data/cpt_data/"
 
     elif where_we_run() == "ciclad":
-        settings.path_to_ccc_myproject_raw_data = "/home/eldupont/ccc_myproject_data/"
-        settings.path_to_cpt_raw_data = "/home/eldupont/cpt_data/"
+        settings.path_to_ccc_myproject_raw_data = "/home/eldupont/consomation_data/ccc_myproject_data/"
+        settings.path_to_cpt_raw_data = "/home/eldupont/consomation_data/cpt_data/"
 
     else:
         settings.path_to_ccc_myproject_raw_data = "\wrong\computer"
@@ -61,7 +61,7 @@ def set_path_to_timeseries():
         # settings.path_to_timeseries = "/home/edupont/ccc_myproject_data/timeseries/"
         settings.path_to_timeseries = "/home/edupont/consomation_data/timeseries/"
     elif where_we_run() == "ciclad":
-        settings.path_to_timeseries = "/home/eldupont/ccc_myproject_data/timeseries/"
+        settings.path_to_timeseries = "/home/eldupont/consomation_data/timeseries/"
     else:
         settings.path_to_timeseries = "\wrong\computer"
 
