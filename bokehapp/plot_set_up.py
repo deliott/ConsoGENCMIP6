@@ -166,7 +166,7 @@ def add_subprojects_to_line_list_bis(plot, source_data, line_list, selected_subp
                                                name=header + ' ',
                                                # small hack to be able to display the name.
                                                # Otherwise, without the ' ' there is a bug
-                                               # line_width=3,
+                                               line_width=3,
                                                color=palette[(nb_plot-1) % 11],
                                                muted_color=palette[(nb_plot-1 )% 11], muted_alpha=0.2
                                                )
