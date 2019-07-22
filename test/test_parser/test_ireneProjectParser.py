@@ -1,6 +1,6 @@
 import unittest
 from unittest import TestCase
-from bin.parser.ccc_myproject_projectparser import ProjectParser
+from bin.parser.ccc_myproject_projectparser import IreneProjectParser
 from bin.parser.ccc_myproject_fileparser import FileParser
 
 
@@ -10,21 +10,21 @@ class TestProjectParser(TestCase):
     def setUp(self) -> None:
 
         self.empty_file_to_parse = FileParser('/home/edupont/ccc_myproject_data/mocks/mock_ccc_myproject.log')
-        self.empty_project_to_parse = ProjectParser(self.empty_file_to_parse.set_path_to_individual_projects_directory() +
+        self.empty_project_to_parse = IreneProjectParser(self.empty_file_to_parse.set_path_to_individual_projects_directory() +
                                                "/project_1.log")
 
         # @TODO : check if we need to import Parent and Child classes or if just Child is enough.
         self.file_to_parse = FileParser('/home/edupont/ccc_myproject_data/mocks/mock_ccc_myproject.log')
-        self.project_to_parse1 = ProjectParser(self.file_to_parse.set_path_to_individual_projects_directory() +
+        self.project_to_parse1 = IreneProjectParser(self.file_to_parse.set_path_to_individual_projects_directory() +
                                                "/project_1.log")
-        self.project_to_parse2 = ProjectParser(self.file_to_parse.set_path_to_individual_projects_directory() +
+        self.project_to_parse2 = IreneProjectParser(self.file_to_parse.set_path_to_individual_projects_directory() +
                                                "/project_2.log")
 
         # @TODO: We should mock the creation of these files.
         self.complete_file_to_parse = FileParser('/home/edupont/ccc_myproject_data/ccc_myproject_20190515.log')
         self.complete_file_to_parse.create_individual_projects_directory()
         self.complete_file_to_parse.copy_project_from_raw_input()
-        self.complete_project_to_parse = ProjectParser(
+        self.complete_project_to_parse = IreneProjectParser(
             self.complete_file_to_parse.set_path_to_individual_projects_directory() + "/project_1.log")
 
     def test_project_parser_init(self):

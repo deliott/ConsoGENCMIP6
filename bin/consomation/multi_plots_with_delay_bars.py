@@ -28,6 +28,7 @@ set_paths.set_path_to_plots()
 project_dict = {}
 project_dict['gencmip6'] = '2019-05-01'
 project_dict['gen0826'] = '2018-10-31'
+project_dict['100592'] = '2019-05-01'
 
 for project_name in list(project_dict.keys()):
     start_date = project_dict[project_name]
