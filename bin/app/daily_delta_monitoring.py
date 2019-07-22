@@ -141,8 +141,6 @@ def test_add_optimal_total_difference_ticks_ter(data_for_plot, df_data, df_opti,
     :param days_in_advance: Number of days the optimal curv
     :return retard_waring : list of Bokeh glyphs (quad) representing the daily consumption. An element represent a day.
     """
-    # print('\n\n\n\nDF_OPTI : ', len(df_opti.index))
-    # print('DF_DATA : ', type(df_data.index), '\n\n\n\n')
 
     days_in_start_difference_between_data_and_opti = (df_data.index[0] - df_opti.index[0]).days
     # print('Time delta between start of minitoring and begining of allocation : ' , days_in_start_difference_between_data_and_opti)
@@ -252,6 +250,7 @@ def test_add_optimal_total_difference_ticks_ter(data_for_plot, df_data, df_opti,
                                   )
 
     return retard_warning
+
 
 def add_difference_hovertool(p, warning_list):
 
