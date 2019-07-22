@@ -20,7 +20,7 @@ def plot_init(processor, project_name, allocation):
     """
     p = figure(title="Consommation de l'allocation " + project_name.swapcase() + ' - ' + processor + ' (' + str(int(allocation))
                      + ' heures)' + " - Vue par MIPs/sous-projets",
-               x_axis_label="Date",
+               x_axis_label=None,
                y_axis_label="Irene " + processor + " (heures)",
                x_axis_type="datetime",
                plot_width=900, plot_height=400,
@@ -124,6 +124,7 @@ def add_optimal_consumption_curve(df_opti, p, line_list):
         p.line('Date', 'Conso_Optimale', source=source_opt,
                legend='Conso_Optimale ',
                name='Conso_Optimale ',
+               # small hack to be able to display the name. Otherwise, without the ' ' there is a bug
                line_width=1,
                color='black',
                muted_color='black', muted_alpha=0.2
@@ -344,3 +345,4 @@ def plot_config(p):
     p.xaxis[0].formatter.days = '%a - %d/%m/%Y'
     p.xaxis.major_label_orientation = pi / 3
     p.yaxis.formatter = NumeralTickFormatter(format="0,")
+    p.axis.axis_label_text_font_style = "bold"
