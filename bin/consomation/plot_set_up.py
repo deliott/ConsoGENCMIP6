@@ -39,7 +39,7 @@ def set_plot_axis_default_range(plot, df_data, df_opti, start_date, vertical_mar
     :param vertical_margin_coef: float representing the precentage of margin to be taken on vertical axis
     :return:
     """
-    fin = pd.to_datetime(df_opti['Date'][-1] + pd.Timedelta(2.5, unit='D'))
+    fin = pd.to_datetime(df_opti.index[-1] + pd.Timedelta(2.5, unit='D'))
     debut = max(fin - pd.Timedelta(60, unit='D'), pd.to_datetime(start_date))
 
     plot.x_range.start = debut
@@ -49,6 +49,23 @@ def set_plot_axis_default_range(plot, df_data, df_opti, start_date, vertical_mar
         df_opti['Conso_Optimale'][-1] * 1.25,  # 1.25 stands for the 25% bonus that can be gained at TGCC
         max(df_data['Total'])
     ) * vertical_margin_coef
+
+
+def set_plot_xaxis_default_range(plot, df_opti, start_date, ):
+    """
+    Set the xaxis range of the plot.
+
+    :param plot: bokeh figure
+    :param df_data: dataframe with the cpu time consumption per project and total as columns. Indexed by dates.
+    :param df_opti:
+    :param vertical_margin_coef: float representing the precentage of margin to be taken on vertical axis
+    :return:
+    """
+    fin = pd.to_datetime(df_opti.index[-1] + pd.Timedelta(2.5, unit='D'))
+    debut = max(fin - pd.Timedelta(60, unit='D'), pd.to_datetime(start_date))
+
+    plot.x_range.start = debut
+    plot.x_range.end = fin
 
 
 def add_subprojects_to_line_list(nb_sousprojets, df_data, p, line_list):
@@ -66,7 +83,8 @@ def add_subprojects_to_line_list(nb_sousprojets, df_data, p, line_list):
 
     source = ColumnDataSource(df_data)
 
-    palette = list(reversed(Spectral[nb_sousprojets]))
+    # palette = list(reversed(Spectral[nb_sousprojets+2]))
+    palette = list(reversed(Spectral[min(nb_sousprojets + 2, 11)]))
 
     for header in list(df_data.columns):
         # print(header)
@@ -76,7 +94,7 @@ def add_subprojects_to_line_list(nb_sousprojets, df_data, p, line_list):
             # On pourrait rajouter d'autres conditions, telles que :
             # - si la valeur a varié depuis longtemps.
             if not df_data[header].iloc[-1] == 0:
-                if nb_plot < nb_sousprojets:
+                if nb_plot <= nb_sousprojets:
                     if header == 'Total':
                         if len(list(df_data.columns)) > 3:
                             line_list.append(p.line('Date', header, source=source,
@@ -102,10 +120,83 @@ def add_subprojects_to_line_list(nb_sousprojets, df_data, p, line_list):
                                                 muted_color=palette[nb_plot], muted_alpha=0.2
                                                 )
                                          )
-                        nb_plot = nb_plot + 1
+                    nb_plot = nb_plot + 1
 
     # return line_list
 
+
+def add_subprojects_to_line_list_bis(plot, source_data, line_list, selected_subproject_list):
+    """
+    Append Bokeh Line Glyphs corresponding to subprojects data to the list (line_list) to be added to the figure (p).
+
+    :param plot: Bokeh figure where the subprojects are to be plotted.
+    :param source_data: dataframe with the cpu time consumption per project and total as columns. Indexed by dates.
+    :param line_list: list with the bokeh glyphs to be added to the plot figure.
+    :param selected_subproject_list: list the subproject names to be added to the plot.
+    :return: None
+    """
+    nb_plot = 1
+    nb_sousprojets = len(selected_subproject_list)
+    palette = list(reversed(Spectral[min(nb_sousprojets + 2, 11)]))
+    for header in selected_subproject_list:
+        if not header == 'Date':
+            # Conditions pour afficher le sous projet :
+            # sa dernière valeure n'est pas nulle
+            # On pourrait rajouter d'autres conditions, telles que :
+            # - si la valeur a varié depuis longtemps.
+            # if not df_data[header].iloc[-1] == 0: (avec df_data = source_data.to_df() )
+            if nb_plot <= nb_sousprojets:
+                if header == 'Total':
+                    if len(list(source_data.data.keys())) > 3:
+                        line_list.append(plot.line('Date', header, source=source_data,  # issue with this source
+                                                legend=header + ' ',
+                                                # small hack to be able to display the name.
+                                                # Otherwise, without the ' ' there is a bug
+                                                name=header + ' ',
+                                                # small hack to be able to display the name.
+                                                # Otherwise, without the ' ' there is a bug
+                                                line_width=3,
+                                                color="black",
+                                                muted_color="black", muted_alpha=0.2
+                                                )
+                                         )
+                else:
+                    print((nb_plot - 1) % 11)
+                    line_list.append(plot.line('Date', header, source=source_data, # issue with the source
+                                               legend=header + ' ',
+                                               name=header + ' ',
+                                               # small hack to be able to display the name.
+                                               # Otherwise, without the ' ' there is a bug
+                                               line_width=3,
+                                               color=palette[(nb_plot-1) % 11],
+                                               muted_color=palette[(nb_plot-1 )% 11], muted_alpha=0.2
+                                               )
+                                     )
+                nb_plot = nb_plot + 1
+
+
+def add_optimal_consumption_curve_bis(source_opt, p, line_list):
+    """
+    Append Bokeh Line Glyphs corresponding to the optimal consumption of the allocation to the list (line_list)
+    to be added to the figure (p).
+
+    :param source_opt: ColumnDataSource from which will be extracted the dataframe with the optimal cpu time consumption as column. Indexed by dates.
+    :param p: bokeh figure that will render the glyphs
+    :param line_list: list with the bokeh glyphs to be added to the p figure.
+    :return: None
+    """
+    # Ajout de la courbe de consomation théorique :
+    # source_opt = ColumnDataSource(df_opti)
+    line_list.append(
+        p.line('Date', 'Conso_Optimale', source=source_opt,
+               legend='Conso_Optimale ',
+               name='Conso_Optimale ',
+               # small hack to be able to display the name. Otherwise, without the ' ' there is a bug
+               line_width=1,
+               color='black',
+               muted_color='black', muted_alpha=0.2
+               )
+    )
 
 def add_optimal_consumption_curve(df_opti, p, line_list):
     """
@@ -167,7 +258,7 @@ def add_optimal_consumption_patch(delai_avant_penalite, df_opti, p, color):
 
     :param delai_avant_penalite: Number of days before Computing Centers decides to take back part of the allocation.
     60 Days at TGCC.
-    :param df_opti: dataframe with the optimal cpu time consumption as column. Indexed by dates.
+    :param df_opti: dataframe (dict) with the optimal cpu time consumption as column. Indexed by dates.
     :param p: bokeh figure that will render the glyphs.
     :param color: string describing the color of the patch.
     :return: None
@@ -175,21 +266,57 @@ def add_optimal_consumption_patch(delai_avant_penalite, df_opti, p, color):
     # delai_avant_penalite = 14
     # delai_avant_penalite = 60
 
-    if len(df_opti['Date']) <= delai_avant_penalite:
-        delai_avant_penalite = min(len(df_opti['Date'])-1, 30)
+    if len(df_opti.index) <= delai_avant_penalite:
+        delai_avant_penalite = min(len(df_opti.index)-1, 30)
         color = 'green'
 
     volume_avant_penalite = df_opti['Conso_Optimale'][delai_avant_penalite]
 
-    xx = [df_opti['Date'][0],
-          df_opti['Date'][-1],
-          df_opti['Date'][-1],
-          df_opti['Date'][delai_avant_penalite],
-          df_opti['Date'][0]]
+    xx = [df_opti.index[0],
+          df_opti.index[-1],
+          df_opti.index[-1],
+          df_opti.index[delai_avant_penalite],
+          df_opti.index[0]]
 
     yy = [df_opti['Conso_Optimale'][0],
           df_opti['Conso_Optimale'][-1],
           df_opti['Conso_Optimale'][-1] - volume_avant_penalite,
+          0,
+          0]
+    p.patch(xx, yy, alpha=0.1, line_width=2, legend=str(delai_avant_penalite) + ' days security area', color=color)
+
+
+def add_optimal_consumption_patch_bis(delai_avant_penalite, df_opti, p, color):
+    """
+    Add Bokeh Patch Glyph to the figurte (p) corresponding to the security area
+    before risk restriction of the allocation.
+    The bis method is able to deal with df_opti as a pandas dataframe.
+
+    :param delai_avant_penalite: Number of days before Computing Centers decides to take back part of the allocation.
+    60 Days at TGCC.
+    :param df_opti: pandas dataframe with the optimal cpu time consumption as column. Indexed by dates.
+    :param p: bokeh figure that will render the glyphs.
+    :param color: string describing the color of the patch.
+    :return: None
+    """
+    # delai_avant_penalite = 14
+    # delai_avant_penalite = 60
+
+    if len(df_opti.index) <= delai_avant_penalite:
+        delai_avant_penalite = min(len(df_opti.index)-1, 30)
+        color = 'green'
+
+    volume_avant_penalite = df_opti['Conso_Optimale'].iloc[delai_avant_penalite]
+
+    xx = [df_opti.index[0],
+          df_opti.index[-1],
+          df_opti.index[-1],
+          df_opti.index[delai_avant_penalite],
+          df_opti.index[0]]
+
+    yy = [df_opti['Conso_Optimale'].iloc[0],
+          df_opti['Conso_Optimale'].iloc[-1],
+          df_opti['Conso_Optimale'].iloc[-1] - volume_avant_penalite,
           0,
           0]
     p.patch(xx, yy, alpha=0.1, line_width=2, legend=str(delai_avant_penalite) + ' days security area', color=color)
@@ -207,7 +334,7 @@ def add_optimal_total_difference_ticks(df_data, df_opti, p, days_in_advance):
     """
     last_opti = df_opti['Conso_Optimale'][-(days_in_advance + 1)]
     last_real = df_data['Total'].iloc[-1]
-    last_date = df_data['Date'].iloc[-1]
+    last_date = df_data.index[-1]
     delta_conso = '{:,.0f}'.format(abs(last_opti - last_real)) + ' heures'
 
     if last_opti > last_real:
@@ -256,18 +383,18 @@ def add_optimal_total_difference_ticks_bis(df_data, df_opti, p):
     :return: None
     """
 
-    days_in_start_difference_between_data_and_opti = (df_data['Date'].iloc[0] - df_opti['Date'][0]).days
+    days_in_start_difference_between_data_and_opti = (df_data.index[0] - df_opti.index[0]).days
 
     retard_warning = []
 
-    for i in range(len(df_data['Date'])):
+    for i in range(len(df_data.index)):
         opti_value = df_opti['Conso_Optimale'][days_in_start_difference_between_data_and_opti + i]
         total_value = df_data['Total'].iloc[i]
 
         delta_conso = '{:,.0f}'.format(abs(opti_value - total_value)) + ' heures'
 
-        left = df_data['Date'].iloc[i]
-        right = df_data['Date'].iloc[i] + datetime.timedelta(days=0.1)
+        left = df_data.index[i]
+        right = df_data.index[i] + datetime.timedelta(days=0.1)
 
         if opti_value > total_value:
             statut = 'Retard'

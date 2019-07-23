@@ -142,21 +142,21 @@ def test_add_optimal_total_difference_ticks_ter(data_for_plot, df_data, df_opti,
     :return retard_waring : list of Bokeh glyphs (quad) representing the daily consumption. An element represent a day.
     """
 
-    days_in_start_difference_between_data_and_opti = (df_data['Date'].iloc[0] - df_opti['Date'][0]).days
+    days_in_start_difference_between_data_and_opti = (df_data.index[0] - df_opti.index[0]).days
     # print('Time delta between start of minitoring and begining of allocation : ' , days_in_start_difference_between_data_and_opti)
     # print('Daily hours amount : ', data_for_plot.optimal_daily_consumption)
 
-    p.line(df_data['Date'], [3 * data_for_plot.optimal_daily_consumption]*len(df_data['Date']),
+    p.line(df_data.index, [3 * data_for_plot.optimal_daily_consumption]*len(df_data.index),
            line_color="olive", line_width=2, alpha=0.7, legend="300 % Optimal daily consumption")
-    p.line(df_data['Date'], [2 * data_for_plot.optimal_daily_consumption]*len(df_data['Date']),
+    p.line(df_data.index, [2 * data_for_plot.optimal_daily_consumption]*len(df_data.index),
            line_color="green", line_width=2, alpha=0.7, legend="200 % Optimal daily consumption")
-    p.line(df_data['Date'], [    data_for_plot.optimal_daily_consumption]*len(df_data['Date']),
+    p.line(df_data.index, [    data_for_plot.optimal_daily_consumption]*len(df_data.index),
            line_color="midnightblue", line_width=2, alpha=0.7, legend="100 % Optimal daily consumption")
 
 
     retard_warning = []
 
-    for i in range(len(df_data['Date'])):
+    for i in range(len(df_data.index)):
         if i > 0:
             # opti_value = df_opti['Conso_Optimale'][days_in_start_difference_between_data_and_opti + i]
             opti_value = data_for_plot.optimal_daily_consumption
@@ -164,8 +164,8 @@ def test_add_optimal_total_difference_ticks_ter(data_for_plot, df_data, df_opti,
 
             delta_conso = '{:,.0f}'.format(abs(opti_value - total_value)) + ' heures'
 
-            left = df_data['Date'].iloc[i] - datetime.timedelta(days=0.95)
-            right = df_data['Date'].iloc[i]
+            left = df_data.index[i] - datetime.timedelta(days=0.95)
+            right = df_data.index[i]
 
             if opti_value < total_value:
                 # statut = 'Prise d\'avance'

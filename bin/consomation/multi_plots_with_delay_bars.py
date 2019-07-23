@@ -55,10 +55,14 @@ for project_name in list(project_dict.keys()):
     for processor in processor_list:
         df_data, df_opti = data_for_plot.run_data_for_plot_extractor(processor, start_date)
 
+        df_data = df_data.set_index(['Date'])
+        df_data.sort_index(inplace=True)
+        df_opti = df_opti.set_index(['Date'])
+        #############################
         #############################
         # Configuration du Plot :
         p = plot_set_up.plot_init(processor, project_name, data_for_plot.allocated_dict[processor])
-        plot_set_up.set_plot_axis_default_range(p, df_data, df_opti, start_date, vertical_margin_coef=1.05)
+        plot_set_up.set_plot_xaxis_default_range(p, df_opti, start_date)
 
         # Ajout des glyphs à la liste
         nb_sousprojets = 10
@@ -97,7 +101,7 @@ for project_name in list(project_dict.keys()):
 
         q = plot_init_delta(processor, project_name)
         # q = plot_set_up.plot_init(processor, project_name)
-
+        q.x_range = p.x_range
         retard_warning = test_add_optimal_total_difference_ticks_ter(data_for_plot, df_data, df_opti, q)
         # retard_warning = test_add_optimal_total_difference_ticks_bis(data_for_plot, df_data, df_opti, q)
 
