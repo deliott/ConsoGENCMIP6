@@ -1,3 +1,7 @@
+import sys
+# Will have to be modified on ciclad.
+sys.path.insert(0, '/home/edupont/Documents/mesocentre/ConsoGENCMIP6_git/ConsoGENCMIP6/')
+
 from os.path import join, dirname
 import datetime
 
@@ -7,18 +11,18 @@ from bokeh.io import curdoc
 from bokeh.layouts import row, column, layout, widgetbox, Spacer
 from bokeh.models import ColumnDataSource, Select, MultiSelect, CustomJS
 
-from data_for_plot_extractor import ProjectData
+from bin.consomation.data_for_plot_extractor import ProjectData
 
-import plot_set_up as plot_set_up
+import bin.consomation.plot_set_up as plot_set_up
 
-import subprojects_display_methods as sdm
-
-
-from daily_delta_monitoring import plot_init_delta, plot_config_delta, test_add_optimal_total_difference_ticks_bis,\
-    test_add_optimal_total_difference_ticks_ter, add_difference_hovertool
+import bin.app.subprojects_display_methods as sdm
 
 
-import set_paths as set_paths
+from bin.consomation.daily_delta_monitoring import plot_init_delta, plot_config_delta,\
+    test_add_optimal_total_difference_ticks_bis, test_add_optimal_total_difference_ticks_ter, add_difference_hovertool
+
+
+import bin.consomation.set_paths as set_paths
 set_paths.set_path_to_plots()
 
 project_dict = dict()
