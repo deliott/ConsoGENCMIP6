@@ -358,5 +358,3 @@ class ProjectData:
         dfOpti = self.get_theoretical_optimal_consumption_curve_dataframe_bis(processor)
 
         return self.subproject_subtotal_dataframe, dfOpti
-
-

@@ -204,7 +204,7 @@ def add_optimal_consumption_curve(df_opti, p, line_list):
     to be added to the figure (p).
 
     :param df_opti: dataframe with the optimal cpu time consumption as column. Indexed by dates.
-    :type df_opti: python dict
+    :type df_opti: pandas dataframe
     :param p: bokeh figure that will render the glyphs
     :param line_list: list with the bokeh glyphs to be added to the p figure.
     :return: None
